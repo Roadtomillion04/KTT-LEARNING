@@ -1,0 +1,424 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+	<!-- Meta tags - data about data-->
+	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- adding description about the page and web browsers use this information-->
+	<meta name="author" content="NirmalKumarR">
+	<meta name="description" content="Learning HTML Day2">
+
+
+	<title>My Website</title>
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+	<style type="text/css">
+		.t2{
+			text-align: center;
+		}
+
+		.data {
+			text-transform: capitalize;
+		}
+
+		.l {
+			display: inline;
+
+		}
+
+	</style>
+
+</head>
+
+<body>
+
+	<h1>Expansion</h1>
+	<hr>
+	
+
+	<figure>
+		<!--picture tag takes more than 1 sources and choose the best match among them depending on the browser/os.-->
+		<picture>
+			<source srcset="1.png" media="(orientation:landscape)">
+			<source srcset="2.png" media="(orientation:portrait)">
+			<img src="1.png" alt="March Calander" width="100%">
+			<figcaption>March Calandar</figcaption>
+		</picture>
+	</figure>
+	
+
+	<details>
+		<summary>ZZZ monthly calandar</summary>
+		<p>March Calandar by Hoyoverse's new action RPG game ZZZ illustrating Character Anby Demara.</p>
+	</details>
+
+	<video width=200 height=300 controls>
+		<source src="bus1.mp4" type="video/mp4">
+	</video>
+
+	<audio controls>
+		<source src="sample-6s.mp3" type="">
+	</audio>
+
+	<!-- <iframe src="https://www.oneplus.com/us/13" title="Buy Oneplus 13" width=300 height=300></iframe> -->
+
+	<!-- <iframe width="240" height="200" src="https://www.youtube-nocookie.com/embed/kQFFdf955dE?si=MkIfJzkVrhdiO9i3&amp;start=10" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
+
+	<!-- <a href="https://www.oneplus.in/oneplus-13?utm_source=google&utm_medium=cpc&utm_campaign=search_oneplus_13_OnePlus-Publicis-IN_EN-OnePlus_13-Sustain-All-CPC-Search_Exact-20241217--Intent-Conversions&gad_source=1&gclid=Cj0KCQjwytS-BhCKARIsAMGJyzq1i-4Nw9jdYcfYbxFz1jmE_5NPrrn4o-ct64dsXb2dJBs2uXO4MigaAgmuEALw_wcB" target="_blank">Click to Buy</a> -->
+
+	<address>
+		Written By Pete Lau,
+		<br>
+		Located in 5000 Riverside Drive, Suite 300, Irving, Texas 75039.
+	</address>
+
+	<br>
+	<hr>
+	<br>
+
+	<h2>Expansion 2</h2>
+	<ul>
+	  <li>Oneplus <bdi>12</bdi>: 8 Gen 3</li>
+	  <li>Oneplus <bdi>11</bdi>: 8 Gen 2</li>
+	  <li>Oneplus <bdo dir=rtl>31</bdo>: 8 Elite</li>
+	</ul>
+
+	<blockquote cite=oneplus.com/us> Oneplus has become one of the top selling flagships.</blockquote>
+
+	<table border= 1 align="center" width="200" height="200" cellpadding="10">
+		<caption bgcolor="red">
+			Oppo's subsidiaries
+		</caption>
+		<thead bgcolor="grey">
+			<tr>
+				<th colspan="2">Realme</th>
+				<th>Oneplus</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td colspan="2">Realme Ui</td>
+				<td>Oxygen Os</td>
+			</tr>
+			<tr>
+				<td colspan="2">Realme gt 7 pro</td>
+				<td>Oneplus 13</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<br>
+	<hr>
+	<br>
+
+	<form method="POST" action="home.html" class="Mobilespecs">
+		<fieldset>
+			<legend>Mobile Specs</legend>
+			<!-- for refers id in label-->
+			<label for="Mob">Mobile Brand</label>
+			<input type="text" id="Mob" placeholder="Samsung" autofocus=true required></input>
+
+			<p>Select Ram:</p>
+			
+			<input type="radio" name="4gb" id="4gb">
+			<label for="4gb">4 GB</label>
+
+			<input type="radio" name="8gb" id="8g">
+			<label for="8gb">8 GB</label>
+
+			<input type="radio" name="12gb" id="12gb">
+			<label for="12gb">12 GB</label>
+
+			<br>
+			<br>
+
+			<label for="android_ver">Select the Android Version</label>
+			<!-- if list name id are same, it will not work-->
+			<input type= "input" list="android_ver" name="ver" id="ver">
+
+			<datalist id="android_ver">
+				<option value="Android 16(Beta)">
+				<option value="Android 15">
+				<option value="Android 14">
+				<option value="Lower">
+			</datalist>
+
+			<br>
+			<br>
+
+			<input type="reset" value="Reset">
+
+			<input type="submit" value="Submit">
+
+		</fieldset>
+	</form>
+
+	<br>
+	<hr>
+	<br>
+
+	<marquee direction= "right" scrollamount= 20 bgcolor= "blue" behavior= "alternate" hspace= "25%" width="50%"> <h3>Expansion 3</h3></marquee>
+
+	<!-- menu is same as ul-->
+	<menu>
+		<!-- while using anchor tag if you want to link to other site you have to enter the full url address with communication protocol(https in this case) otherwise the href automatically the value to current page url-->
+		<li><a href="https:www.oppo.com" target="_blank"><button>Oppo website</button></a></li>
+		<li><a href="https://www.Realme.com" target="_blank"><button>Realme website</button></a></li>
+		<li><a href="https://www.Oneplus.com" target="_blank"><button>Oneplus website</button></a></li>
+	</menu>
+
+	<!--optgroup cannot be not nested-->
+	<label for="mobile-select">List of Parent mobile company from China</label>
+	<br>f
+	<select id="mobile-select">
+		<optgroup label="BBK Electronics">
+			<option>Realme</option>
+			<option>Oppo</option>
+			<option>Oneplus</option>
+			<option>Vivo</option>
+			<option>Iqoo</option>
+		</optgroup>
+		<optgroup label="Xiaomi">
+			<option>Xiaomi</option>
+			<option>Poco</option>
+			<option>Redmi</option>
+		</optgroup>
+	</select>
+
+	<div align="center">
+		<p>Popular Phone Brands:</p>
+
+		<dl >
+		  <dt>Samsung</dt>
+		  	<dd>All budgets covered.</dd>
+
+		  <dt>Iphone</dt>
+		  	<dd>Expensive variants.</dd>
+
+		  <dt>Oppo</dt>
+		  	<dd>medium to expensive variants.</dd>
+		</dl>
+
+	</div>
+
+	<a href="#">start</a>
+	<hr>
+
+	<input type="file" multiple name="uploads" id="uploads" />
+
+	<br>
+	<br>
+
+
+	<div id="location">
+		<iframe src="href="https://www.openstreetmap.org/#map=16/${latitude}/${longitude}>Position is ${latitude} latitude and ${longitude} longitude.</iframe>
+
+	</div>
+
+	<br>
+	<br>
+	<hr>
+
+	<p id="click_button">0</p>
+	<button onclick="clickaction()">Click +</button>
+
+	<br>
+	<br>
+
+	<table class="t2" border="1" cellpadding="20" align="center">
+		<caption>
+			<h1>Test Table</h1>
+		</caption>
+
+		<!-- colgroup is used to select the columns of the table-->
+		<colgroup>
+			<!--first column -> can manually get all columns with repeating the col tag or select mulitple column with help of span-->
+			<col>
+			<!--second column color is changed-->
+			<col style="background-color: maroon;">
+			<col span="3"></col> <!--skips 3 col-->
+			<col style="background-color: maroon;"></col>
+
+		</colgroup>
+
+		<thead>
+			<tr>
+				<th rowspan="2">A</th>
+				<th colspan="2">B</th>
+				<th rowspan="2">D</th>
+				<th rowspan="2">E</th>
+				<th rowspan="2">F</th>
+			</tr>
+			<tr>
+				<th>B1</th>
+				<th>B2</th>
+			</tr>
+
+		</thead>
+		<tbody class="data">
+			<tr>
+				<td>a1</td>
+				<td rowspan="4">a2</td>
+				<td>a3</td>
+				<td>a4</td>
+				<td rowspan="4">a5</td>
+				<td>a6</td>
+			</tr>
+			<tr>
+				<td>b1</td>
+				<td>b3</td>
+				<td>b4</td>
+				<td>b6</td>
+			</tr>
+			<tr>
+				<td>c1</td>
+				<td>c3</td>
+				<td>c4</td>
+				<td>c6</td>
+			</tr>
+			<tr>
+				<td>d1</td>
+				<td>d3</td>
+				<td>d4</td>
+				<td>d6</td>
+			</tr>
+		</tbody>
+
+		<tfoot style="background-color: red;">
+			<tr>
+				<td>10</td>
+				<td>20</td>
+				<td>30</td>
+				<td>40</td>
+				<td>50</td>
+				<td>60</td>
+			</tr>
+		</tfoot>
+
+	</table>
+
+	<hr>
+	<br>
+	<br>
+
+	<form method="GET" action="/">
+		<fieldset>
+			<legend>Fill the form</legend>
+
+			<label>Picture: </label>
+			<input type="file" accept="image/jpg, image/png">
+			<br>
+			<br>
+
+			<labe>Name: </label>
+			<input type="text">
+			<br>
+			<br>
+
+			<label>power level</lable>
+			<input type="range" min="0" max="100" step="25" value="0">
+			<br>
+			<br>
+
+			<label>Age</label>
+			<input type="number" min="0" max="100" value="0">
+			<br>
+			<br>
+
+			<label>BirthPlace</label>
+			<input type="text" multiple>
+			<br>
+			<br>
+
+			<label>debut</label>
+			<input type="date">
+			<br>
+			<br>
+
+			<label>Batting</label>
+			<select>
+				<option>Right</option>
+				<option>Left</option>
+			</select>
+			<br>
+			<br>
+
+			<label>Bowling</label>
+			<input type="checkbox">
+			<br>
+			<br>
+
+			<input type="submit">
+
+		</fieldset>
+	</form>
+
+	<br>
+	<br>
+
+	<div style="background-color: gray;">
+		<nav>
+			<ul align="right">
+				<li class="l"><a href="">A page</a></li>
+				<li class="l"><a href="">B page</a></li>
+				<li class="l"><a href="">C page</a></li>
+				<li class="l"><a href="">D page</a></li>
+			</ul>
+		</nav>
+	</div>
+
+</body>
+
+<script type="text/javascript">
+
+	console.log("hi");
+
+	if (!navigator.geolocation) {
+		console.log("No location.");
+	}
+
+	function s(pos){
+
+		console.log(pos)
+
+		const latitude = pos.coords.latitude;
+		const longitude = pos.coords.longitude;
+
+		// writing html markup to display the position on the page.
+		const current_pos = `<a href="https://www.openstreetmap.org/#map=16/${latitude}/${longitude}">Position is ${latitude} latitude and ${longitude} longitude.</a>`;
+	
+	document.getElementById("location").innerHTML = current_pos;
+
+	}
+
+	function e(){
+
+	}
+
+	const o = {};
+
+	console.log("down");
+
+	// geolocation getCurrentPosition/WatchPosition no longer works in insecure sites that is hosting in private ip(http server) but works in local host as it is loopback interface(requests communicate with itself & does not go outside the computer so its safe) meanwhile hosting in ngrok is https
+	navigator.geolocation.getCurrentPosition(s, e, o);
+
+
+	let total_count = 0;
+
+	function clickaction() {
+		total_count = total_count + 1;
+		document.getElementById("click_button").innerHTML = total_count;
+
+
+		let slider_val = document.getElementById("slider_val").innerHTML;
+
+		slider_val = document.getElementById("slider").
+
+	getAttribute("value");
+	}
+
+
+</script>
+
+</html>

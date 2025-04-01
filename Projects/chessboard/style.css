@@ -1,0 +1,48 @@
+.board {
+	width: 1260px;
+	height: 680px;
+
+	border: 7px solid rgba(255, 0, 0, 1.0);
+
+	display: flex;
+
+}
+
+.slot {
+	/* calc(100px/ 12px) & calc(100 / 12)px are invalid */
+	width: calc(1260px / 8);
+	height: calc(680px / 8);
+	border: 1px solid;
+
+	text-align: center;
+	line-height: calc(1260px/ 16);
+	font-style: italic;
+	font-size: 2rem;
+	font-family: sans-serif;
+
+	/* for the child <p> notation to be fitted inside the container */
+	position: relative;
+}
+
+
+#white {
+	background-color: #A1662F;
+}
+
+.slot:hover {
+	background-color: darkcyan !important;
+}
+
+#notation-top {
+	font-size: 1rem !important;
+	position: absolute;
+	top: calc(1260px / 64);
+}
+
+#notation-right {
+	font-size: 1rem !important;
+	position: absolute;
+	top: calc(1260px / 64);
+	right: calc(1260px / 128);
+}
+
