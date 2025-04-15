@@ -1,26 +1,43 @@
-var http = require("http")
 
-var server = http.createServer(function(request, response) {
+function serve_http() {
+	var http = require("http")
 
-	if (request.url == "/"){
-		response.write("request recieved")
-		response.end()
+	var server = http.createServer(function(request, response) {
+
+		if (request.url == "/"){
+			response.write("request recieved")
+			response.end()
+			}
+
+		if (request.url == "/home") {
+			response.write("welcome to home page!")
+			response.end()
+			}	
+
+		if (request.url == "/files") {
+			var serveStatic = require("serve-static")
+			var finalHandler = require("finalhandler")
+
+			var serve = serveStatic("../ktt")
+			serve(request, response, finalHandler(request, response))
 		}
 
-	if (request.url == "/home") {
-		response.write("welcome to home page!")
-		response.end()
-		}	
+		}
+	)
 
-	if (request.url == "/files") {
-		var serveStatic = require("serve-static")
-		var finalHandler = require("finalhandler")
+	server.listen(8888)
+}
 
-		var serve = serveStatic("../ktt")
-		serve(request, response, finalHandler(request, response))
-	}
 
-	}
-)
+var express = require("express")
+var app = express()
 
-server.listen(8888)
+app.get("/", function (request, response) {
+	response.send("Request Recieved")
+})
+
+app.get("/home", function (request, response) {
+	response.send("welcome to home page")
+})
+
+app.listen(8889)
