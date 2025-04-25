@@ -1,0 +1,24 @@
+body {
+	display: flex;
+}
+
+div {
+	border: 2px solid;
+	width: 50vw;
+	height: 97vh;
+
+	font-size: 1rem;
+	
+}
+
+textarea {
+	padding: 10px;
+	font-size: 2rem;
+	margin-left: 20px;
+	min-width: 90%;
+	min-height: 88%;
+}
+
+button {
+
+}

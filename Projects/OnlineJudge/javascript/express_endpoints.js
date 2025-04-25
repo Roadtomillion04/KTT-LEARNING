@@ -1,0 +1,78 @@
+// var app = require('express')()
+// is shortcut for 
+var express = require('express')
+var app = express()
+var cors = require('cors')
+var pool = require('./db')
+// var query = require('./login')
+
+app.use(express.json()) // to get req.body
+app.use(cors()) // cors error strikes if not set while using fetch
+
+
+// endpoint for registering user from Login Page
+app.post("/user_register", async function (req, res) {
+
+	// req.body is an object type
+	var body = req.body
+
+	// does not work without `as identifier`
+	var time_stamp = await pool.query(`SELECT current_date as date, current_time as now`)
+
+	console.log(JSON.stringify(time_stamp.rows[0].date).slice(1, 11), JSON.stringify(time_stamp.rows[0].now.slice()));
+
+	var query = `INSERT INTO user_register (first_name, last_name, email, department, roll_no, user_password, registration_time) 
+VALUES ('${body.first_name}', '${body.last_name}', '${body.email}', '${body.department}', '${body.roll_no}', '${body.password}', '${JSON.stringify(time_stamp.rows[0].date).slice(1, 11) + " " + time_stamp.rows[0].now}');`
+
+	try {
+		var new_add = await pool.query(query)
+		// res.json(new_add)
+	} 
+	catch (err) {
+		console.error(err.message)
+	}
+
+})
+
+// get registered users
+app.get("/get_users", async function (req, res) {
+
+	try {
+	var get_users = await pool.query(`SELECT * FROM user_register;`)
+	res.json(get_users.rows) // responds in json format
+	}
+	catch (err) {
+		console.error(err.message)
+	}
+
+})
+
+// add questions to postgres
+app.post("/add_question", async function (req, res) {
+	try {
+
+		var body = req.body
+
+		function split_input_parameters(inputs) {
+			// inputs is array
+			for (var test_case of inputs) {
+				for (var letter of test_case) {
+
+				}
+			}
+		}
+
+		split_input_parameters(body.test_case_input)
+
+
+		console.log(body.test_case_input)
+
+		var query = `INSERT INTO interview_questions (question, problem_statement, test_case_input, test_case_output) VALUES ('${body.question}', '${body.problem_statement}', );`
+	}
+
+	catch (err) {
+		console.error(err.message)
+	}
+})
+
+app.listen(9000, function () {})

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login Page</title>
+	<script type="text/javascript" src="../javascript/login.js"></script>
+</head>
+
+<body style="
+	height: 97vh;
+	width: 97vw;
+	display: flex; 
+	justify-content: center;
+	align-items: center;">
+	
+	<form style="border: 0.5em solid blue; padding: 40px; font-size: 2rem; scale: 1.25; text-align: center;" action="/">
+	
+	<h1>Register</h1>
+
+	<div style="display: flex; justify-content: space-between;">
+	<label>First Name*: </label>
+	<input id= "first_name" type="text" required>	
+	<label>Last Name*: </label>
+	<input id= "last_name" type="text" required>
+	</div>
+
+	<br>
+
+	<div style="display: flex; justify-content: space-between;">
+	<label>Email*: </label>
+	<input id= "email" type="email" required>	
+	<label>Department*: </label>
+	<input id= "department" type="text" required>
+	</div>
+
+	<br>
+
+	<div style="display: flex; justify-content: space-between;">
+	<label>Roll No*: </label>
+	<input id= "roll_no" type="text" required>
+	<label>Password*: </label>
+	<input id= "password" type="password" required>
+	</div>
+
+	<br>
+
+	<button type="submit" onclick="registerUser()" id="submit">Login</button>
+	
+	</form>
+
+</body>
+
+</html>

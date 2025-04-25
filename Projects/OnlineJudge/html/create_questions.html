@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<title>Create Questions</title>
+	<link rel="stylesheet" href="../css/create_questions.css"></link>
+	<script type="text/javascript" src="../javascript/create_questions.js"></script>
+
+</head>
+
+<body>
+
+	<div>
+		<label>Question: </label>
+		<br>
+		<textarea style="width: 100%; height: 10vh; font-size: 2rem;" id="question"></textarea>
+	</div>
+	<br>
+
+	<div>
+		<label>Problem Statement</label>
+		<br>
+		<textarea style="width: 100%; height: 35vh; font-size: 1.5rem;" id="problem_statement"></textarea>
+	</div>
+	<br>
+
+	<div>
+		<button onclick="createTestCaseFields()" type="submit">Add TestCases</button>
+	</div>
+	<br>
+
+	<div id="test_cases">
+		
+	</div>
+
+	<div>
+		<button type="submit" onclick="submitQuestion()">Confirm</button>
+	</div>
+
+</body>
+
+</html>
