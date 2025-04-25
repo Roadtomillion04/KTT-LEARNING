@@ -65,7 +65,7 @@ app.post("/add_question", async function (req, res) {
 		split_input_parameters(body.test_case_input)
 
 
-		console.log(body.test_case_input)
+		console.log(body.test_case_input[0])
 
 		var query = `INSERT INTO interview_questions (question, problem_statement, test_case_input, test_case_output) VALUES ('${body.question}', '${body.problem_statement}', );`
 	}
@@ -75,4 +75,18 @@ app.post("/add_question", async function (req, res) {
 	}
 })
 
-app.listen(9000, function () {})
+// get questions from postgres
+app.get("/get_questions", async function (req, res) {
+	try {
+		var get_questions = await pool.query("SELECT * FROM interview_questions")
+
+		res.json(get_questions.rows)
+	}
+
+	catch (err) {
+		console.error(err.message)
+	}
+})
+
+
+app.listen(9001, function () {})
