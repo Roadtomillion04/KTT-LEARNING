@@ -49,26 +49,20 @@ app.get("/get_users", async function (req, res) {
 
 // add questions to postgres
 app.post("/add_question", async function (req, res) {
+
+	var body = req.body
+
+	console.log(body)
+
+	// we know the last value is going to be output cause languagles like C no 2 return and step is most important part here to segerate the combined test cases in array
+	// console.log(body.test_case_values[0])
+
+	var query = `INSERT INTO INTERVIEW_QUESTIONS (question, problem_statement, test_case_inputs, test_case_values, step) VALUES ('${body.question}', '${body.problem_statement}', ARRAY[${body.test_case_inputs}], ARRAY[${body.test_case_values}], '${body.step}');`
+
 	try {
-
-		var body = req.body
-
-		function split_input_parameters(inputs) {
-			// inputs is array
-			for (var test_case of inputs) {
-				for (var letter of test_case) {
-
-				}
-			}
-		}
-
-		split_input_parameters(body.test_case_input)
-
-
-		console.log(body.test_case_input[0])
-
-		var query = `INSERT INTO interview_questions (question, problem_statement, test_case_input, test_case_output) VALUES ('${body.question}', '${body.problem_statement}', );`
-	}
+		var new_add = await pool.query(query)
+		// res.json(new_add)
+	} 
 
 	catch (err) {
 		console.error(err.message)

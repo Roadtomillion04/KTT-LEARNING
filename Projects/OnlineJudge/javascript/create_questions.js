@@ -1,5 +1,7 @@
 test_case_count = 0
 
+// pending bug, add parameter slot multiple when test click is add more
+
 function createTestCaseFields() {
 
 	//every time this function called increase count by 1 to keep track
@@ -7,51 +9,70 @@ function createTestCaseFields() {
 
 	var test_case_parent = document.getElementById("test_cases")
 
-	// text area add
+	// lets container the test case slots
+	var container = document.createElement("div")
+	container.id = `individual_slot${test_case_count}`
+	container.className = "test_case_slot"
+
+
+	// input field
 	var input_add = document.createElement("input")
 	input_add.type = "number"
 	input_add.value = 1 // default 1
 	input_add.min = 1
 	input_add.max = 5	
-	input_add.id = "parameter_count"
+	input_add.id = `parameter_count${test_case_count}`
 
 	var confirm_add = document.createElement("button")
 	confirm_add.type = "button"
-	confirm_add.innerHTML = "confirm"
-	confirm_add.id = "clicked"
+	confirm_add.innerHTML = "add"
+	confirm_add.id = `add_button${test_case_count}`
+	confirm_add.className = "add_button"
 
-	// delete button add
-	// var delete_button = document.createElement("button")
-	// delete_button.id = `delete${test_case_count}`
-	// delete_button.className = "delete"
-	// delete_button.innerHTML = "delete"
 
 	// now that new textarea element is created, to add it to html page we need to append to parent
-	test_case_parent.appendChild(input_add)
-	// test_case_parent.appendChild(delete_button)
-	test_case_parent.appendChild(confirm_add)
+	test_case_parent.appendChild(container)
+
+	// you can just directly append to created element here
+	container = document.getElementById(`individual_slot${test_case_count}`)
+
+	// now inside container let's add the elements
+	container.appendChild(input_add)
+	container.appendChild(confirm_add)
 
 	line_break = document.createElement("br")
 	line_break.id = `break${test_case_count}`
 
-	test_case_parent.appendChild(line_break)
+	container.appendChild(line_break)
 
-	updateElement()
-	add_parameter_slots()
+	// I am creating and appending Delete button in after add parameter slot for neat visuals and more flexible
+	// creating and apending at last
+	// delete button add
+	var delete_button = document.createElement("button")
+	delete_button.id = `delete${test_case_count}`
+	delete_button.className = "delete"
+	delete_button.innerHTML = "delete"
+	container.appendChild(delete_button)
+		
+
+
+	addDeleteEvent()
+	addParameterSlots()
 }
 
 
-function updateElement() {
-	var class_delete = document.getElementsByClassName("delete")
+function addDeleteEvent() {
+	var delete_button_batched = document.getElementsByClassName("delete")
 
-	console.log(class_delete)
+	console.log(delete_button_batched)
 
 	// assign event listener everytime (refreshes index when element get deleted)
-	for (var i = 0; i < class_delete.length; i++) {
-	class_delete[i].addEventListener('click', deleteElement, false)
+	for (var i = 0; i < delete_button_batched.length; i++) {
+	delete_button_batched[i].addEventListener('click', deleteElement, false)
 	}
 
 	function deleteElement() {
+		// this is a delete button that is clicked	
 		console.log("deltedId", this.id)
 
 		// parseInt not work alpha before digits
@@ -61,14 +82,13 @@ function updateElement() {
 
 		console.log(getNumberFromString(this.id))
 
-		document.getElementById(`textarea${getNumberFromString(this.id)}`).remove()
-		document.getElementById(`delete${getNumberFromString(this.id)}`).remove()
+		// lets just delete the container
+		var curr_container = document.getElementById(`individual_slot${getNumberFromString(this.id)}`) // this.id is delete id, in this case we have only one element not mutliple
 
-		// removing br element will resolve space in between issues
-		document.getElementById(`break${getNumberFromString(this.id)}`).remove()
+		curr_container.remove()
 
 
-		console.log(class_delete)
+		console.log(delete_button_batched)
 
 	}
 }
@@ -91,31 +111,50 @@ async function submitQuestion() {
 
 	var problem_statement = document.getElementById('problem_statement').value
 
-	var all_test_cases = document.getElementsByClassName('test_case')
+	// getting the parameters and values
+	var parameters_batched = document.getElementsByClassName("parameters")
+	var inputs_batched = document.getElementsByClassName("values")
 
-	// split input and output
-	var input = ""
-	var output = ""
+	// also parameter count to batch the test cases in order
+	var parameter_count = document.getElementById("parameter_count1").value
 
 	// posting test cases in array
-	var input_arr = []
-	var output_arr = []
+	param_arr = []
+	value_arr = []
 
-	for (var i = 0; i < all_test_cases.length; i++) {
+	// both are same length anyway
+	for (var i = 0; i < parameters_batched.length; i++) {
 
-		// getting input parameters and output in two strings by line break
-		[input, output] = all_test_cases[i].value.split("\n")
+		// no problem with parameters
+		param_arr.push(parameters_batched[i].value)
 
-		input_arr.push(input.slice(7))
-		output_arr.push(output.slice(8))
+
+		// all values gonna be string, so for array conversion
+		if (inputs_batched[i].value[0].includes("[") && inputs_batched[i].value.at(-1).includes("]")) {
+
+			// remove the brackets and at for negative indexing
+			inputs_batched[i].value = inputs_batched[i].value.replace("[", "")
+			inputs_batched[i].value = inputs_batched[i].value.replace("]", "")
+
+			// presuming array values are spaced after commas
+			var new_arr = inputs_batched[i].value.split(", ")
+
+			value_arr.push(new_arr)
+
+		}
+
+		else {
+			value_arr.push(inputs_batched[i].value)
+		}
 		
 		}
 
 	try {
 		var body = {"question": question, 
 		"problem_statement": problem_statement, 
-		"test_case_input": input_arr,
-		"test_case_output": output_arr}
+		"test_case_inputs": param_arr,
+		"test_case_values": value_arr,
+		"step": Number(parameter_count) + 1} // Output last
 
 		var req = await fetch("http://localhost:9001/add_question", {
 			method: "POST",
@@ -130,17 +169,24 @@ async function submitQuestion() {
 	}
 }
 
-function add_parameter_slots() {
+function addParameterSlots() {
 
-	var confirm_button = document.getElementById("clicked")
+	var confirm_button_batched = document.getElementsByClassName("add_button")
 
-	confirm_button.addEventListener('click', updateField, false)
+	for (var i = 0; i < confirm_button_batched.length; i++) {
+	confirm_button_batched[i].addEventListener('click', addSlots, false)
 
-	function updateField() {
+	}
+
+	function addSlots() {
 
 		// cannot append under input element, has to be div/container
-		var parent = document.getElementById("please_work")
-		var parameter_count = document.getElementById("parameter_count").value
+		var parent = document.getElementById(`individual_slot${getNumberFromString(this.id)}`)
+		var parameter_count = document.getElementById(`parameter_count${getNumberFromString(parent.id)}`).value // in this count this.id gives button id which is test_case_count same for all
+
+		// disabling button after click to avoid bugs
+		var curr_button = document.getElementById(`add_button${getNumberFromString(parent.id)}`)
+		curr_button.disabled = true
 
 		// +1 for output 
 		for (var i = 0; i < Number(parameter_count) + 1; i++) {
@@ -153,18 +199,27 @@ function add_parameter_slots() {
 			line_break = document.createElement("br")
 
 			// setting attributes
+			param_input.className = "parameters"
 			param_input.placeholder = "parameter name"
+			param_input.required = true
+
+			value_input.className = "values"
 			value_input.placeholder = "value"
+			value_input.required = true
+
+			// well required here is useless anyyway as it's not under the form
 
 			// for output (last slot)
 			if (i == parameter_count) {
 				param_input.value = "Output"
+				param_input.placeholder = ""
 				value_input.placeholder = "value"
 			}
 
 			parent.appendChild(param_input)
 			parent.appendChild(value_input)
 			parent.appendChild(line_break)
+
 
 		}
 
