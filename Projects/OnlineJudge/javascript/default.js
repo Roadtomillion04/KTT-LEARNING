@@ -76,7 +76,7 @@ async function fetchQuestion() {
 		console.log(Math.floor(Math.random(res.length)))
 
 		// for now let's send one question
-		addQuestionToPage(res[1])
+		addQuestionToPage(res[0])
 	}
 
 	catch (err) {
@@ -85,56 +85,59 @@ async function fetchQuestion() {
 }
 
 
-function addQuestionToPage(question_body) {
+function addQuestionToPage(body) {
 
 	// first let's get the containers
 	var question_container = document.getElementById("question")
 
 	var problem_statement_container = document.getElementById("problem_statement")
 
-	var example1_container = document.getElementById("Example 1")
-
-	var example2_container = document.getElementById("Example 2")
+	var example_container = document.getElementById("examples")
 
 	// adding question
-	var question = document.createElement("p")
-	question.innerHTML = question_body.question
+	var question = document.createElement("pre")
+	question.innerHTML = body.question
 
 	question_container.appendChild(question)
 
 	//adding problem Statement
-	var problem_statement = document.createElement("p")
-	problem_statement.innerHTML = question_body.problem_statement
+	var problem_statement = document.createElement("pre")
+	problem_statement.innerHTML = body.problem_statement
 
 	problem_statement_container.appendChild(problem_statement)
 
-	// add example 1 - let's keep it to two examples for now
-	var example1 = document.createElement("code")
+	// adding examples
+	for (var [example_num, example_obj] of Object.entries(body.examples)) {
+		
+		// now key shall be header
+		var example_number = document.createElement("h3")
+		example_number.innerHTML = example_num
 
-	console.log(question_body.test_cases.test_case1.nums)
+		example_container.appendChild(example_number)
 
-	// destructing with obj.entries
-	
-	for (var [key, value] of Object.entries(question_body.test_cases.test_case1)) {
+		// unpack (nested object)
+		for (var [key, value] of Object.entries(example_obj)) {
+			var new_pair = document.createElement("pre")
 
-		example1.innerHTML += " " + `${key} = ${value}`
+			// key is not needed as value itself contains I/p, O/p and Explanation
+			new_pair.innerHTML = value
+
+			// and also for the cases only one explanation is given, and next one not given, filter
+
+			if (key == "Explanation" && value == undefined) {
+			
+				new_pair.innerHTML = ""
+
+			} 
+
+			example_container.appendChild(new_pair)
+		}
 
 	}
 
-	example1_container.appendChild(example1)
-
-
-	var example2 = document.createElement("code")
-
-	// destructing with obj.entries
 	
-	for (var [key, value] of Object.entries(question_body.test_cases.test_case2)) {
 
-		example2.innerHTML += " " + `${key} = ${value}`
-
-	}
-
-	example2_container.appendChild(example2)
+	
 }
 
 
