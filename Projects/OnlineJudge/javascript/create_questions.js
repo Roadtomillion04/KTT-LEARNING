@@ -15,7 +15,7 @@ function createTestCaseFields() {
 	container.className = "test_case_slot"
 
 
-	// input field
+	// input field - dont need this anymore as I am going to add it for one time in html page
 	var input_add = document.createElement("input")
 	input_add.type = "number"
 	input_add.value = 1 // default 1
@@ -115,19 +115,22 @@ async function submitQuestion() {
 	var parameters_batched = document.getElementsByClassName("parameters")
 	var inputs_batched = document.getElementsByClassName("values")
 
-	// also parameter count to batch the test cases in order
-	var parameter_count = document.getElementById("parameter_count1").value
+	// This is needed to jump between test cases
+	var step = Number(document.getElementById("parameter_count1").value)
 
-	// posting test cases in array
-	param_arr = []
 	value_arr = []
+
+	// creating to object to push it as json in database
+	test_cases = {}
+	
+	step = Number(step) + 1 // output
+	
+	// creating an empty object value to assign test cases
+	var test_case_count = 1
+	test_cases[`test_case${test_case_count}`] = {}
 
 	// both are same length anyway
 	for (var i = 0; i < parameters_batched.length; i++) {
-
-		// no problem with parameters
-		param_arr.push(parameters_batched[i].value)
-
 
 		// all values gonna be string, so for array conversion
 		if (inputs_batched[i].value[0].includes("[") && inputs_batched[i].value.at(-1).includes("]")) {
@@ -136,25 +139,42 @@ async function submitQuestion() {
 			inputs_batched[i].value = inputs_batched[i].value.replace("[", "")
 			inputs_batched[i].value = inputs_batched[i].value.replace("]", "")
 
-			// presuming array values are spaced after commas
 			var new_arr = inputs_batched[i].value.split(", ")
 
 			value_arr.push(new_arr)
-
 		}
 
 		else {
 			value_arr.push(inputs_batched[i].value)
 		}
-		
+
+		console.log(parameters_batched[i].value)
+		console.log(value_arr[i])
+
+		// for whatever reason .notation no works so whenever duplicate occurs gotta store it inside object (nested)
+
+		// as indexing starts from 0, so when i === step which is next starting test case parameter, we create new object value for a updated key
+		if (i === step) {
+			test_case_count += 1
+			test_cases[`test_case${test_case_count}`] = {}
+			
+			step += step
 		}
+
+
+		// values will be assigned inside the respective test case nested object
+		test_cases[`test_case${test_case_count}`][parameters_batched[i].value] =
+				value_arr[i]
+	
+	}
+
+	console.log(test_cases)
 
 	try {
 		var body = {"question": question, 
-		"problem_statement": problem_statement, 
-		"test_case_inputs": param_arr,
-		"test_case_values": value_arr,
-		"step": Number(parameter_count) + 1} // Output last
+		"problem_statement": problem_statement,
+		"test_cases": test_cases
+		} // Output last
 
 		var req = await fetch("http://localhost:9001/add_question", {
 			method: "POST",

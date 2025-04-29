@@ -1,0 +1,14 @@
+.page_content {
+	display: flex;
+}
+
+.page_body {
+	border: 2px solid;
+	width: 50vw;
+	height: 95vh;
+}
+
+.can_click:hover {
+	font-weight: bold;
+	background-color: burlywood;
+}

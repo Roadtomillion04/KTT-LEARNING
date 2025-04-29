@@ -7,44 +7,67 @@
 	<script type="text/javascript" src="../javascript/default.js"></script>
 </head>
 
-<body class="">
-	
-	<!-- Left side: Problem & description -->
-	<div>
-		<h1>Problem 1</h1>
-		<br>
-		<h2>A + B</h2>
-		<br>
+<body>
+	<!-- top Nav Bar-->
+	<nav class="Nav">
+		<ul>
+			<li><a herf="">Question 1</a></li>
+			<li><a herf="">Question 2</a></li>
+			<li><a herf="">Question 3</a></li>
+			<li><a herf="">Question 4</a></li>
+			<li><a herf="">Question 5</a></li>
+		</ul>
+	</nav>
 
-		<pre>
-Two input a & b given, 
-Expected Output 7 
-for Input 5 & 2
-		</pre>
+	<!-- can exist only one time in a page-->
+	<main class="page_content">
+		<!-- Left side: Problem & description -->
+		<div class="page_div"> 
 
-	</div>
+			<!-- Sub containers-->
+			<div id="question">
+				<h2>Question:</h2>
+				
+			</div>
+
+			<div id="problem_statement">
+				<h3>Problem Statement:</h3>
+				
+			</div>
+
+			<div id="Example 1">
+				<h3>Example: 1</h3>
+				
+			</div>
+
+			<div id="Example 2">
+				<h3>Example: 2</h3>
+
+			</div>
+
+		</div>
 
 
-	<!-- Right side: text area for code-->
-	<div>
-		<code>Select Language: </code>
+		<!-- Right side: text area for code-->
+		<div class="page_div">
+			<code>Select Language: </code>
 
-		<select id="language">
-			<option>C</option>
-			<option>C++</option>
-			<option>Python</option>
-			<option>Java</option>
-		</select>
+			<select id="language">
+				<option>C</option>
+				<option>C++</option>
+				<option>Python</option>
+				<option>Java</option>
+			</select>
 
-		<br>
-		<br>
+			<br>
+			<br>
 
-		<textarea id="src-code"></textarea>
+			<textarea id="src-code"></textarea>
 
-		<button onclick="runProgram()">Run</button>
+			<button onclick="runProgram()">Run</button>
 
-
-	</div>
+		</div>
+	</main>
 
 </body>
 

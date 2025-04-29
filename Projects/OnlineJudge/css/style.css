@@ -1,8 +1,8 @@
-body {
+.page_content {
 	display: flex;
 }
 
-div {
+.page_div {
 	border: 2px solid;
 	width: 50vw;
 	height: 97vh;
@@ -19,6 +19,12 @@ textarea {
 	min-height: 88%;
 }
 
-button {
+/* can also do this in css select child */
+.Nav ul{
+	display: flex;
+	justify-content: space-around;
+}
 
+.Nav a{
+	
 }

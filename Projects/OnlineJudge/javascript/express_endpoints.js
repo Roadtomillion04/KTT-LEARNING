@@ -54,10 +54,10 @@ app.post("/add_question", async function (req, res) {
 
 	console.log(body)
 
-	// we know the last value is going to be output cause languagles like C no 2 return and step is most important part here to segerate the combined test cases in array
+	// we know the last value is going to be output cause languagles like Java no 2 return and step is most important part here to segerate the combined test cases in array
 	// console.log(body.test_case_values[0])
 
-	var query = `INSERT INTO INTERVIEW_QUESTIONS (question, problem_statement, test_case_inputs, test_case_values, step) VALUES ('${body.question}', '${body.problem_statement}', ARRAY[${body.test_case_inputs}], ARRAY[${body.test_case_values}], '${body.step}');`
+	var query = `INSERT INTO INTERVIEW_QUESTIONS (question, problem_statement, test_cases) VALUES ('${body.question}', '${body.problem_statement}', '${JSON.stringify(body.test_cases)}');`
 
 	try {
 		var new_add = await pool.query(query)
@@ -75,6 +75,7 @@ app.get("/get_questions", async function (req, res) {
 		var get_questions = await pool.query("SELECT * FROM interview_questions")
 
 		res.json(get_questions.rows)
+
 	}
 
 	catch (err) {
