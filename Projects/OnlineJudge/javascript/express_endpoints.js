@@ -83,5 +83,32 @@ app.get("/get_questions", async function (req, res) {
 	}
 })
 
+// check admin table, okay so :id gets only one param, to get the query, do this
+app.get("/check_admin_credentials", async function (req, res) {
+	
+	try {
+		var name = await req.query.username
+		var password = await req.query.password
+		console.log(name, password)
+
+		// now let's check if user actually exist in db
+		var query = `SELECT * FROM ADMIN WHERE username = '${name}' and admin_password = '${password}';`
+
+		var check_exists = await pool.query(query)
+
+		res.json(check_exists.rows)
+		
+		}
+
+	catch (err) {
+
+		console.log(err.message)
+
+		}
+	
+	}
+
+)
+
 
 app.listen(9001, function () {})
