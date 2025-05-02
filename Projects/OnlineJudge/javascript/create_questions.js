@@ -1,5 +1,7 @@
 test_case_count = 0
 
+// leetcode contains array of elements with no spaces and my method of conversion is totally flawed for the nd array
+
 function createTestCaseFields() {
 
 	//every time this function called increase count by 1 to keep track
@@ -138,7 +140,7 @@ async function submitQuestion() {
 			inputs_batched[i].value = inputs_batched[i].value.replace("[", "")
 			inputs_batched[i].value = inputs_batched[i].value.replace("]", "")
 
-			var new_arr = inputs_batched[i].value.split(", ")
+			var new_arr = inputs_batched[i].value.split(",")
 
 			value_arr.push(new_arr)
 		}
@@ -211,7 +213,7 @@ async function submitQuestion() {
 		"examples": examples
 		} 
 
-		var req = await fetch("http://localhost:9001/add_question", {
+		var req = await fetch("http://localhost:9002/add_question", {
 			method: "POST",
 			headers: {"Content-Type": "application/json"},
 			body: JSON.stringify(body)

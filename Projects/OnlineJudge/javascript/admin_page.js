@@ -5,7 +5,7 @@ async function validateAdmin() {
 	var password = document.getElementById("admin_password").value
 
 	// instead of select * and check everything in js, i'll just send query and check with sql
-	var check_valid_admin = await fetch(`http://localhost:9001/check_admin_credentials/?username=${username}&password=${password}`, {
+	var check_valid_admin = await fetch(`http://localhost:9002/check_admin_credentials/?username=${username}&password=${password}`, {
 
 		method: "GET",
 		headers: {"Content-Type": "application/json"}

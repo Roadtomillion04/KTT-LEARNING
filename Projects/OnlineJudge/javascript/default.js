@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", fetchQuestion)
 async function fetchQuestion() {
 
 	try {
-		var questions = await fetch("http://localhost:9001/get_questions", 
+		var questions = await fetch("http://localhost:9002/get_question", 
 		{
 			method: "GET",
 			headers: {"Content-Type": "application/json"}
@@ -72,10 +72,6 @@ async function fetchQuestion() {
 		// returns json inside an array
 		var res = await questions.json()
 
-		// random return float only, so floor or ceil
-		console.log(Math.floor(Math.random(res.length)))
-
-		// for now let's send one question
 		addQuestionToPage(res[0])
 	}
 

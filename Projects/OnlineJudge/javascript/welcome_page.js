@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", displayAllQuestions, false)
 async function displayAllQuestions() {
 
 	try {
-	var get_all_questions = await fetch("http://localhost:9001/get_questions", {
+	var get_all_questions = await fetch("http://localhost:9002/get_all_questions", {
 
 		method: "GET",
 		headers: {"Content-Type": "application/json"}
@@ -27,7 +27,7 @@ async function displayAllQuestions() {
 
 		test.appendChild(question)
 
-	}
+		}
 
 	}
 
@@ -37,7 +37,7 @@ async function displayAllQuestions() {
 
 }
 
-// getting body response and id,, this.id does not work and gets window when used with .bind to send param
+// getting body response and id, this.id does not work and gets window when used with .bind to send param
 function addClickEvent(body, id) {
 	console.log(id, body) // returns id of the clicked element
 
