@@ -1,13 +1,29 @@
 .page_content {
 	display: flex;
+
 }
 
 .page_div {
+	/** if content goes outside div just use overflow scroll**/
+	overflow: scroll;
+
 	border: 2px solid;
 	width: 50vw;
-	height: 97vh;
+	height: 100vh;
+
+	padding: 15px;
+}
+
+.code_editor_div {
+	border: 2px solid;
+	width: 50vw;
+	height: 100vh;
 
 	font-size: 1rem;
+
+	padding: 20px;
+
+	background-color: seashell;
 	
 }
 
@@ -15,16 +31,34 @@ textarea {
 	padding: 10px;
 	font-size: 2rem;
 	margin-left: 20px;
-	min-width: 90%;
-	min-height: 88%;
+	min-width: 100%;
+	min-height: 50%;
+
+	background-color: ghostwhite;
 }
 
-/* can also do this in css select child */
-.Nav ul{
-	display: flex;
-	justify-content: space-around;
+pre {
+	white-space: pre-wrap;
 }
 
-.Nav a{
-	
+.sub_container {
+	padding: 15px;
+	background-color: wheat;
+}
+
+h2 {
+	text-decoration: underline;
+}
+
+h3 {
+	text-decoration: underline;
+}
+
+.example {
+	background-color: burlywood;
+	padding: 10px;
+}
+
+button {
+	background-color: burlywood;
 }

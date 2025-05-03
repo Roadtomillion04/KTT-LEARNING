@@ -88,23 +88,35 @@ function addQuestionToPage(body) {
 
 	var problem_statement_container = document.getElementById("problem_statement")
 
-	var example_container = document.getElementById("examples")
 
 	// adding question
 	var question = document.createElement("pre")
 	question.innerHTML = body.question
+	question.style.fontSize = "1rem"
 
 	question_container.appendChild(question)
 
 	//adding problem Statement
 	var problem_statement = document.createElement("pre")
 	problem_statement.innerHTML = body.problem_statement
+	problem_statement.style.fontSize = "1rem"
 
 	problem_statement_container.appendChild(problem_statement)
 
+
 	// adding examples
+	var example_parent = document.getElementById("examples")
+
 	for (var [example_num, example_obj] of Object.entries(body.examples)) {
-		
+
+		// for css purpose only, creating new div everytime
+		var example_container = document.createElement("div")
+		example_container.className = "example"
+			
+		// well let's add br here, it look conjested on html
+		var line_break = document.createElement("br")
+		example_container.appendChild(line_break)
+
 		// now key shall be header
 		var example_number = document.createElement("h3")
 		example_number.innerHTML = example_num
@@ -117,6 +129,7 @@ function addQuestionToPage(body) {
 
 			// key is not needed as value itself contains I/p, O/p and Explanation
 			new_pair.innerHTML = value
+			new_pair.style.fontSize = "1rem"
 
 			// and also for the cases only one explanation is given, and next one not given, filter
 
@@ -126,13 +139,19 @@ function addQuestionToPage(body) {
 
 			} 
 
+			// well let's add br here, it look conjested on html
+			line_break = document.createElement("br")
+			example_container.appendChild(line_break)
+
 			example_container.appendChild(new_pair)
 		}
 
+		example_parent.appendChild(example_container)
+		line_break = document.createElement("br")
+			example_parent.appendChild(line_break)
+
+
 	}
-
-	
-
 	
 }
 

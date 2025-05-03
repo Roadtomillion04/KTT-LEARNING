@@ -2,7 +2,9 @@ test_case_count = 0
 
 // leetcode contains array of elements with no spaces and my method of conversion is totally flawed for the nd array
 
-function createTestCaseFields() {
+
+// i used async here because i want to addparameters() to finish executing first and then appendchild delete button so that it's at last 
+async function createTestCaseFields() {
 
 	//every time this function called increase count by 1 to keep track
 	test_case_count += 1
@@ -45,6 +47,9 @@ function createTestCaseFields() {
 
 	container.appendChild(line_break)
 
+	// basically yield
+	await addParameterSlots()
+
 	// I am creating and appending Delete button in after add parameter slot for neat visuals and more flexible
 	// creating and apending at last
 	// delete button add
@@ -53,11 +58,9 @@ function createTestCaseFields() {
 	delete_button.className = "delete"
 	delete_button.innerHTML = "delete"
 	container.appendChild(delete_button)
-		
-
 
 	addDeleteEvent(delete_button.className, "individual_slot")
-	addParameterSlots()
+		
 }
 
 
@@ -255,7 +258,7 @@ function addParameterSlots() {
 			// creating parameter elements
 			var param_input = document.createElement("input")
 			var value_input = document.createElement("input")
-			line_break = document.createElement("br")
+			var line_break = document.createElement("br")
 
 			// setting attributes
 			param_input.className = "parameters"
@@ -278,6 +281,7 @@ function addParameterSlots() {
 			parent.appendChild(param_input)
 			parent.appendChild(value_input)
 			parent.appendChild(line_break)
+
 
 
 		}
@@ -317,6 +321,10 @@ function createExampleFields() {
 	example_field_parent.appendChild(container)
 
 	container.appendChild(text_area)
+
+	line_break = document.createElement("br")
+	container.appendChild(line_break)
+
 	container.appendChild(delete_button)
 
 

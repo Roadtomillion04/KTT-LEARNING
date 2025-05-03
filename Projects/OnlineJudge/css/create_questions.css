@@ -6,5 +6,23 @@
 */
 
 body {
-	text-align: center;
+	padding: 1vw;
+}
+
+
+textarea {
+	background-color: seashell;
+	padding: 10px;
+}
+
+button {
+	background-color: burlywood;
+}
+
+input {
+	background-color: bisque;
+}
+
+select {
+	background-color: seashell;
 }

@@ -1,0 +1,23 @@
+main {
+	background-color: bisque;
+	font-weight: bold;
+}
+
+input {
+	background-color: ghostwhite;
+	padding: 5px;
+}
+
+button {
+	background-color: salmon;
+}
+
+main {
+	text-align: center;
+}
+
+.admin_btn {
+	text-align: right;
+
+	background-color: seashell;
+}

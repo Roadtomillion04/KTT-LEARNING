@@ -2,13 +2,45 @@
 	display: flex;
 }
 
-.page_body {
+.questions_body {
 	border: 2px solid;
 	width: 50vw;
 	height: 95vh;
+
+	/** if content goes outside div just use overflow scroll**/
+	overflow: scroll;
+
+	padding: 10px;
+
+	background-color: wheat;
 }
+
+.info_body {
+	border: 2px solid;
+	width: 50vw;
+	height: 95vh;
+
+
+	/** if content goes outside div just use overflow scroll**/
+	overflow: scroll;
+
+	padding: 10px;
+
+	background-color: seashell;
+
+}
+
 
 .can_click:hover {
 	font-weight: bold;
+	background-color: burlywood;
+}
+
+/** To wrap a pre tag, use whitesapce, so uhh there are other properties but as long as it works so yeah **/
+pre {
+	white-space: pre-wrap;
+}
+
+button {
 	background-color: burlywood;
 }

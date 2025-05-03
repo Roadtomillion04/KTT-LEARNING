@@ -129,7 +129,7 @@ app.get("/header_check", async function (req, res) {
 		var a = req.headers.is_admin
 		console.log(a)
 
-		res.redirect("../html/login.html")
+		res.redirect("")
 
 	}
 

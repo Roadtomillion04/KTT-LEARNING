@@ -16,39 +16,54 @@ async function selectFiveQuestions() {
 
 	for (var i = 0; i < body.length; i++) {
 
-		// so inorder to display question and button in same line, let's just create individual div for each iteration 
+		// // so inorder to display question and button in same line, let's just create individual div for each iteration 
 
-		var div = document.createElement("div")
-		div.id = `div${i}`
+		// var div = document.createElement("div")
+		// div.id = `div${i}`
 
-		// set this to flex
-		div.style.display = "flex"
+		// // set this to flex
+		// div.style.display = "flex"
 
-		question_container.appendChild(div)
+		// question_container.appendChild(div)
 
-		// so after appending you gotta getElement in order to append to it
-		var div_container = document.getElementById(`div${i}`)
+		// plans changed, I want it to be table row now
+		var table_body = document.getElementById("tbody")
+
+		var table_row = document.createElement("tr")
+
+		var table_data = document.createElement("td")
+
+		// // so after appending you gotta getElement in order to append to it
+		// var div_container = document.getElementById(`div${i}`)
 
 		// append question
-		var question = document.createElement("pre")
-		question.innerHTML = body[i].question
+		// var question = document.createElement("pre")
+		// question.innerHTML = body[i].question
 
-		div_container.appendChild(question)
+		table_data.textContent = body[i].question
+		table_row.appendChild(table_data)
 
 
 		// let's add a button to go to default page
-		var go_button = document.createElement("button")
-		go_button.textContent = "Go"
-		go_button.type = "button"
+		var attempt_button = document.createElement("button")
+		attempt_button.textContent = "Attempt"
+		attempt_button.type = "button"
 
 		// let's add eventlistener to the button and to send parameters
-		go_button.addEventListener("click", onQuestionClicked.bind(null, body[i].question), false)
+		attempt_button.addEventListener("click", onQuestionClicked.bind(null, body[i].question), false)
 
-		div_container.appendChild(go_button)
+		table_data = document.createElement("td")
+
+		table_data.appendChild(attempt_button)
+
+		// table_data.appendChild(go_button)
 
 		// line break
-		var line_break = document.createElement("br")
-		question_container.appendChild(line_break)
+		// var line_break = document.createElement("br")
+		// question_container.appendChild(line_break)
+
+		table_row.appendChild(table_data)
+		table_body.appendChild(table_row)
 
 		}
 

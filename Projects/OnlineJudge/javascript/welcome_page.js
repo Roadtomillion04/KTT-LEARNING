@@ -109,7 +109,5 @@ function addClickEvent(body, id) {
 		}
 
 	}
-	hr = document.createElement("hr")
-	info_body.appendChild(hr)
 
 }
