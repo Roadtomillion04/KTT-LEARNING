@@ -17,13 +17,12 @@ async function displayAllQuestions() {
 		// add each question to container and also add question id which acts as number
 		var question = document.createElement("pre")
 
-		question.textContent = body[i].question_id + ". " + body[i].question
+		question.textContent = i+1 + ". " + body[i].question
 		question.className = "can_click"
 		question.style.fontSize = "2em"
-		// let's add id to track which one is clicked
-		question.id = body[i].question_id
 
-		question.addEventListener("click", addClickEvent.bind(null, body[i], body[i].question_id), false)
+
+		question.addEventListener("click", addClickEvent.bind(null, body[i]), false)
 
 		test.appendChild(question)
 
@@ -37,9 +36,9 @@ async function displayAllQuestions() {
 
 }
 
-// getting body response and id, this.id does not work and gets window when used with .bind to send param
-function addClickEvent(body, id) {
-	console.log(id, body) // returns id of the clicked element
+// getting body response and id, this.id does not work and gets window when used with .bind to send param, no need serial id anymore as we iterating above
+function addClickEvent(body) {
+	console.log(body) // returns id of the clicked element
 
 	// get right side
 	var info_body = document.getElementById("question_info")
@@ -108,6 +107,37 @@ function addClickEvent(body, id) {
 			info_body.appendChild(new_pair)
 		}
 
+	}
+
+	var delete_button = document.createElement("button")
+	delete_button.textContent = "delete"
+	delete_button.type = "button"
+
+	delete_button.addEventListener("click", deleteQuestionEvent.bind(null, body), false)
+
+	info_body.appendChild(delete_button)
+
+}
+
+// simple delete method call here, with the question id
+async function deleteQuestionEvent(body) {
+	
+	try {
+	var delete_question = fetch(`http://localhost:9002/delete_question/:${body.question_id}`, {
+
+		method: "DELETE",
+		headers: {"Content-Type": "application/json"}
+		})
+	
+	}
+
+	catch (err) {
+		console.error(err.message)
+	}
+
+	finally {
+		// so after the deletion just refresh the page for an update
+		window.location.reload()
 	}
 
 }

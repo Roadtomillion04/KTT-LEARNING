@@ -181,5 +181,31 @@ app.post("/question_selected", async function (req, res) {
 
 } )
 
+// delete question in db
+app.delete("/delete_question/:id", async function (req, res) {
+
+		try {
+		// destructing
+		var { id } = req.params
+
+		// just slice to remove :
+		id = id.slice(1,)
+
+
+		var query = `DELETE FROM INTERVIEW_QUESTIONS WHERE question_id = ${id}`
+
+		var delete_question = await pool.query(query)
+
+		res.json("ok!")
+
+		}
+
+		catch (err) {
+			console.error(err.message)
+		}
+
+
+} )
+
 
 app.listen(9002, function () {})
