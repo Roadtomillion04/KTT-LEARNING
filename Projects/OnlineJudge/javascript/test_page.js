@@ -1,4 +1,32 @@
-document.addEventListener("DOMContentLoaded", selectFiveQuestions, false)
+document.addEventListener("DOMContentLoaded", loadData, false)
+
+// so before loading question, we are checking jwt token exists from login page
+async function loadData() {
+	await tokenVerification() // await here is like yield
+	selectFiveQuestions()
+}
+
+
+async function tokenVerification() {
+	
+	var token_verify = await fetch("http://localhost:9002/check_user", {
+
+		method: "GET",
+		headers: {"Content-Type": "application/json"}
+
+	})
+
+	var res = await token_verify.json()
+
+	console.log(res)
+
+	if (res.user == "invalid") {
+		alert("who are you?")
+
+		// redirect
+		window.location.href = "./login.html"
+	}
+}
 
 async function selectFiveQuestions() {
 

@@ -11,7 +11,7 @@ async function registerUser() {
 	try {
 		var body = {"first_name": first_name, "last_name": last_name, "email": email, "department": department, "roll_no": roll_no, "password": password}
 
-		var req = await fetch("http://localhost:9002/user_register", {
+		var req = await fetch("http://localhost:9002/create_new_user", {
 			method: "POST",
 			headers: {"Content-Type": "application/json"},
 			body: JSON.stringify(body)

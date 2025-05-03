@@ -38,7 +38,7 @@ async function displayAllQuestions() {
 
 // getting body response and id, this.id does not work and gets window when used with .bind to send param, no need serial id anymore as we iterating above
 function addClickEvent(body) {
-	console.log(body) // returns id of the clicked element
+	console.log(body)
 
 	// get right side
 	var info_body = document.getElementById("question_info")

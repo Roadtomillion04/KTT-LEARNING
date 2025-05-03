@@ -4,15 +4,33 @@ var express = require('express')
 var app = express()
 var cors = require('cors')
 var pool = require('./db')
-// var query = require('./login')
 
 app.use(express.json()) // to get req.body
-app.use(cors()) // cors error strikes if not set while using fetch
+app.use(cors()) // cors error (HTTP security protocol) strikes if not set while using fetch, cors need to be set for resource sharing across different media 
 
 var get_chosen_question = ""
 
+
+// digital ocean jwt tutorial
+var jwt = require('jsonwebtoken')
+
+// console.log(require('crypto').randomBytes(64).toString('hex')) -> this was the code used to generate the secret token
+
+// dotenv sole purpose is to load environment variables from a .env file into process.env and .env is no visible in file system lol
+var dotenv = require('dotenv')
+dotenv.config()
+var secret_key = process.env.SECRET_TOKEN
+// console.log(process.env.SECRET_TOKEN)
+
+
+function generateAccessToken(username) {
+  return jwt.sign(username, secret_key, { expiresIn: '1800s' })
+}
+
 // endpoint for registering user from Login Page
-app.post("/user_register", async function (req, res) {
+app.post("/create_new_user", async function (req, res) {
+
+	try {
 
 	// req.body is an object type
 	var body = req.body
@@ -25,28 +43,49 @@ app.post("/user_register", async function (req, res) {
 	var query = `INSERT INTO user_register (first_name, last_name, email, department, roll_no, user_password, registration_time) 
 VALUES ('${body.first_name}', '${body.last_name}', '${body.email}', '${body.department}', '${body.roll_no}', '${body.password}', '${JSON.stringify(time_stamp.rows[0].date).slice(1, 11) + " " + time_stamp.rows[0].now}');`
 
-	try {
 		var new_add = await pool.query(query)
 		// res.json(new_add)
+
+		// so umm let's call generatetoken function with the username
+		var token = await generateAccessToken( {username: body.first_name} )
+		
+		res.json(token)
 	} 
+	
 	catch (err) {
 		console.error(err.message)
 	}
 
 })
 
-// get registered users
-app.get("/get_users", async function (req, res) {
+// 
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+
+  if (token == null) {
+  		res.json({user: "invalid"})
+  	}
+
+}
+
+
+// so the async function get executed after authenticateToken is done
+app.get("/check_user", authenticateToken, async function (req, res) {
 
 	try {
-	var get_users = await pool.query(`SELECT * FROM user_register;`)
-	res.json(get_users.rows) // responds in json format
+
+	// var get_users = await pool.query(`SELECT * FROM user_register;`)
+	// res.json(get_users.rows) // responds in json format
+	
 	}
+	
 	catch (err) {
 		console.error(err.message)
 	}
 
 })
+
 
 // add questions to postgres
 app.post("/add_question", async function (req, res) {
