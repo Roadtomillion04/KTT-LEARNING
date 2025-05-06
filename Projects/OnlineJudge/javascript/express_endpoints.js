@@ -8,8 +8,9 @@ var pool = require('./db')
 app.use(express.json()) // to get req.body
 app.use(cors()) // cors error (HTTP security protocol) strikes if not set while using fetch, cors need to be set for resource sharing across different media 
 
+//
 var get_chosen_question = ""
-
+var client_generated_token = ""
 
 // digital ocean jwt tutorial
 var jwt = require('jsonwebtoken')
@@ -49,7 +50,8 @@ VALUES ('${body.first_name}', '${body.last_name}', '${body.email}', '${body.depa
 		// so umm let's call generatetoken function with the username
 		var token = await generateAccessToken( {username: body.first_name} )
 		
-		res.json(token)
+		res.json({token: token})
+	
 	} 
 	
 	catch (err) {
@@ -58,14 +60,43 @@ VALUES ('${body.first_name}', '${body.last_name}', '${body.email}', '${body.depa
 
 })
 
+// getting token from login page in client side and store it in global var,
+// app.post("/user_generated_token", async function (req, res) {
+
+// 		try {
+
+
+// 			res.json("ok!")
+
+// 		}
+
+// 		catch (err) {
+// 			console.error(err.message)
+// 		}
+
+// })
+
 // 
 function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1]
+
+	// well actually sending localStorage as a header seems to work, as each google account/incognito(but if you open multiple incognito they all share same localStorage) has its own localStorage/cookie/session
+	var token = req.headers.user_token
 
   if (token == null) {
   		res.json({user: "invalid"})
   	}
+
+  jwt.verify(token, secret_key, function (err, user) {
+
+  if (err) return res.json({user: "invalid"})
+
+  req.user = user
+
+	console.log(req.user)
+
+  next()
+
+  })
 
 }
 
@@ -74,6 +105,10 @@ function authenticateToken(req, res, next) {
 app.get("/check_user", authenticateToken, async function (req, res) {
 
 	try {
+
+		res.json({user: "valid"})
+
+		
 
 	// var get_users = await pool.query(`SELECT * FROM user_register;`)
 	// res.json(get_users.rows) // responds in json format
@@ -113,9 +148,9 @@ app.post("/add_question", async function (req, res) {
 app.get("/get_question", async function (req, res) {
 	try {
 		// okay so declaring get_chosen_question a global variable and update it on post (/question_selected) and while getting it here it work!
-		var get_questions = await get_chosen_question
+		var get_question = await get_chosen_question
 
-		res.json(get_chosen_question.rows)
+		res.json(get_question)
 
 	}
 
@@ -177,17 +212,19 @@ app.get("/header_check", async function (req, res) {
 	}
 })
 
-
 // get 5 questions randomly for the user to take test
 app.get("/test_questions", async function (req, res) {
 
 		try {
-		// ehh just question is enough
-		var query = `SELECT question FROM INTERVIEW_QUESTIONS ORDER BY random() LIMIT 5`
+			// this random selection has to be one time event for new account, for now I'll store all the client tokens in array, not sure how effective it is, Update: handling this in client side
 
-		var get_five_questions = await pool.query(query)
+				// ehh just question is enough
+				var query = `SELECT question FROM INTERVIEW_QUESTIONS ORDER BY random() LIMIT 5`
 
-		res.json(get_five_questions.rows)
+				var get_five_questions = await pool.query(query)
+
+				res.json(get_five_questions.rows)
+
 
 		}
 
@@ -204,10 +241,16 @@ app.post("/question_selected", async function (req, res) {
 		try {
 
 			var body = req.body
+
+			console.log(body)
 			
 			// so now that we know which question is pushed next let's select * db and get the rest of the columns
 
 			get_chosen_question = await pool.query(`SELECT * FROM INTERVIEW_QUESTIONS WHERE question = '${body.question}';`)
+
+			get_chosen_question = get_chosen_question.rows
+
+			console.log(get_chosen_question)
 
 			// console.log(get_question_db.rows)
 			res.json("recieved")
@@ -247,4 +290,4 @@ app.delete("/delete_question/:id", async function (req, res) {
 } )
 
 
-app.listen(9002, function () {})
+app.listen(9005, function () {})

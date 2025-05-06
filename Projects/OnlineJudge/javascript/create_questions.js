@@ -216,11 +216,13 @@ async function submitQuestion() {
 		"examples": examples
 		} 
 
-		var req = await fetch("http://localhost:9002/add_question", {
+		var req = await fetch("http://localhost:9005/add_question", {
 			method: "POST",
 			headers: {"Content-Type": "application/json"},
 			body: JSON.stringify(body)
 		})
+
+		window
 
 	}
 

@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", displayAllQuestions, false)
 async function displayAllQuestions() {
 
 	try {
-	var get_all_questions = await fetch("http://localhost:9002/get_all_questions", {
+	var get_all_questions = await fetch("http://localhost:9005/get_all_questions", {
 
 		method: "GET",
 		headers: {"Content-Type": "application/json"}
@@ -123,7 +123,7 @@ function addClickEvent(body) {
 async function deleteQuestionEvent(body) {
 	
 	try {
-	var delete_question = fetch(`http://localhost:9002/delete_question/:${body.question_id}`, {
+	var delete_question = fetch(`http://localhost:9005/delete_question/:${body.question_id}`, {
 
 		method: "DELETE",
 		headers: {"Content-Type": "application/json"}

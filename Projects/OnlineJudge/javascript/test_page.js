@@ -9,10 +9,10 @@ async function loadData() {
 
 async function tokenVerification() {
 	
-	var token_verify = await fetch("http://localhost:9002/check_user", {
+	var token_verify = await fetch("http://localhost:9005/check_user", {
 
 		method: "GET",
-		headers: {"Content-Type": "application/json"}
+		headers: {"Content-Type": "application/json", "user_token": localStorage.getItem("user_token")}
 
 	})
 
@@ -21,23 +21,48 @@ async function tokenVerification() {
 	console.log(res)
 
 	if (res.user == "invalid") {
-		alert("who are you?")
+		alert("not authorized")
 
 		// redirect
-		window.location.href = "./login.html"
+		window.location.replace("./login.html")
 	}
+
 }
+
 
 async function selectFiveQuestions() {
 
 	try {
-	var get_five_questions = await fetch("http://localhost:9002/test_questions", {
+
+	var get_five_questions = await fetch("http://localhost:9005/test_questions", {
 
 		method: "GET",
 		headers: {"Content-Type": "application/json"}
 	})
 
-	var body = await get_five_questions.json()
+	var body 
+
+	if (localStorage.getItem("questions_selected") == null) {
+	
+		body = await get_five_questions.json()
+
+
+		localStorage.setItem("questions_selected", JSON.stringify(body))
+
+		console.log(body == JSON.parse(localStorage.getItem("questions_selected")))
+
+	}
+
+	else {
+
+		console.log(JSON.parse(localStorage.getItem("questions_selected")))
+
+		body = JSON.parse(localStorage.getItem("questions_selected"))
+	}
+
+	console.log(typeof body)
+	console.log(typeof JSON.parse(localStorage.getItem("questions_selected")))
+
 
 
 	var question_container = document.getElementById("questions")
@@ -114,9 +139,9 @@ async function onQuestionClicked(question) {
 
 	try {
 
-	// important note to take away here, so you see, the method POST tries to get response back, if no response is given, it gonna try again and again and does not exit this line
+	// important note to take away here, so you see, the method POST/GET tries to get response back, if no response is given, it gonna try again and again and does not exit this line
 
-	var post_question = await fetch("http://localhost:9002/question_selected", {
+	var post_question = await fetch("http://localhost:9005/question_selected", {
 
 		method: "POST",
 		headers: {"Content-Type": "application/json"},

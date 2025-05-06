@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", fetchQuestion)
 async function fetchQuestion() {
 
 	try {
-		var questions = await fetch("http://localhost:9002/get_question", 
+		var questions = await fetch("http://localhost:9005/get_question", 
 		{
 			method: "GET",
 			headers: {"Content-Type": "application/json"}
@@ -71,6 +71,8 @@ async function fetchQuestion() {
 
 		// returns json inside an array
 		var res = await questions.json()
+
+		console.log(res)
 
 		addQuestionToPage(res[0])
 	}
