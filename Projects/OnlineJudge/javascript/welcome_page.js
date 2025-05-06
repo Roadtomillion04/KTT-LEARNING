@@ -1,4 +1,32 @@
-document.addEventListener("DOMContentLoaded", displayAllQuestions, false)
+document.addEventListener("DOMContentLoaded", initialize, false)
+
+async function initialize() {
+
+	await adminVerification() // await is yield
+	displayAllQuestions()
+}
+
+async function adminVerification() {
+	var admin_status = await fetch("http://localhost:9005/check_admin", {
+
+		// okay so don't be confused with the GET method here, we are sending sessionStorage in headers, it'll recive in express
+		method: "GET",
+		headers: {"Content-Type": "application/json", "is_admin": sessionStorage.getItem("is_admin")}
+
+	})
+
+	var res = await admin_status.json()
+
+	console.log(res)
+
+	if (res.is_admin != "yes") {
+		alert("not authorized")
+
+		// redirect
+		window.location.replace("./login.html")
+	}
+
+}
 
 async function displayAllQuestions() {
 

@@ -1,7 +1,7 @@
-document.addEventListener("DOMContentLoaded", loadData, false)
+document.addEventListener("DOMContentLoaded", initialize, false)
 
 // so before loading question, we are checking jwt token exists from login page
-async function loadData() {
+async function initialize() {
 	await tokenVerification() // await here is like yield
 	selectFiveQuestions()
 }
@@ -11,8 +11,9 @@ async function tokenVerification() {
 	
 	var token_verify = await fetch("http://localhost:9005/check_user", {
 
+		// okay so don't be confused with the GET method here, we are sending sessionStorage in headers, it'll recive in express
 		method: "GET",
-		headers: {"Content-Type": "application/json", "user_token": localStorage.getItem("user_token")}
+		headers: {"Content-Type": "application/json", "user_token": sessionStorage.getItem("user_token")}
 
 	})
 
@@ -42,26 +43,26 @@ async function selectFiveQuestions() {
 
 	var body 
 
-	if (localStorage.getItem("questions_selected") == null) {
+	if (sessionStorage.getItem("questions_selected") == null) {
 	
 		body = await get_five_questions.json()
 
 
-		localStorage.setItem("questions_selected", JSON.stringify(body))
+		sessionStorage.setItem("questions_selected", JSON.stringify(body))
 
-		console.log(body == JSON.parse(localStorage.getItem("questions_selected")))
+		console.log(body == JSON.parse(sessionStorage.getItem("questions_selected")))
 
 	}
 
 	else {
 
-		console.log(JSON.parse(localStorage.getItem("questions_selected")))
+		console.log(JSON.parse(sessionStorage.getItem("questions_selected")))
 
-		body = JSON.parse(localStorage.getItem("questions_selected"))
+		body = JSON.parse(sessionStorage.getItem("questions_selected"))
 	}
 
 	console.log(typeof body)
-	console.log(typeof JSON.parse(localStorage.getItem("questions_selected")))
+	console.log(typeof JSON.parse(sessionStorage.getItem("questions_selected")))
 
 
 

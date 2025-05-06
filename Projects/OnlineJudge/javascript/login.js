@@ -23,8 +23,10 @@ async function registerUser() {
 		console.log(res.token)
 
 		// just setItem to localstorage, don't complicate things by posting request everytime the token, for login and admin yeah
-		localStorage.setItem("user_token", res.token)
+		// localStorage.setItem("user_token", res.token)
 
+		// well let's swtich to session storage as it fits my needs more, no sharing across tabs and expires auto when tab is closed
+		sessionStorage.setItem("user_token", res.token)
 
 		window.location.href = "./test_page.html"
 

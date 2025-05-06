@@ -100,7 +100,6 @@ function authenticateToken(req, res, next) {
 
 }
 
-
 // so the async function get executed after authenticateToken is done
 app.get("/check_user", authenticateToken, async function (req, res) {
 
@@ -118,6 +117,17 @@ app.get("/check_user", authenticateToken, async function (req, res) {
 	catch (err) {
 		console.error(err.message)
 	}
+
+})
+
+
+app.get("/check_admin", async function (req, res) {
+
+		var is_admin = req.headers.is_admin
+
+
+
+		res.json({"is_admin": is_admin})
 
 })
 

@@ -21,6 +21,9 @@ async function validateAdmin() {
 	}
 
 	else {
+		// let's keep the minimal header, that this person is admin
+		sessionStorage.setItem("is_admin", "yes")
+
 		// let's generate link after confirming 
 		var welcome_page_link = document.createElement("a")
 		welcome_page_link.innerHTML = `click to proceed, ${body[0].username}`
