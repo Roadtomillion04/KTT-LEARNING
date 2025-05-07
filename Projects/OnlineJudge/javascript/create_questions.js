@@ -1,3 +1,18 @@
+document.addEventListener("DOMContentLoaded", adminVerification, false)
+
+async function adminVerification() {
+
+		var is_admin = sessionStorage.getItem("is_admin")
+
+		if (is_admin != "yes") {
+			alert("not authorized")
+
+			// redirect
+			window.location.replace("./login.html")
+	}
+}
+
+
 test_case_count = 0
 
 // leetcode contains array of elements with no spaces and my method of conversion is totally flawed for the nd array

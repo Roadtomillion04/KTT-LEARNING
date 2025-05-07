@@ -39,6 +39,7 @@ app.post("/create_new_user", async function (req, res) {
 	// does not work without `as identifier`
 	var time_stamp = await pool.query(`SELECT current_date as date, current_time as now`)
 
+	// instead of this, I could have just set `default now()` in the column creation..
 	console.log(JSON.stringify(time_stamp.rows[0].date).slice(1, 11), JSON.stringify(time_stamp.rows[0].now.slice()));
 
 	var query = `INSERT INTO user_register (first_name, last_name, email, department, roll_no, user_password, registration_time) 
@@ -120,16 +121,16 @@ app.get("/check_user", authenticateToken, async function (req, res) {
 
 })
 
+// I get sessionStorage directly in js
+// app.get("/check_admin", async function (req, res) {
 
-app.get("/check_admin", async function (req, res) {
-
-		var is_admin = req.headers.is_admin
+// 		var is_admin = req.headers.is_admin
 
 
 
-		res.json({"is_admin": is_admin})
+// 		res.json({"is_admin": is_admin})
 
-})
+// })
 
 
 // add questions to postgres

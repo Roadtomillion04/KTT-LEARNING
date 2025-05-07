@@ -63,13 +63,13 @@ document.addEventListener("DOMContentLoaded", initialize, false)
 async function initialize() {
 
 	await tokenVerification() // await is yield
-	displayAllQuestions()
+	fetchQuestion()
 }
 
 async function tokenVerification() {
 	var token_verify = await fetch("http://localhost:9005/check_user", {
 
-		// okay so don't be confused with the GET method here, we are sending localStorage in headers, it'll recive in express
+		// okay so don't be confused with the GET method here, we are sending sessionStorage in headers, it'll recive in express
 		method: "GET",
 		headers: {"Content-Type": "application/json", "user_token": sessionStorage.getItem("user_token")}
 

@@ -50,8 +50,6 @@ async function selectFiveQuestions() {
 
 		sessionStorage.setItem("questions_selected", JSON.stringify(body))
 
-		console.log(body == JSON.parse(sessionStorage.getItem("questions_selected")))
-
 	}
 
 	else {
@@ -60,9 +58,6 @@ async function selectFiveQuestions() {
 
 		body = JSON.parse(sessionStorage.getItem("questions_selected"))
 	}
-
-	console.log(typeof body)
-	console.log(typeof JSON.parse(sessionStorage.getItem("questions_selected")))
 
 
 
@@ -83,9 +78,16 @@ async function selectFiveQuestions() {
 		// plans changed, I want it to be table row now
 		var table_body = document.getElementById("tbody")
 
-		var table_row = document.createElement("tr")
+		// var table_row = document.createElement("tr")
 
-		var table_data = document.createElement("td")
+		// var table_data = document.createElement("td")
+
+		// insertRow and insertCell seem more convinient
+		var row = table_body.insertRow(i)
+
+		var cell1 = row.insertCell(0)
+		var cell2 = row.insertCell(1)
+		var cell3 = row.insertCell(2)
 
 		// // so after appending you gotta getElement in order to append to it
 		// var div_container = document.getElementById(`div${i}`)
@@ -94,11 +96,12 @@ async function selectFiveQuestions() {
 		// var question = document.createElement("pre")
 		// question.innerHTML = body[i].question
 
-		table_data.textContent = body[i].question
-		table_row.appendChild(table_data)
+		// table_data.textContent = body[i].question
+		// table_row.appendChild(table_data)
 
+		cell1.textContent = body[i].question
 
-		// let's add a button to go to default page
+		// let's add a button to attempt questionn
 		var attempt_button = document.createElement("button")
 		attempt_button.textContent = "Attempt"
 		attempt_button.type = "button"
@@ -106,9 +109,26 @@ async function selectFiveQuestions() {
 		// let's add eventlistener to the button and to send parameters
 		attempt_button.addEventListener("click", onQuestionClicked.bind(null, body[i].question), false)
 
-		table_data = document.createElement("td")
+		// table_data = document.createElement("td")
 
-		table_data.appendChild(attempt_button)
+		// table_data.appendChild(attempt_button)
+
+		cell2.appendChild(attempt_button)
+
+		
+		// third column will be completion status
+		var completion_status = document.createElement("input")
+
+		completion_status.type = "checkbox"
+
+		completion_status.value = "complete"
+		
+		completion_status.className = ""
+
+
+		// table_data.appendChild(completion_status)	
+
+		cell3.appendChild(completion_status)
 
 		// table_data.appendChild(go_button)
 
@@ -116,8 +136,9 @@ async function selectFiveQuestions() {
 		// var line_break = document.createElement("br")
 		// question_container.appendChild(line_break)
 
-		table_row.appendChild(table_data)
-		table_body.appendChild(table_row)
+		// table_row.appendChild(table_data)
+		// table_body.appendChild(table_row)
+
 
 		}
 

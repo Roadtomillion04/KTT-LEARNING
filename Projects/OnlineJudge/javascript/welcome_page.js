@@ -7,19 +7,20 @@ async function initialize() {
 }
 
 async function adminVerification() {
-	var admin_status = await fetch("http://localhost:9005/check_admin", {
+	// var admin_status = await fetch("http://localhost:9005/check_admin", {
 
-		// okay so don't be confused with the GET method here, we are sending sessionStorage in headers, it'll recive in express
-		method: "GET",
-		headers: {"Content-Type": "application/json", "is_admin": sessionStorage.getItem("is_admin")}
+	// 	// okay so don't be confused with the GET method here, we are sending sessionStorage in headers, it'll recive in express
+	// 	method: "GET",
+	// 	headers: {"Content-Type": "application/json", "is_admin": sessionStorage.getItem("is_admin")}
 
-	})
+	// })
 
-	var res = await admin_status.json()
+	// var res = await admin_status.json()
 
-	console.log(res)
+	// don't do it in a hard way lol
+	var is_admin = sessionStorage.getItem("is_admin")
 
-	if (res.is_admin != "yes") {
+	if (is_admin != "yes") {
 		alert("not authorized")
 
 		// redirect
@@ -167,5 +168,14 @@ async function deleteQuestionEvent(body) {
 		// so after the deletion just refresh the page for an update
 		window.location.reload()
 	}
+
+}
+
+function logoutAdmin() {
+
+	// on logging out let's delete sessionStorage before redirecting
+	sessionStorage.removeItem("is_admin")
+
+	window.location.href = "./admin_page.html"
 
 }
