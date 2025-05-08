@@ -3,6 +3,10 @@ document.addEventListener("DOMContentLoaded", initialize, false)
 async function initialize() {
 
 	await adminVerification() // await is yield
+
+	// lesson learn, putting reload() here creates infinite stack of reload
+	// window.location.reload()
+
 	displayAllQuestions()
 }
 
@@ -138,21 +142,67 @@ function addClickEvent(body) {
 
 	}
 
+	// let's add edit button to take it to edit question page
+	var edit_button = document.createElement("button")
+	edit_button.textContent = "edit"
+	edit_button.type = "button"
+
+	edit_button.addEventListener("click", editQuestionEvent.bind(null, body), false)
+
+	info_body.appendChild(edit_button)
+
+
+	// and delete button
 	var delete_button = document.createElement("button")
 	delete_button.textContent = "delete"
 	delete_button.type = "button"
 
 	delete_button.addEventListener("click", deleteQuestionEvent.bind(null, body), false)
 
+	// edit and delete button is next to each other so yeah
+	delete_button.style.marginLeft = "10px"
+
 	info_body.appendChild(delete_button)
 
 }
 
-// simple delete method call here, with the question id
+// posting question to edit
+async function editQuestionEvent(body) {
+
+	try {
+
+		// once again res must be given at endpoint
+		var edit_question = await fetch("http://localhost:9005/post_question_to_edit_on_welcome_page", {
+
+			method: "POST",
+			headers: {"Content-Type": "application/json"},
+			body: JSON.stringify(body)
+
+		})
+
+	}
+
+	catch (err) {
+
+		console.error(err.message)
+
+	}
+
+	finally {
+
+		window.location.href = "./edit_questions.html"
+
+	}
+
+}
+
+
+// deleting method call here, with the question id
 async function deleteQuestionEvent(body) {
 	
 	try {
-	var delete_question = fetch(`http://localhost:9005/delete_question/:${body.question_id}`, {
+		
+	var delete_question = await fetch(`http://localhost:9005/delete_question/${body.question_id}`, {
 
 		method: "DELETE",
 		headers: {"Content-Type": "application/json"}

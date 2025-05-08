@@ -91,7 +91,7 @@ async function tokenVerification() {
 async function fetchQuestion() {
 
 	try {
-		var questions = await fetch("http://localhost:9005/get_question", 
+		var questions = await fetch("http://localhost:9005/get_question_to_display_on_default_page", 
 		{
 			method: "GET",
 			headers: {"Content-Type": "application/json"}

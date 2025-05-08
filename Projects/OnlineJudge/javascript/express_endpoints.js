@@ -8,9 +8,12 @@ var pool = require('./db')
 app.use(express.json()) // to get req.body
 app.use(cors()) // cors error (HTTP security protocol) strikes if not set while using fetch, cors need to be set for resource sharing across different media 
 
-//
-var get_chosen_question = ""
+// for display in default page
+var get_question_from_test_page = ""
 var client_generated_token = ""
+
+// to edit on edit question page
+var get_question_from_welcome_page = ""
 
 // digital ocean jwt tutorial
 var jwt = require('jsonwebtoken')
@@ -147,7 +150,7 @@ app.post("/add_question", async function (req, res) {
 
 	try {
 		var new_add = await pool.query(query)
-		// res.json(new_add)
+		res.json("ok!")
 	} 
 
 	catch (err) {
@@ -156,12 +159,12 @@ app.post("/add_question", async function (req, res) {
 })
 
 // well get the question for default.html page, since we know which question to pick from /question_selected we gotta access the question from there
-app.get("/get_question", async function (req, res) {
+app.get("/get_question_to_display_on_default_page", async function (req, res) {
 	try {
-		// okay so declaring get_chosen_question a global variable and update it on post (/question_selected) and while getting it here it work!
-		var get_question = await get_chosen_question
+		// okay so declaring get_question_from_test_page a global variable and update it on post (/question_selected) and while getting it here it work!
+		var question = await get_question_from_test_page
 
-		res.json(get_question)
+		res.json(question)
 
 	}
 
@@ -207,22 +210,6 @@ app.get("/check_admin_credentials", async function (req, res) {
 
 )
 
-app.get("/header_check", async function (req, res) {
-
-	try {
-
-		var a = req.headers.is_admin
-		console.log(a)
-
-		res.redirect("")
-
-	}
-
-	catch (err) {
-		console.error(err.message)
-	}
-})
-
 // get 5 questions randomly for the user to take test
 app.get("/test_questions", async function (req, res) {
 
@@ -247,7 +234,7 @@ app.get("/test_questions", async function (req, res) {
 
 
 // so getting the pressed question on test page and let's try to update default.html accordingly
-app.post("/question_selected", async function (req, res) {
+app.post("/post_question_clicked_on_test_page", async function (req, res) {
 
 		try {
 
@@ -257,11 +244,11 @@ app.post("/question_selected", async function (req, res) {
 			
 			// so now that we know which question is pushed next let's select * db and get the rest of the columns
 
-			get_chosen_question = await pool.query(`SELECT * FROM INTERVIEW_QUESTIONS WHERE question = '${body.question}';`)
+			get_question_from_test_page = await pool.query(`SELECT * FROM INTERVIEW_QUESTIONS WHERE question = '${body.question}';`)
 
-			get_chosen_question = get_chosen_question.rows
+			get_question_from_test_page = get_question_from_test_page.rows
 
-			console.log(get_chosen_question)
+			console.log(get_question_from_test_page)
 
 			// console.log(get_question_db.rows)
 			res.json("recieved")
@@ -274,18 +261,88 @@ app.post("/question_selected", async function (req, res) {
 
 } )
 
-// delete question in db
+
+// PUT part: getting clicked question first from the welcome_page
+app.post("/post_question_to_edit_on_welcome_page", async function (req, res) {
+
+	try {
+
+			var body = req.body
+
+			console.log(body)
+
+			get_question_from_welcome_page = req.body
+
+			res.json("ok!")
+
+	}
+
+	catch (err) {
+
+		console.error(err.message)
+
+	}
+
+
+})
+
+app.get("/get_question_to_edit", async function (req, res) {
+
+		try {
+
+				var question = await get_question_from_welcome_page
+
+				res.json(question)
+
+		}
+
+		catch (err) {
+
+			console.error(err.message)
+
+		}
+
+})
+
+app.put("/update_question/:id", async function (req, res) {
+
+		try {
+
+		var { id } = req.params
+		var body = req.body
+
+		// console.log("id", id)
+		// console.log("body", body)
+
+		// to update multiple columns use set col1 = val, col2 = val
+		var query = `UPDATE INTERVIEW_QUESTIONS SET question = '${body.question}', problem_statement = '${body.problem_statement}', test_cases = '${JSON.stringify(body.test_cases)}', examples = '${JSON.stringify(body.examples)}' WHERE question_id = '${id}';`
+
+		var update = await pool.query(query)
+
+		}
+
+		catch (err) {
+
+			console.error(err.message)
+
+		}
+
+
+		res.json("ok!")
+
+})
+
+
+
+// delete question in db, after : is params
 app.delete("/delete_question/:id", async function (req, res) {
 
 		try {
 		// destructing
 		var { id } = req.params
 
-		// just slice to remove :
-		id = id.slice(1,)
 
-
-		var query = `DELETE FROM INTERVIEW_QUESTIONS WHERE question_id = ${id}`
+		var query = `DELETE FROM INTERVIEW_QUESTIONS WHERE question_id = ${id};`
 
 		var delete_question = await pool.query(query)
 

@@ -163,7 +163,7 @@ async function onQuestionClicked(question) {
 
 	// important note to take away here, so you see, the method POST/GET tries to get response back, if no response is given, it gonna try again and again and does not exit this line
 
-	var post_question = await fetch("http://localhost:9005/question_selected", {
+	var post_question = await fetch("http://localhost:9005/post_question_clicked_on_test_page", {
 
 		method: "POST",
 		headers: {"Content-Type": "application/json"},

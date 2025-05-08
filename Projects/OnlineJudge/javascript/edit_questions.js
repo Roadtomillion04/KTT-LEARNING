@@ -1,15 +1,128 @@
-document.addEventListener("DOMContentLoaded", adminVerification, false)
+// is same as create question page, on page load we fetching question data and adding values to the fields
 
-async function adminVerification() {
+// document.addEventListener("DOMContentLoaded", adminVerification, false)
 
-		var is_admin = sessionStorage.getItem("is_admin")
+// async function adminVerification() {
 
-		if (is_admin != "yes") {
-			alert("not authorized")
+// 		var is_admin = sessionStorage.getItem("is_admin")
 
-			// redirect
-			window.location.replace("./login.html")
+// 		if (is_admin != "yes") {
+// 			alert("not authorized")
+
+// 			// redirect
+// 			window.location.replace("./login.html")
+// 	}
+// }
+
+
+document.addEventListener("DOMContentLoaded", getQuestionToEdit, false)
+
+// parameter for PUT
+var question_id = null
+
+async function getQuestionToEdit() {
+
+	var get_question = await fetch("http://localhost:9005/get_question_to_edit", {
+
+		method: "GET",
+		headers: {"Content-Type": "application/json"}
+
+	})
+
+	// gets question from db 
+	body = await get_question.json()
+
+	question_id = body.question_id
+
+	await unpackAndInsertFields(body) // await is yield
+}
+
+// let's unpack here
+async function unpackAndInsertFields(body) {
+
+	var question_field = document.getElementById("question")
+
+	question_field.textContent = body.question
+
+	var problem_statement_field = document.getElementById("problem_statement")
+
+	problem_statement_field.textContent = body.problem_statement
+
+	console.log(body.test_cases)
+
+
+	// first, test cases
+	var i = 0
+
+	var param = document.getElementsByClassName("parameters")
+
+	var values = document.getElementsByClassName("values")
+
+	for ([test_case_title, test_case_obj] of Object.entries(body.test_cases)) {
+
+		// this returns in Array, and length can be used in Array/String
+		console.log(Object.keys(test_case_obj).length)
+
+		var parameter_count_field = document.getElementById("parameter_count")
+
+		parameter_count_field.value = Object.values(test_case_obj).length - 1 // Output is already defined
+
+		
+		createTestCaseFields()
+
+
+		for ([key, value] of Object.entries(test_case_obj)) {
+
+
+			param[i].value = key
+
+			// we know it's array
+			if (typeof value == "object") {
+
+				// omg, I tries almost everything, for whatever reason brackets [] are not inserting in input, so this is the way
+				values[i].value = '[' + value + ']'
+			}
+
+			else {
+
+				values[i].value = value
+			}
+
+
+			i += 1
+
+		}
+
+
 	}
+
+	// now examples
+	var j = 0
+
+	var example_text_area = document.getElementsByClassName("example")
+
+	for ([example_title, example_obj] of Object.entries(body.examples)) {
+
+		createExampleFields()
+
+		example_text_area[j].textContent = ""
+
+
+		for ([key, value] of Object.entries(example_obj)) {
+
+			// so on unpacking all of the examples 
+
+			console.log(example_text_area[1])
+
+
+			example_text_area[j].textContent += value + "\n"
+		}
+
+		j += 1
+
+	}
+
+
 }
 
 
@@ -65,7 +178,7 @@ async function createTestCaseFields() {
 	// basically yield
 	await addParameterSlots()
 
-	// I am creating and appending Delete button in after add parameter slot for neat visuals and more flexible
+	// I am creating and appending Delete button in after add parameter slot for neat visuals
 	// creating and apending at last
 	// delete button add
 	var delete_button = document.createElement("button")
@@ -125,7 +238,7 @@ function getNumberFromString(str) {
 
 }
 
-async function submitQuestion() {
+async function submitEditedQuestion() {
 	var question = document.getElementById('question').value
 
 	var problem_statement = document.getElementById('problem_statement').value
@@ -190,7 +303,7 @@ async function submitQuestion() {
 	console.log(test_cases)
 
 
-	// getting examples and storing it in object same as test cases for more flexibility than array(no know how to push T_T)
+	// getting examples and storing it in object same as test cases for more flexibility than array(no know how to push in postgres T_T)
 	var examples_class = document.getElementsByClassName("example")
 
 	console.log(examples_class)
@@ -231,11 +344,13 @@ async function submitQuestion() {
 		"examples": examples
 		} 
 
-		var req = await fetch("http://localhost:9005/add_question", {
-			method: "POST",
+		var req = await fetch(`http://localhost:9005/update_question/${question_id}`, {
+			method: "PUT",
 			headers: {"Content-Type": "application/json"},
 			body: JSON.stringify(body)
 		})
+
+
 
 	}
 
@@ -243,9 +358,9 @@ async function submitQuestion() {
 		console.log(err.message)
 	}
 
+
 	finally {
 
-		//switching to welcome page for update
 		window.location.replace("./welcome_page.html")
 
 	}
