@@ -1,18 +1,18 @@
 // is same as create question page, on page load we fetching question data and adding values to the fields
 
-// document.addEventListener("DOMContentLoaded", adminVerification, false)
+document.addEventListener("DOMContentLoaded", adminVerification, false)
 
-// async function adminVerification() {
+async function adminVerification() {
 
-// 		var is_admin = sessionStorage.getItem("is_admin")
+		var is_admin = sessionStorage.getItem("is_admin")
 
-// 		if (is_admin != "yes") {
-// 			alert("not authorized")
+		if (is_admin != "yes") {
+			alert("not authorized")
 
-// 			// redirect
-// 			window.location.replace("./login.html")
-// 	}
-// }
+			// redirect
+			window.location.replace("./login.html")
+	}
+}
 
 
 // another pitfall is, for the questions contains Input/Output more than one line in Examples
@@ -148,22 +148,6 @@ async function createTestCaseFields() {
 	container.id = `individual_slot${test_case_count}`
 	container.className = "test_case_slot"
 
-
-	// input field - dont need this anymore as I am going to add it for one time in html page
-	// var input_add = document.createElement("input")
-	// input_add.type = "number"
-	// input_add.value = 1 // default 1
-	// input_add.min = 1
-	// input_add.max = 5	
-	// input_add.id = `parameter_count${test_case_count}`
-
-	// var confirm_add = document.createElement("button")
-	// confirm_add.type = "button"
-	// confirm_add.innerHTML = "add"
-	// confirm_add.id = `add_button${test_case_count}`
-	// confirm_add.className = "add_button"
-
-
 	// now that new textarea element is created, to add it to html page we need to append to parent
 	test_case_parent.appendChild(container)
 
@@ -223,7 +207,6 @@ function addDeleteEvent(class_name, container_name) {
 
 		curr_container.remove()
 
-
 		console.log(delete_button_batched)
 
 	}
@@ -271,11 +254,7 @@ async function submitEditedQuestion() {
 		// all values gonna be string, so for array conversion
 		if (inputs_batched[i].value[0].includes("[") && inputs_batched[i].value.at(-1).includes("]")) {
 
-			// remove the brackets and at for negative indexing
-			inputs_batched[i].value = inputs_batched[i].value.replace("[", "")
-			inputs_batched[i].value = inputs_batched[i].value.replace("]", "")
-
-			var new_arr = inputs_batched[i].value.split(",")
+			var new_arr = JSON.parse(inputs_batched[i].value)
 
 			value_arr.push(new_arr)
 		}
@@ -354,8 +333,6 @@ async function submitEditedQuestion() {
 			body: JSON.stringify(body)
 		})
 
-
-
 	}
 
 	catch (err) {
@@ -422,8 +399,6 @@ function addParameterSlots() {
 			parent.appendChild(param_input)
 			parent.appendChild(value_input)
 			parent.appendChild(line_break)
-
-
 
 		}
 

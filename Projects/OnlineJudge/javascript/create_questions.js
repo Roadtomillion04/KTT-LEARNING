@@ -154,11 +154,17 @@ async function submitQuestion() {
 		// all values gonna be string, so for array conversion
 		if (inputs_batched[i].value[0].includes("[") && inputs_batched[i].value.at(-1).includes("]")) {
 
-			// remove the brackets and at for negative indexing
-			inputs_batched[i].value = inputs_batched[i].value.replace("[", "")
-			inputs_batched[i].value = inputs_batched[i].value.replace("]", "")
+			console.log("look at here")
+			console.log(JSON.parse(inputs_batched[i].value))
 
-			var new_arr = inputs_batched[i].value.split(",")
+			// remove the brackets and at for negative indexing
+			// inputs_batched[i].value = inputs_batched[i].value.replace("[", "")
+			// inputs_batched[i].value = inputs_batched[i].value.replace("]", "")
+
+			// var new_arr = inputs_batched[i].value.split(",")
+
+			// SO MUCH TIME WASTED ON PYTHON FLASK AND NP ARRAY TRYING TO TYPE CAST, WHILE I COULD HAVE JUST USED JSON PARSE(THIS THING EVEN CONVERTS NUMBERS TO NUMBERS)
+			var new_arr = JSON.parse(inputs_batched[i].value)
 
 			value_arr.push(new_arr)
 		}
@@ -246,7 +252,7 @@ async function submitQuestion() {
 	finally {
 
 		//switching to welcome page for update
-		window.location.replace("./welcome_page.html")
+	//window.location.replace("./welcome_page.html")
 
 	}
 }
