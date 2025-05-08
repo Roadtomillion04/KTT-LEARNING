@@ -15,6 +15,8 @@
 // }
 
 
+// another pitfall is, for the questions contains Input/Output more than one line in Examples
+
 document.addEventListener("DOMContentLoaded", getQuestionToEdit, false)
 
 // parameter for PUT
@@ -52,6 +54,7 @@ async function unpackAndInsertFields(body) {
 
 
 	// first, test cases
+	// this i is for accessing next index of the batched param/values array returned by className
 	var i = 0
 
 	var param = document.getElementsByClassName("parameters")
@@ -97,6 +100,7 @@ async function unpackAndInsertFields(body) {
 	}
 
 	// now examples
+	// this j is for accessing next index of the batched textarea array returned by className
 	var j = 0
 
 	var example_text_area = document.getElementsByClassName("example")

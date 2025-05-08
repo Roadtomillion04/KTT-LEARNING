@@ -13,6 +13,7 @@ body {
 textarea {
 	background-color: seashell;
 	padding: 10px;
+	width: 400px;
 }
 
 button {
