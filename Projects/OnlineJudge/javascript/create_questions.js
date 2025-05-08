@@ -252,7 +252,7 @@ async function submitQuestion() {
 	finally {
 
 		//switching to welcome page for update
-	//window.location.replace("./welcome_page.html")
+		window.location.replace("./welcome_page.html")
 
 	}
 }

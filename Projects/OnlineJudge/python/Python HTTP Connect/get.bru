@@ -4,8 +4,14 @@ meta {
   seq: 2
 }
 
-get {
-  url: localhost:80
-  body: none
+post {
+  url: 127.0.0.1:5000/type_cast
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "array": "[[1, 2, 3], [1, 2]]"
+  }
 }
