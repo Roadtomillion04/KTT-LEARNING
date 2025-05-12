@@ -7,7 +7,8 @@ async function initialize() {
 	// lesson learn, putting reload() here creates infinite stack of reload
 	// window.location.reload()
 
-	displayAllQuestions()
+	searchQuestion()
+
 }
 
 async function adminVerification() {
@@ -33,33 +34,47 @@ async function adminVerification() {
 
 }
 
-async function displayAllQuestions() {
+// so what we are doing is click event input triggers for each button input and we are using LIKE %input% to match questions in db
+async function searchQuestion() {
 
-	try {
-	var get_all_questions = await fetch("http://localhost:9005/get_all_questions", {
+	// initially to load all the questions, is one time event only
+	sessionStorage.setItem("user_input", "")
+	getQuestionsFromDb()
 
-		method: "GET",
-		headers: {"Content-Type": "application/json"}
-	})
+	var search_bar = document.createElement("input")
+	search_bar.type = "search"
+	search_bar.placeholder = "Search questions"
 
-	var body = await get_all_questions.json()
+	search_bar.addEventListener("input", search, false)
 
-	var test = document.getElementById("questions")
+	document.getElementById("search_bar").appendChild(search_bar)
 
-	for (var i = 0; i < body.length; i++) {
-		// add each question to container and also add question id which acts as number
-		var question = document.createElement("pre")
+	function search() {
+		// get's the user typing
+		console.log(this.value)
 
-		question.textContent = i+1 + ". " + body[i].question
-		question.className = "can_click"
-		question.style.fontSize = "2em"
+		sessionStorage.setItem("user_input", this.value)
+
+		getQuestionsFromDb()
+		
+	}
 
 
-		question.addEventListener("click", addClickEvent.bind(null, body[i]), false)
+	async function getQuestionsFromDb() {
+		
+		try {
 
-		test.appendChild(question)
+			// so LIKE %""% returns all the questions from the postgres table, for the first time when page loads we are doing that 
 
-		}
+			var search_res = await fetch("http://localhost:9005/search_questions/", {
+
+				method: "POST",
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify({"user_input": sessionStorage.getItem("user_input")})
+
+			})
+
+			var body = await search_res.json()
 
 	}
 
@@ -67,102 +82,182 @@ async function displayAllQuestions() {
 		console.error(err.message)
 	}
 
+	finally {
+
+		displayQuestions(body)
+
+		}
+	}
+
+}
+
+
+async function displayQuestions(body) {
+
+	var question_body = document.getElementById("questions")
+
+	// we need to clear screen everytime, for each search
+
+	question_body.innerHTML = ""
+
+	for (var i = 0; i < body.length; i++) {
+
+		// we need overall parent container to organize things in-line
+		var parent_container = document.createElement("div")
+		parent_container.id = `parent${i+1}`
+		parent_container.className = `parent_display`
+
+
+		// add each question to container and also add question id which acts as number
+		var question_container = document.createElement("div")
+		question_container.id = `question${i+1}`
+		question_container.className = "hide_overflow"
+
+		// let's create container for buttons seperately 
+		var button_container = document.createElement("div")
+		button_container.id = `button${i+1}`
+		button_container.className = "button_display"
+
+
+		// add each question to container and also add question id which acts as number
+		// var question = document.createElement("pre")
+
+		// for ellipsis to work the text has to be inside div
+		question_container.textContent = i+1 + ". " + body[i].question
+		// question.className = "can_click"
+		// question.style.fontSize = "2em"
+
+
+		// let's add edit button to take it to edit question page
+		var edit_button = document.createElement("button")
+		edit_button.textContent = "edit"
+		edit_button.type = "button"
+
+		edit_button.addEventListener("click", editQuestionEvent.bind(null, body[i]), false)
+
+		// and delete button
+		var delete_button = document.createElement("button")
+		delete_button.textContent = "delete"
+		delete_button.type = "button"
+
+		delete_button.addEventListener("click", deleteQuestionEvent.bind(null, body[i]), false)
+
+		// and also view button
+		var view_button = document.createElement("button")
+		view_button.textContent = "view"
+		view_button.type = "button"
+
+		view_button.addEventListener("click", viewEvent.bind(null, body[i]), false)
+
+
+		question_body.appendChild(parent_container)
+
+
+		parent_container = document.getElementById(`parent${i+1}`)
+
+		// question_container.appendChild(question)
+		parent_container.appendChild(question_container)
+
+		parent_container.appendChild(button_container)
+		
+		button_container = document.getElementById(`button${i+1}`)
+
+		button_container.appendChild(view_button)
+
+		button_container.appendChild(edit_button)
+
+		button_container.appendChild(delete_button)
+
+
+		}
+
 }
 
 // getting body response and id, this.id does not work and gets window when used with .bind to send param, no need serial id anymore as we iterating above
-function addClickEvent(body) {
+function viewEvent(body) {
 	console.log(body)
 
-	// get right side
-	var info_body = document.getElementById("question_info")
 
-	// let's iterate the body and find match of the id
-	// for (var i = 0; i < body.length; i++) {
-		// if (body[i].question_id == id) {
-			// match found and create elements to display
+	var dialog = document.createElement("dialog")
+	dialog.id = `dialog${body.question_id}`
+	
 
-	// clearing screen everytime to avoid appending
-	info_body.innerHTML = ""
+	// so when textContent += "\n" no works, use innerHTML += "<br>"
 
 	// adding question
-	var question = document.createElement("h2")
-	question.innerHTML = body.question
-	info_body.appendChild(question)
+	dialog.innerHTML = "Question: " + body.question + "<br>"
 
-	// adding <hr> for everyline for good visuals
-	var hr = document.createElement("hr")
-	info_body.appendChild(hr)
 
 	// adding problem statement
-	var problem_statement = document.createElement("h4")
-	problem_statement.innerHTML = body.problem_statement
-	info_body.appendChild(problem_statement)
+	 dialog.innerHTML += "Problem Statement: " + body.problem_statement + "<br>"
 
-	var hr = document.createElement("hr")
-	info_body.appendChild(hr)
 
 	// adding test cases
+	dialog.innerHTML += "<hr>"
+
+	 dialog.innerHTML += "Test Cases: " + "<br>"
+
 	for (var [test_case_title, test_case_obj] of Object.entries(body.test_cases)) {
 
-		var test_cases = document.createElement("pre")
+		dialog.innerHTML += "<hr>"
 		
-		test_cases.innerHTML = test_case_title
+		dialog.innerHTML += test_case_title + "<br>"
 
-		info_body.appendChild(test_cases)
 
 		for ([key, value] of Object.entries(test_case_obj)) {
-			var new_pair = document.createElement("pre")
+			
 
-			new_pair.innerHTML = key + " = " + value
+			dialog.innerHTML += key + " = " + value + "<br>"
 
-			info_body.appendChild(new_pair)
 
 		}
 	}
 
-	// tip you have to CREATE element everytime otherwise it updates to last position
-	hr = document.createElement("hr")
-	info_body.appendChild(hr)
 
 	// adding examples
+	dialog.innerHTML += "<hr>"
+
+	dialog.innerHTML += "Examples: " + "<br>"
+
 	for (var [example_num, example_obj] of Object.entries(body.examples)) {
 		
-		var examples = document.createElement("pre")
-		examples.innerHTML = example_num
+		dialog.innerHTML += "<hr>"
+		
 
-		info_body.appendChild(examples)
+		dialog.innerHTML += example_num + "<br>"
+
 
 		for (var [key, value] of Object.entries(example_obj)) {
-			var new_pair = document.createElement("pre")
 
-			new_pair.innerHTML = value
+			dialog.innerHTML += value + "<br>"
 
-			info_body.appendChild(new_pair)
 		}
 
 	}
 
-	// let's add edit button to take it to edit question page
-	var edit_button = document.createElement("button")
-	edit_button.textContent = "edit"
-	edit_button.type = "button"
+	var hr = document.createElement("hr")
+	dialog.appendChild(hr)
 
-	edit_button.addEventListener("click", editQuestionEvent.bind(null, body), false)
+	var close_dialog = document.createElement("button")
+	close_dialog.textContent = "close"
 
-	info_body.appendChild(edit_button)
+	// sending dialog id to let know system which is open for close
+	close_dialog.addEventListener("click", closeModal.bind(null, dialog.id), false)
+
+	dialog.appendChild(close_dialog)
 
 
-	// and delete button
-	var delete_button = document.createElement("button")
-	delete_button.textContent = "delete"
-	delete_button.type = "button"
+	document.getElementById("main").appendChild(dialog)
 
-	delete_button.addEventListener("click", deleteQuestionEvent.bind(null, body), false)
+	// so this modal thing is, restricting access to outside content while open
+	document.getElementById(`dialog${body.question_id}`).showModal()
 
-	// edit and delete button is next to each other so yeah
-	delete_button.style.marginLeft = "10px"
 
-	info_body.appendChild(delete_button)
+	function closeModal(id) {
+		document.getElementById(`${id}`).close()
+
+	}
+
 
 }
 

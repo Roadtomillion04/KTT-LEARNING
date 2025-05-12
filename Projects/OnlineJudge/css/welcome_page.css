@@ -1,10 +1,6 @@
 .page_content {
-	display: flex;
-}
-
-.questions_body {
 	border: 2px solid;
-	width: 50vw;
+	width: 100vw;
 	height: 95vh;
 
 	/** if content goes outside div just use overflow scroll**/
@@ -13,9 +9,55 @@
 	padding: 10px;
 
 	background-color: wheat;
+
+	text-overflow: ellipsis;
+
+	overflow: hidden;
+	white-space: nowrap;
 }
 
-.info_body {
+
+/** line clamp source - https://css-tricks.com/almanac/properties/l/line-clamp/**/
+.hide_overflow {
+
+	font-size: 2em;
+
+	width: 50vw;
+
+	text-overflow: ellipsis;
+
+	overflow: hidden;
+	white-space: nowrap;
+
+}
+
+.button_display {
+
+	width: 50vw;
+
+	display: flex;
+
+	justify-content: space-evenly;
+
+	height: 32px;	
+
+}
+
+.parent_display {
+
+	display: flex;
+
+	align-items: center; /**vertical align**/
+
+}
+
+.parent_display:hover {
+
+	font-weight: bold;
+	background-color: burlywood;
+}
+
+/*.info_body {
 	border: 2px solid;
 	width: 50vw;
 	height: 95vh;
@@ -29,7 +71,7 @@
 	background-color: seashell;
 
 }
-
+*/
 
 .can_click:hover {
 	font-weight: bold;

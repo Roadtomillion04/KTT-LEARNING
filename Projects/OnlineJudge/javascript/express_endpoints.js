@@ -319,6 +319,8 @@ app.put("/update_question/:id", async function (req, res) {
 
 		var update = await pool.query(query)
 
+		res.json("done!")
+
 		}
 
 		catch (err) {
@@ -326,9 +328,6 @@ app.put("/update_question/:id", async function (req, res) {
 			console.error(err.message)
 
 		}
-
-
-		res.json("ok!")
 
 })
 
@@ -356,6 +355,31 @@ app.delete("/delete_question/:id", async function (req, res) {
 
 
 } )
+
+
+// let's try search questions based on user input in db
+app.post("/search_questions", async function (req, res) {
+
+		try {
+
+			var body = req.body
+
+			var query = `SELECT * FROM INTERVIEW_QUESTIONS WHERE question LIKE '%${body.user_input}%'`
+
+			var search_questions = await pool.query(query)
+
+			res.json(search_questions.rows)
+		
+		}
+
+		catch (err) {
+
+			console.error(err.message)
+
+		}
+
+
+})
 
 
 app.listen(9005, function () {})
