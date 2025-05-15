@@ -124,14 +124,13 @@ async function displayQuestions(body) {
 
 		// for ellipsis to work the text has to be inside div
 		question_container.textContent = i+1 + ". " + body[i].question
-		// question.className = "can_click"
-		// question.style.fontSize = "2em"
 
 
 		// let's add edit button to take it to edit question page
 		var edit_button = document.createElement("button")
 		edit_button.textContent = "edit"
 		edit_button.type = "button"
+		edit_button.className = "action_button"
 
 		edit_button.addEventListener("click", editQuestionEvent.bind(null, body[i]), false)
 
@@ -139,6 +138,7 @@ async function displayQuestions(body) {
 		var delete_button = document.createElement("button")
 		delete_button.textContent = "delete"
 		delete_button.type = "button"
+		delete_button.className = "action_button"
 
 		delete_button.addEventListener("click", deleteQuestionEvent.bind(null, body[i]), false)
 
@@ -146,6 +146,7 @@ async function displayQuestions(body) {
 		var view_button = document.createElement("button")
 		view_button.textContent = "view"
 		view_button.type = "button"
+		view_button.className = "action_button"
 
 		view_button.addEventListener("click", viewEvent.bind(null, body[i]), false)
 

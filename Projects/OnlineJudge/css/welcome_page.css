@@ -57,6 +57,12 @@
 	background-color: burlywood;
 }
 
+.action_button:hover {
+
+	font-weight: bold;
+
+}
+
 /*.info_body {
 	border: 2px solid;
 	width: 50vw;

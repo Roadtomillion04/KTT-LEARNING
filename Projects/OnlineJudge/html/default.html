@@ -48,7 +48,7 @@
 
 		<!-- Right side: text area for code-->
 		<div class="code_editor_div">
-			<code>Select Language: </code>
+			<!-- <code>Select Language: </code>
 
 			<select id="language">
 				<option>C</option>
@@ -60,12 +60,22 @@
 			<br>
 			<br>
 
-			<textarea id="src-code"></textarea>
+			<textarea id="src_code"></textarea>
 			<br>
 
-			<button onclick="runProgram()">Run</button>
+			<button type="button" onclick="run()">Run</button> -->
+
+		    <iframe id="judge0-ide" src="https://ide.judge0.com?judge0.style=minimal&judge0.theme=dark" frameborder="0" width="100%" height="450px"></iframe>
+
+		    <hr />
+		    		    
+		    <pre id="judge0-ide-data-viewer" style="padding: 1rem; background-color: #eee;"></pre>
+
+			<button type="submit" id="submission" onclick="submitAnswer()">Submit</button>
+
 
 		</div>
+
 	</main>
 
 </body>

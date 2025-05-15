@@ -62,8 +62,9 @@ document.addEventListener("DOMContentLoaded", initialize, false)
 
 async function initialize() {
 
-	await tokenVerification() // await is yield
-	fetchQuestion()
+	// await tokenVerification() // await is yield
+	// fetchQuestion()
+	judge0()
 }
 
 async function tokenVerification() {
@@ -185,4 +186,121 @@ function addQuestionToPage(body) {
 	
 }
 
+
+// now
+async function run() {
+
+	var code = document.getElementById("src_code").value
+
+
+	var language = 71
+
+	var body = {
+
+		"source_code": code,
+		"language_id": language,
+		"number_of_runs": null,
+		"stdin": null,
+		"expected_output": 2,
+		"cpu_time_limit": null,
+		"memory_limit": null,
+		"max_processes_and_or_threads": null,
+		"enable_per_process_and_thread_time_limit": null,
+		"enable_per_process_and_thread_memory_limit": null,
+		"max_file_size": null,
+		"enable_network": null
+
+	}
+
+
+	var get_res = await fetch("http://localhost:2358/submissions/", {
+
+		method: "POST",
+		headers: {"content-type": "application/json"},
+		referrer: "http://localhost:2358/dummy-client.html",
+  		body: JSON.stringify(body)
+	})
+
+	var res = await get_res.json()
+
+	// so now that it is working, it returns the token
+
+	verifyResult(res.token)
+
+}
+
+async function verifyResult(token) {
+
+	var results = await fetch(`http://localhost:2358/submissions/${token}`, {
+
+		method: "GET",
+		headers: {"content-type": "application/json"}
+
+	})
+
+	var body = await results.json()
+
+	console.log(body)
+
+	// await verifyResult(token)
+
+}
+
+function judge0() {
+
+	let iframeDataViewer = document.getElementById("judge0-ide-data-viewer");
+
+    let judge0IDE = document.getElementById("judge0-ide");
+
+    window.onmessage = function(e) {
+        if (!e.data) {
+            return;
+        }
+
+        iframeDataViewer.innerHTML = JSON.stringify(e.data, null, 2);
+
+        if (e.data.event === "initialised") {
+            // Make sure to only post data after the IDE is initialised
+            // When setting the data, make sure to set the action to "set".
+            //
+            // The data you send will be used to populate the IDE.
+            // You don't have to send all the data, only the data you want to set.
+            //
+            // Make sure to get your API key at https://platform.sulu.sh/apis/judge0
+            // If you don't set your API key, the default API key will be used, which has limitations and should not be used in production.
+            judge0IDE.contentWindow.postMessage({
+                action: "set",
+                api_key: "",
+                source_code: "...",
+                language_id: 71,
+                flavor: "CE",
+                stdin: `3\n${JSON.parse("[1, 2, 3]")}`,
+                stdout: null,
+                compiler_options: "",
+                command_line_arguments: "",
+            }, '*');
+        }
+
+
+        if (e.data.event === "postExecution") {
+
+
+    		console.log(e.data.output)
+
+    	}
+
+    };
+   
+}
+
+async function submitAnswer() {
+
+	var body = {
+		"test_id": 1,
+		"roll_no": "7376212AL135",
+		"question_id": 1,
+		"test_case_results": {"test_case1": {"Input": }}
+	}
+
+}
 
