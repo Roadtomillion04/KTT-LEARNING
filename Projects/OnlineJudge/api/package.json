@@ -1,0 +1,14 @@
+{
+  "name": "express_endpoints",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "nirmal",
+  "license": "ISC",
+  "type": "commonjs"
+
+}

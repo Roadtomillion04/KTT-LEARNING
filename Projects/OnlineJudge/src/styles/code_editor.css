@@ -1,0 +1,80 @@
+.page_content {
+	display: flex;
+
+}
+
+.page_div {
+	/** if content goes outside div just use overflow scroll**/
+	overflow: scroll;
+
+	border: 2px solid;
+	width: 50vw;
+	height: 100vh;
+
+	padding: 15px;
+}
+
+.code_editor_div {
+	border: 2px solid;
+	width: 50vw;
+	height: 100vh;
+
+	font-size: 1rem;
+
+	padding: 20px;
+
+	background-color: seashell;
+
+	overflow: scroll;
+	
+}
+
+textarea {
+	padding: 10px;
+	font-size: 2rem;
+	margin-left: 20px;
+	min-width: 100%;
+	min-height: 50%;
+
+	background-color: ghostwhite;
+}
+
+pre {
+	white-space: pre-wrap;
+}
+
+.sub_container {
+	padding: 15px;
+	background-color: wheat;
+}
+
+h2 {
+	text-decoration: underline;
+}
+
+h3 {
+	text-decoration: underline;
+}
+
+.examples {
+	background-color: burlywood;
+	padding: 10px;
+
+}
+
+.input_output_div {
+
+	border: 2px solid;
+	display: flex;
+	justify-content: space-between;
+
+}
+
+button {
+	background-color: burlywood;
+}
+
+.fullscreen:hover {
+	cursor: pointer;
+}
+
