@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", initialize, false)
 
 // so before loading question, we are checking jwt token exists from login page
 async function initialize() {
-	await tokenVerification() // await here is like yield
+	// await tokenVerification() // await here is like yield
 	selectFiveQuestions()
 }
 
@@ -117,13 +117,11 @@ async function selectFiveQuestions() {
 
 		
 		// third column will be completion status
-		var completion_status = document.createElement("input")
+		var completion_status = document.createElement("pre")
 
-		completion_status.type = "checkbox"
-
-		completion_status.value = "complete"
+		completion_status.textContent = "-"
 		
-		completion_status.className = ""
+		completion_status.className = "completion_status"
 
 
 		// table_data.appendChild(completion_status)	
@@ -183,5 +181,16 @@ async function onQuestionClicked(question) {
 		window.location.href = "./default.html"
 	}
 
+
+}
+
+
+async function submitTest() {
+
+	// so we pushing the final results
+	var test_id = 1
+	var roll_no = sessionStorage.getItem("roll_no")
+	var questions = sessionStorage.getItem("questions_selected")
+	var passed = ""
 
 }

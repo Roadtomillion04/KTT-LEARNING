@@ -68,8 +68,11 @@
 		    <iframe id="judge0-ide" src="https://ide.judge0.com?judge0.style=minimal&judge0.theme=dark" frameborder="0" width="100%" height="450px"></iframe>
 
 		    <hr />
-		    		    
-		    <pre id="judge0-ide-data-viewer" style="padding: 1rem; background-color: #eee;"></pre>
+		    
+		    <!-- execution status is unnecessary for user to see, and surprisingly hidden not only makes it visible=off, it's like the element does not exist there-->
+		    <pre id="judge0-ide-data-viewer" style="padding: 1rem; background-color: #eee;" hidden></pre>
+
+		    <pre id="judge0_evaluation"></pre>
 
 			<button type="submit" id="submission" onclick="submitAnswer()">Submit</button>
 

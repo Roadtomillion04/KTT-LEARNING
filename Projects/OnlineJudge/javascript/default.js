@@ -63,8 +63,7 @@ document.addEventListener("DOMContentLoaded", initialize, false)
 async function initialize() {
 
 	// await tokenVerification() // await is yield
-	// fetchQuestion()
-	judge0()
+	fetchQuestion()
 }
 
 async function tokenVerification() {
@@ -103,7 +102,10 @@ async function fetchQuestion() {
 
 		console.log(res)
 
-		addQuestionToPage(res[0])
+		await addQuestionToPage(res[0])
+
+		// also sending body to judge 0 for input and output
+		judge0(res[0])
 	}
 
 	catch (err) {
@@ -142,7 +144,10 @@ function addQuestionToPage(body) {
 
 		// for css purpose only, creating new div everytime
 		var example_container = document.createElement("div")
-		example_container.className = "example"
+		example_container.className = "examples"
+
+		var input_output_container = document.createElement("div")
+		input_output_container.className = "input_output_div"
 			
 		// well let's add br here, it look conjested on html
 		var line_break = document.createElement("br")
@@ -154,13 +159,23 @@ function addQuestionToPage(body) {
 
 		example_container.appendChild(example_number)
 
+		example_container.appendChild(input_output_container)
+
 		// unpack (nested object)
 		for (var [key, value] of Object.entries(example_obj)) {
+
 			var new_pair = document.createElement("pre")
 
-			// key is not needed as value itself contains I/p, O/p and Explanation
-			new_pair.innerHTML = value
-			new_pair.style.fontSize = "1rem"
+			// this is for visual purpose only, nothing else
+			if (key != "Explanation") {
+				new_pair.innerHTML = key + "<br>" + "<hr>" + value
+				new_pair.style.fontSize = "1rem"
+			}
+
+			else {
+				new_pair.innerHTML = key + "<br>" + value
+				new_pair.style.fontSize = "1rem"
+			}
 
 			// and also for the cases only one explanation is given, and next one not given, filter
 
@@ -172,9 +187,17 @@ function addQuestionToPage(body) {
 
 			// well let's add br here, it look conjested on html
 			line_break = document.createElement("br")
-			example_container.appendChild(line_break)
+			input_output_container.appendChild(	line_break)
 
-			example_container.appendChild(new_pair)
+			// css purposes, display flex only Input and Output so yeah
+
+			if (key == "Explanation") {
+				example_container.appendChild(new_pair)
+			}
+
+			else {
+			input_output_container.appendChild(new_pair)
+			}
 		}
 
 		example_parent.appendChild(example_container)
@@ -187,7 +210,6 @@ function addQuestionToPage(body) {
 }
 
 
-// now
 async function run() {
 
 	var code = document.getElementById("src_code").value
@@ -246,7 +268,9 @@ async function verifyResult(token) {
 
 }
 
-function judge0() {
+// now that the refactoring is complete, next step is to give the example input value to input and other test cases inputs(hidden)
+
+function judge0(question_body) {
 
 	let iframeDataViewer = document.getElementById("judge0-ide-data-viewer");
 
@@ -258,6 +282,8 @@ function judge0() {
         }
 
         iframeDataViewer.innerHTML = JSON.stringify(e.data, null, 2);
+
+        // so the initial objective is to for all test cases we looping, we giving 1 test case only to for user to run and check, rest of them will be evaluated with the code they write
 
         if (e.data.event === "initialised") {
             // Make sure to only post data after the IDE is initialised
@@ -271,36 +297,49 @@ function judge0() {
             judge0IDE.contentWindow.postMessage({
                 action: "set",
                 api_key: "",
-                source_code: "...",
+                source_code: "#",
                 language_id: 71,
                 flavor: "CE",
-                stdin: `3\n${JSON.parse("[1, 2, 3]")}`,
+                stdin: `${question_body.test_cases.test_case1.Input}`,
                 stdout: null,
                 compiler_options: "",
                 command_line_arguments: "",
             }, '*');
         }
 
+        // so we getting user code here to compare to rest of the test cases (done in hidden)
+        if (e.data.event === "preExecution") {
+        	var user_code = e.data.source_code
+
+        	sessionStorage.setItem("user_code", user_code)
+
+        }
+
 
         if (e.data.event === "postExecution") {
+        	var output = e.data.output
 
+        	var output_text = document.getElementById("judge0_evaluation")
 
-    		console.log(e.data.output)
+        	output_text.textContent = "Output: " + output + "\n" + "Expected Output: " + question_body.test_cases.test_case1.Output
 
-    	}
+        	// if (output == question_body.test_cases.test_case1.Output) {
+        	// 	sessionStorage.setItem("passed", true)
+        	// }
+
+    		console.log(output)
+
+   		}
 
     };
-   
+
 }
 
 async function submitAnswer() {
 
-	var body = {
-		"test_id": 1,
-		"roll_no": "7376212AL135",
-		"question_id": 1,
-		"test_case_results": {"test_case1": {"Input": }}
-	}
+	var question = {}
+
+	sessionStorage.setItem("answer_submission", JSON.stringify({"hi": "ok"}))
 
 }
 

@@ -63,6 +63,19 @@
 
 }
 
+.view_containers {
+
+	display: flex;
+	justify-content: space-around;
+
+}
+
+dialog {
+
+	overflow-wrap: normal;
+
+}
+
 /*.info_body {
 	border: 2px solid;
 	width: 50vw;
@@ -70,11 +83,11 @@
 
 
 	/** if content goes outside div just use overflow scroll**/
-	overflow: scroll;
+	/*overflow: scroll;
 
 	padding: 10px;
 
-	background-color: seashell;
+	background-color: seashell;*/
 
 }
 */

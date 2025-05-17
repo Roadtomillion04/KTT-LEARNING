@@ -190,7 +190,11 @@ function viewEvent(body) {
 
 
 	// adding problem statement
-	 dialog.innerHTML += "Problem Statement: " + body.problem_statement + "<br>"
+	var problem_statement_content = document.createElement("pre")
+	
+	problem_statement_content.textContent = body.problem_statement
+
+	dialog.appendChild(problem_statement_content)
 
 
 	// adding test cases
@@ -204,12 +208,19 @@ function viewEvent(body) {
 		
 		dialog.innerHTML += test_case_title + "<br>"
 
+		var container = document.createElement("div")
+		container.className = "view_containers"
+		
+		// tip: it really does not matter which order you appendChild, in the end when DOM loads everything works as you intended
+		dialog.appendChild(container)
 
-		for ([key, value] of Object.entries(test_case_obj)) {
+		for (var [key, value] of Object.entries(test_case_obj)) {
 			
+			var content = document.createElement("pre")
 
-			dialog.innerHTML += key + " = " + value + "<br>"
+			content.textContent += key + "\n" + value
 
+			container.appendChild(content)
 
 		}
 	}
@@ -227,10 +238,20 @@ function viewEvent(body) {
 
 		dialog.innerHTML += example_num + "<br>"
 
+		var container = document.createElement("div")
+		container.className = "view_containers"
+		
+		// tip: it really does not matter which order you appendChild, in the end when DOM loads everything works as you intended
+		dialog.appendChild(container)
+
 
 		for (var [key, value] of Object.entries(example_obj)) {
 
-			dialog.innerHTML += value + "<br>"
+			var content = document.createElement("pre")
+
+			content.textContent += key + "\n" + value
+
+			container.appendChild(content)
 
 		}
 
@@ -256,6 +277,9 @@ function viewEvent(body) {
 
 	function closeModal(id) {
 		document.getElementById(`${id}`).close()
+
+		// it persists in document after closing, let's get rid of it
+		document.getElementById(`${id}`).remove()
 
 	}
 

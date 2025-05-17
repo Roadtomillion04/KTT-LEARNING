@@ -9,11 +9,45 @@ body {
 	padding: 1vw;
 }
 
+.test_case_input {
+
+	background-color: seashell;
+	padding: 10px;
+	width: 150px;
+	height: 150px;
+}
+
+.test_case_output {
+
+	background-color: seashell;
+	padding: 10px;
+	width: 150px;
+	height: 150px;
+
+}
+
+.example_input {
+
+	background-color: seashell;
+	padding: 10px;
+	width: 150px;
+	height: 150px;	
+
+}
+
+.example_output {
+
+	background-color: seashell;
+	padding: 10px;
+	width: 150px;
+	height: 150px;
+	
+}
 
 textarea {
 	background-color: seashell;
 	padding: 10px;
-	width: 400px;
+	width: 200px;
 }
 
 button {
