@@ -6,11 +6,13 @@ var pool = require('../postgres/db.js')
 
 var jwt = require('jsonwebtoken')
 
-// console.log(require('crypto').randomBytes(64).toString('hex')) -> this was the code used to generate the secret token
+// console.log(require('crypto').randomBytes(64).toString('hex')) // -> this was the code used to generate the secret token
 
 // dotenv sole purpose is to load environment variables from a .env file into process.env and .env is no visible in file system lol
 var dotenv = require('dotenv')
-dotenv.config()
+// the path was auto configured in api/ found by {debug: true}
+dotenv.config({path: "./routes/.env"})
+
 var secret_key = process.env.SECRET_TOKEN
 // console.log(process.env.SECRET_TOKEN)
 

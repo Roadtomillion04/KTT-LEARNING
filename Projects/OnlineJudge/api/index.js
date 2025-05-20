@@ -6,6 +6,24 @@ var cors = require('cors')
 var pool = require('./postgres/db.js')
 
 
+var session = require("express-session")
+
+
+// reference express-session-npm
+app.use(session({
+	secret: "secret",
+	resave: false,
+	saveUninitialized: true
+}))
+
+
+// app.use(function (req, res, next) {
+
+// 	if (req.session.get_question)
+
+// })
+
+
 app.use(express.json()) // to get req.body
 app.use(cors()) // cors error (HTTP security protocol) strikes if not set while using fetch, cors need to be set for resource sharing across different media 
 

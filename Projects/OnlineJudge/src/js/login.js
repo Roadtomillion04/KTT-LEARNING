@@ -28,7 +28,8 @@ async function registerUser() {
 		// well let's swtich to session storage as it fits my needs more, no sharing across tabs and expires auto when tab is closed
 		sessionStorage.setItem("user_token", res.token)
 
-		window.location.href = "./test_page.html"
+		getTestId()
+
 
 		// forget about the cookies, it's just a headache configuring for localhost, todo later: try after deployment
 		// document.cookie = `user_token=${res.token}`
@@ -44,6 +45,43 @@ async function registerUser() {
 	}
 
 }
+
+// I was planning to set question count in session storage here as well, I don't want to give away all stuff you know, well nvm
+async function getTestId() {
+
+	try {
+
+		var get_test_configs = await fetch("http://localhost:8999/get_configs", {
+
+			method: "GET",
+			headers: {"Content-Type": "application/json"}
+
+		})
+
+		var res = await get_test_configs.json()
+
+		console.log(res)
+
+		// let's set the test id in sessionStorage 
+		await sessionStorage.setItem("test_id", res[0].test_id)
+
+		// and no. of questions
+		await sessionStorage.setItem("no_of_questions", res[0].question_count)
+
+	}
+
+	catch (err) {
+		console.error(err.message)
+	}
+
+	finally {
+		window.location.href = "./code_editor.html"
+	}
+
+
+
+}
+
 
 // so the initial plan was to post token to express, now I'll just use localStorage
 // async function sendValidToken(body) {

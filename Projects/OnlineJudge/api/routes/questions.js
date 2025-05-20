@@ -5,7 +5,7 @@ var pool = require('../postgres/db.js')
 // I forgot server canno't access client side storage
 
 // for display in default page
-var get_question_from_test_page = ""
+// var get_question_from_test_page = ""
 
 // to edit on edit question page
 var get_question_from_welcome_page = ""
@@ -34,19 +34,21 @@ router.post("/add_question", async function (req, res) {
 
 
 // well get the question for default.html page, since we know which question to pick from /question_selected we gotta access the question from there
-router.get("/get_question_to_display_on_default_page", async function (req, res) {
-	try {
-		// okay so declaring get_question_from_test_page a global variable and update it on post (/question_selected) and while getting it here it work!
-		var question = await get_question_from_test_page
+// router.get("/get_question_to_display_on_default_page", async function (req, res) {
+// 	try {
+// 		// okay so declaring get_question_from_test_page a global variable and update it on post (/question_selected) and while getting it here it work!
+// 		var question = await req.session.get_question
 
-		res.json(question)
+// 		console.log("session", req.session.get_question)
 
-	}
+// 		res.json(question)
 
-	catch (err) {
-		console.error(err.message)
-	}
-})
+// 	}
+
+// 	catch (err) {
+// 		console.error(err.message)
+// 	}
+// })
 
 
 router.get("/get_all_questions", async function (req, res) {
@@ -60,17 +62,19 @@ router.get("/get_all_questions", async function (req, res) {
 
 
 // get 5 questions randomly for the user to take test
-router.get("/test_questions", async function (req, res) {
+router.get("/test_questions/:id", async function (req, res) {
 
 		try {
 			// this random selection has to be one time event for new account, for now I'll store all the client tokens in array, not sure how effective it is, Update: handling this in client side
 
+				var { id } = req.params
+
 				// ehh just question is enough
-				var query = `SELECT question FROM INTERVIEW_QUESTIONS ORDER BY random() LIMIT 5`
+				var query = `SELECT question FROM INTERVIEW_QUESTIONS ORDER BY random() LIMIT ${id}`
 
-				var get_five_questions = await pool.query(query)
+				var get_n_questions = await pool.query(query)
 
-				res.json(get_five_questions.rows)
+				res.json(get_n_questions.rows)
 
 
 		}
@@ -93,13 +97,13 @@ router.post("/post_question_clicked_on_test_page", async function (req, res) {
 			
 			// so now that we know which question is pushed next let's select * db and get the rest of the columns
 
-			get_question_from_test_page = await pool.query(`SELECT * FROM INTERVIEW_QUESTIONS WHERE question = '${body.question}';`)
+			var get_question = await pool.query(`SELECT * FROM INTERVIEW_QUESTIONS WHERE question = '${body.question}';`)
 
-			get_question_from_test_page = get_question_from_test_page.rows
-
+			// can store it like this, but don't know how to access this outside this scope
+			req.session.get_question = get_question.rows
 
 			// console.log(get_question_db.rows)
-			res.json("recieved")
+			res.json(req.session.get_question)
 
 		}
 

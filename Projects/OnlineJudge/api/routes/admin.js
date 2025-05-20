@@ -32,4 +32,28 @@ router.get("/check_admin_credentials", async function (req, res) {
 )
 
 
+router.post("/test_config", async function (req, res) {
+
+		var body = req.body
+
+		var query = `INSERT INTO TEST_CONFIG (test_id, question_count, start_time, end_time, test_date) VALUES ('${body.test_id}', '${body.question_count}', '${body.start_time}', '${body.end_time}', '${body.test_date}')`
+
+		var insert_data = await pool.query(query)
+
+		res.json("ok!")
+
+})
+
+// let's fetch the last inserted values as the configs for the next test
+router.get("/get_configs/", async function (req, res) {
+
+	var query = `SELECT * FROM TEST_CONFIG ORDER BY creation_id DESC LIMIT 1`
+
+	var get_row = await pool.query(query)
+
+	res.json(get_row.rows)
+
+})
+
+
 module.exports = router

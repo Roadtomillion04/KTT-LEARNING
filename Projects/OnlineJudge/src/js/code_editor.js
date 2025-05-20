@@ -3,11 +3,23 @@ document.addEventListener("DOMContentLoaded", initialize, false)
 async function initialize() {
 
 	// await tokenVerification() // await is yield
-	fetchQuestion()
+
+	await selectNQuestions()
+
+	// idk this works, on reload, first time load as intented so yeah
+	// fetchQuestion()
+
+	displayQuestion()
 
 
 	// going full screen when click on image
 	document.getElementById("fullscreen_img").addEventListener("click", resizeScreen, false)
+
+	// timer start, let's keep 45 mins
+
+	// setInterval(startTimer, 1000 * 60) // 1000ms is 1 sec, 60 sec is minute 
+	
+
 
 }
 
@@ -33,6 +45,144 @@ async function tokenVerification() {
 
 }
 
+
+async function selectNQuestions() {
+
+	try {
+
+	var get_five_questions = await fetch(`http://localhost:8999/test_questions/${sessionStorage.getItem("no_of_questions")}`, {
+
+		method: "GET",
+		headers: {"Content-Type": "application/json"}
+	})
+
+	var body 
+
+	if (sessionStorage.getItem("questions_selected") == null) {
+	
+		body = await get_five_questions.json()
+
+		sessionStorage.setItem("questions_selected", JSON.stringify(body))
+		
+	}
+
+	else {
+
+		body = JSON.parse(sessionStorage.getItem("questions_selected"))
+		}
+
+	}
+
+	catch (err) {
+		console.error(err.message)
+	}
+
+	// let's try creating buttons here as it calls only once in the script, no on next refresh the button are gone 
+
+	var question_count = sessionStorage.getItem("no_of_questions")
+
+	for (var i = 1; i <= Number(question_count); i++) {
+
+		var new_button = document.createElement("button")
+
+		new_button.className = "qbtn"
+		new_button.textContent = "Question #" + i
+
+		document.getElementById("qbtn_container").appendChild(new_button)
+	}
+
+
+	// so assign question to the buttons
+	var batched_question_button = document.getElementsByClassName("qbtn") // is array
+
+	// let's add click event
+	for (var i = 0; i < batched_question_button.length; i++) {
+
+		batched_question_button[i].addEventListener("click", setQuestion.bind(null, body[i].question), null)
+
+	}
+
+	// var select_option = document.getElementById("select_option")
+
+	// select_option.addEventListener("change", displaySelectedQuestion.bind(null, body), null)
+
+}
+
+function setQuestion(question) {
+
+	sessionStorage.setItem("question", question)
+
+	location.reload() // mainly for judge0 ide, to refresh for each question
+
+}
+
+async function displayQuestion() {
+
+	var question = ""
+
+	// on page load, no button clicked sessionStorage shall be null, when it is
+
+	if (sessionStorage.getItem("question") == null) {
+
+		question = JSON.parse(sessionStorage.getItem("questions_selected"))[0].question
+
+	}
+
+	else {
+		question = sessionStorage.getItem("question")
+	}
+
+
+	// this no working, so get the select again and get the value
+	// var selected_question = document.getElementById("select_option").value
+
+	// var question = body[selected_question].question
+
+
+	console.log(question)
+
+	var body = {"question": question}
+
+
+	try {
+
+	// important note to take away here, so you see, the method POST/GET tries to get response back, if no response is given, it gonna try again and again and does not exit this line
+
+	var post_question = await fetch("http://localhost:8999/post_question_clicked_on_test_page", {
+
+		method: "POST",
+		headers: {"Content-Type": "application/json"},
+		body: JSON.stringify(body)
+
+	})
+
+	// returns json inside an array
+	var res = await post_question.json()
+
+	console.log(res)
+
+
+	await addQuestionToPage(res[0])
+
+	// also sending body to judge 0 for input and output
+	await judge0(res[0])
+
+
+	}
+
+	catch (err) {
+		console.error(err.message)
+	}
+
+	finally {
+		// fetchQuestion()
+
+		// location.reload()
+	}
+
+
+}
+
 async function fetchQuestion() {
 
 	try {
@@ -47,6 +197,11 @@ async function fetchQuestion() {
 
 		console.log(res)
 
+		// in awhile let's update question name in header
+		document.getElementById("header_question").textContent = res[0].question
+
+		// document.getElementById("select_option").options[0].textContent = res[0].question
+
 		await addQuestionToPage(res[0])
 
 		// also sending body to judge 0 for input and output
@@ -56,6 +211,7 @@ async function fetchQuestion() {
 	catch (err) {
 		console.error(err.message)
 	}
+
 }
 
 
@@ -152,65 +308,6 @@ function addQuestionToPage(body) {
 
 	}
 	
-}
-
-
-async function run() {
-
-	var code = document.getElementById("src_code").value
-
-
-	var language = 71
-
-	var body = {
-
-		"source_code": code,
-		"language_id": language,
-		"number_of_runs": null,
-		"stdin": null,
-		"expected_output": 2,
-		"cpu_time_limit": null,
-		"memory_limit": null,
-		"max_processes_and_or_threads": null,
-		"enable_per_process_and_thread_time_limit": null,
-		"enable_per_process_and_thread_memory_limit": null,
-		"max_file_size": null,
-		"enable_network": null
-
-	}
-
-
-	var get_res = await fetch("http://localhost:2358/submissions/", {
-
-		method: "POST",
-		headers: {"content-type": "application/json"},
-		referrer: "http://localhost:2358/dummy-client.html",
-  		body: JSON.stringify(body)
-	})
-
-	var res = await get_res.json()
-
-	// so now that it is working, it returns the token
-
-	verifyResult(res.token)
-
-}
-
-async function verifyResult(token) {
-
-	var results = await fetch(`http://localhost:2358/submissions/${token}`, {
-
-		method: "GET",
-		headers: {"content-type": "application/json"}
-
-	})
-
-	var body = await results.json()
-
-	console.log(body)
-
-	// await verifyResult(token)
-
 }
 
 // now that the refactoring is complete, next step is to give the example input value to input and other test cases inputs(hidden)
@@ -317,4 +414,12 @@ function resizeScreen() {
 	
 }
 
+function startTimer() {
 
+	var timer = document.getElementById("timer")
+
+	timer.textContent = "Time Remaining: " + time + " " + "minutes"
+
+	time = time - 1
+
+}

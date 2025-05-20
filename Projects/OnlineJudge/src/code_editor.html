@@ -20,17 +20,38 @@
 			<li><a herf="">Question 4</a></li>
 			<li><a herf="">Question 5</a></li>
 		</ul>
-	</nav>
- -->
+	</nav> -->
+
+	<header style="display: flex;" id="header">
+
+		<div id="qbtn_container">
+			
+
+		</div>
+
+
+		<div style=" width: 75vw; text-align: right;">
+
+		<p id="timer">Time Remaining: </p>
+
+		<button type="submit" id="submission" onclick="submitAnswer()">Submit Test</button>
+
+		</div>
+		
+	</header>
+		
+
+
 	<!-- can exist only one time in a page-->
 	<main class="page_content">
+
 		<!-- Left side: Problem & description -->
 		<div class="page_div"> 
 
 			<!-- Sub containers-->
 			<div id="question" class="sub_container">
 				<h2>Question:</h2>
-				
+					
 			</div>
 
 			<div id="problem_statement" class="sub_container">
@@ -48,22 +69,7 @@
 
 		<!-- Right side: text area for code-->
 		<div class="code_editor_div">
-			<!-- <code>Select Language: </code>
 
-			<select id="language">
-				<option>C</option>
-				<option>C++</option>
-				<option>Python</option>
-				<option>Java</option>
-			</select>
-
-			<br>
-			<br>
-
-			<textarea id="src_code"></textarea>
-			<br>
-
-			<button type="button" onclick="run()">Run</button> -->
 
 			<img src="./img/fullscreen.svg" width="24px" height="24px" class="fullscreen" id="fullscreen_img">
 
@@ -76,12 +82,11 @@
 
 		    <pre id="judge0_evaluation"></pre>
 
-			<button type="submit" id="submission" onclick="submitAnswer()">Submit</button>
-
 
 		</div>
 
 	</main>
+
 
 </body>
 

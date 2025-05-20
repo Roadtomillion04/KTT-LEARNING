@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", initialize, false)
 
 // so before loading question, we are checking jwt token exists from login page
 async function initialize() {
-	// await tokenVerification() // await here is like yield
+	// nawait tokenVerification() // await here is like yield
 	selectFiveQuestions()
 }
 
