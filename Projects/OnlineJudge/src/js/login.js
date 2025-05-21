@@ -28,6 +28,9 @@ async function registerUser() {
 		// well let's swtich to session storage as it fits my needs more, no sharing across tabs and expires auto when tab is closed
 		sessionStorage.setItem("user_token", res.token)
 
+		// and also roll_no for on_submitting
+		sessionStorage.setItem("roll_no", roll_no)
+
 		getTestId()
 
 

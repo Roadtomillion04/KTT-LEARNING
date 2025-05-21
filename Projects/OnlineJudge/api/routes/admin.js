@@ -45,7 +45,7 @@ router.post("/test_config", async function (req, res) {
 })
 
 // let's fetch the last inserted values as the configs for the next test
-router.get("/get_configs/", async function (req, res) {
+router.get("/get_configs", async function (req, res) {
 
 	var query = `SELECT * FROM TEST_CONFIG ORDER BY creation_id DESC LIMIT 1`
 

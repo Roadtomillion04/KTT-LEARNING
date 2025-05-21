@@ -32,10 +32,13 @@ app.use(cors()) // cors error (HTTP security protocol) strikes if not set while 
 var user_route = require("./routes/user")
 var admin_route = require("./routes/admin")
 var questions_route = require("./routes/questions")
+var utils_route = require("./routes/utils")
+var submissions_route = require("./routes/submissions")
 
 app.use("/", user_route)
 app.use("/", admin_route)
 app.use("/", questions_route)
-
+app.use("/", utils_route)
+app.use("/", submissions_route)
 
 app.listen(8999, function () {})

@@ -1,8 +1,10 @@
+// used lot of sessionStorage as I'm reloading page for every question and also one note if you JSON.stringify, you need to use JSON.parse to get it to object, or it's pushed to db as string
+
 document.addEventListener("DOMContentLoaded", initialize, false)
 
 async function initialize() {
 
-	// await tokenVerification() // await is yield
+	await tokenVerification() // await is yield
 
 	await selectNQuestions()
 
@@ -15,10 +17,9 @@ async function initialize() {
 	// going full screen when click on image
 	document.getElementById("fullscreen_img").addEventListener("click", resizeScreen, false)
 
-	// timer start, let's keep 45 mins
-
-	// setInterval(startTimer, 1000 * 60) // 1000ms is 1 sec, 60 sec is minute 
 	
+	// it's basically a physics process with ms to control calling
+	setInterval(displayTimeRemaining, 1000) // 1000ms is 1 sec
 
 
 }
@@ -353,8 +354,15 @@ function judge0(question_body) {
         if (e.data.event === "preExecution") {
         	var user_code = e.data.source_code
 
+        	var language_id = e.data.language_id
+
+        	// set user_code, useful to check after submission
         	sessionStorage.setItem("user_code", user_code)
 
+        	// set language, also pushing this to db, we have only id here, let's request for language name
+
+        	fetchLanguage(language_id)
+        
         }
 
 
@@ -365,11 +373,12 @@ function judge0(question_body) {
 
         	output_text.textContent = "Output: " + output + "\n" + "Expected Output: " + question_body.test_cases.test_case1.Output
 
-        	// if (output == question_body.test_cases.test_case1.Output) {
-        	// 	sessionStorage.setItem("passed", true)
-        	// }
+        	if (output == question_body.test_cases.test_case1.Output) {
 
-    		console.log(output)
+
+        	 	sessionStorage.setItem(`${question_body.question} status`, JSON.stringify({"given_input": question_body.test_cases.test_case1.Input, "expected_output": question_body.test_cases.test_case1.Output,
+        	 		"user_ouput": output, "source_code": sessionStorage.getItem("user_code"), "is_passed": true, "used_language": sessionStorage.getItem("language_name")}))
+        	 }
 
    		}
 
@@ -377,13 +386,25 @@ function judge0(question_body) {
 
 }
 
-async function submitAnswer() {
 
-	var question = {}
 
-	sessionStorage.setItem("answer_submission", JSON.stringify({"hi": "ok"}))
+async function fetchLanguage(language_id) {
+
+	var get_langauge_name = await fetch(`https://ce.judge0.com/languages/${language_id}`, {
+
+		method: "GET",
+		headers: {"Content-Type": "application/json"}
+
+	})
+
+	var language_name = await get_langauge_name.json()
+
+	var lang = language_name.name
+
+	sessionStorage.setItem("language_name", lang)
 
 }
+
 
 // just old trick odd or even
 var count = 0
@@ -414,12 +435,72 @@ function resizeScreen() {
 	
 }
 
-function startTimer() {
+async function displayTimeRemaining() {
+
+	var get_curr_time = await fetch("http://localhost:8999/time_remaining", {
+
+		method: "GET",
+		headers: {"Content-Type": "application/json"}
+
+	})
+
+	var res = await get_curr_time.json()
 
 	var timer = document.getElementById("timer")
 
-	timer.textContent = "Time Remaining: " + time + " " + "minutes"
+	timer.textContent = "Time Remaining: " + res.hour + " hours" + " " + res.min + " minutes" + " " + res.sec + " seconds"
 
-	time = time - 1
+}
+
+
+async function submitAnswers() {
+
+	var question_pass_status = {}
+
+	// unpacking the array and inside is questions
+	for (obj of JSON.parse(sessionStorage.getItem("questions_selected"))) {
+
+		// so the logic here is stroing each question status individually in sessionStorage and grabing it all here, if sessionStorage question does not exist np it return null by default
+		question_pass_status[`${obj.question} status`] = JSON.parse(sessionStorage.getItem(`${obj.question} status`))
+
+	}
+
+	console.log(question_pass_status)
+
+	// relying too much on sessionStorage
+	var body = {
+		"test_id": sessionStorage.getItem("test_id"),
+		"roll_no": sessionStorage.getItem("roll_no"),
+		"questions_passed": question_pass_status
+
+	}
+
+	try {
+
+	var post_submission = await fetch("http://localhost:8999/submit_answers", {
+
+		method: "POST",
+		headers: {"Content-Type": "application/json"},
+		body: JSON.stringify(body)
+
+	})
+
+	}
+
+	catch (err) {
+		console.error(err.message)
+	}
+
+	finally {
+		alert("Test Submitted!")
+
+		// removing everything in session, so they don't have access anymore
+		sessionStorage.clear()
+
+		// let's just redirect back to login
+		window.location.replace("./login.html")
+
+	}
+
 
 }

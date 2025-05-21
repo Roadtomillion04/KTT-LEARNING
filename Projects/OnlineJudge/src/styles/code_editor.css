@@ -78,3 +78,11 @@ button {
 	cursor: pointer;
 }
 
+/** src w3schools, for sticky header top 0px need**/
+header {
+	display: flex; 
+	position: sticky; 
+	top: 0px; 
+	background: white; 
+	border: solid 2px;
+}

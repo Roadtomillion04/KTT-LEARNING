@@ -17,8 +17,9 @@ var secret_key = process.env.SECRET_TOKEN
 // console.log(process.env.SECRET_TOKEN)
 
 
-function generateAccessToken(username) {
-  return jwt.sign(username, secret_key, { expiresIn: '1800s' })
+// my guess is, user_data here acts as a seed
+function generateAccessToken(user_data) {
+  return jwt.sign(user_data, secret_key, { expiresIn: '1800s' })
 }
 
 function authenticateToken(req, res, next) {
@@ -66,7 +67,7 @@ VALUES ('${body.first_name}', '${body.last_name}', '${body.email}', '${body.depa
 		// res.json(new_add)
 
 		// so umm let's call generatetoken function with the username
-		var token = await generateAccessToken( {username: body.first_name} )
+		var token = await generateAccessToken( {first_name: body.first_name, last_name: body.last_name, roll_no: body.roll_no} )
 		
 		res.json({token: token})
 	
@@ -98,6 +99,5 @@ router.get("/check_user", authenticateToken, async function (req, res) {
 	}
 
 })
-
 
 module.exports = router

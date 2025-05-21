@@ -344,8 +344,8 @@ async function deleteQuestionEvent(body) {
 function logoutAdmin() {
 
 	// on logging out let's delete sessionStorage before redirecting
-	sessionStorage.removeItem("is_admin")
+	sessionStorage.clear()
 
-	window.location.href = "./admin_page.html"
+	window.location.href = "./login.html"
 
 }
