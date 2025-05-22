@@ -25,9 +25,21 @@ router.post("/submit_answers", async function (req, res) {
 })
 
 // getting all submissions
-router.get("/get_all_submissions", async function (req, res) {
+router.get("/get_submissions", async function (req, res) {
 
-	var pass
+	try {
+
+	var query = `SELECT * FROM SUBMISSIONS`
+
+	var get_all_submissions = await pool.query(query)
+
+	res.json(get_all_submissions.rows)
+
+	}
+
+	catch (err) {
+		console.error(err.message)
+	}
 
 })
 

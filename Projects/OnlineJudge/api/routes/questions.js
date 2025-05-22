@@ -53,11 +53,20 @@ router.post("/add_question", async function (req, res) {
 
 router.get("/get_all_questions", async function (req, res) {
 
+		try {
+
 		var query = `SELECT * FROM INTERVIEW_QUESTIONS`
 
 		var get_all_questions = await pool.query(query)
 
 		res.json(get_all_questions.rows)
+
+		}
+
+		catch (err) {
+			console.error(err.message)
+		}
+
 })
 
 

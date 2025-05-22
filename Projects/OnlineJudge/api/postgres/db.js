@@ -10,6 +10,7 @@ var pool = new Pool({
 	database: "test"
 })
 
+// exporting pool here to communicate in endpoints
 module.exports = pool
 
 // 	pool.connect()

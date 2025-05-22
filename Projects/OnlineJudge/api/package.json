@@ -1,5 +1,5 @@
 {
-  "name": "express_endpoints",
+  "name": "OnlineJudgeBackend",
   "version": "1.0.0",
   "description": "",
   "main": "",
@@ -9,6 +9,19 @@
   "keywords": [],
   "author": "nirmal",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+
+  "dependencies": {
+      "body-parser": "ˆ2.2.0",
+      "cors": "ˆ2.8.5",
+      "dotenv": "ˆ16.5.0",
+      "express": "ˆ5.1.0",
+      "express-session": "ˆ1.18.1",
+      "finalhandler": "ˆ2.1.0",
+      "jsonwebtoken": "ˆ9.0.2",
+      "pg": "ˆ8.15.1",
+      "serve-static": "ˆ2.2.0"
+
+    }
 
 }
