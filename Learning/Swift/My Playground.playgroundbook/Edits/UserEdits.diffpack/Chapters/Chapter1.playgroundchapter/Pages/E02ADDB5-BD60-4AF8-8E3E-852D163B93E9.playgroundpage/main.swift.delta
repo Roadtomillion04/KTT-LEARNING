@@ -1,4 +1,14 @@
-// raw values in enum
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BaseFile</key>
+	<string>Chapters/Chapter1.playgroundchapter/Pages/Template.playgroundpage/main.swift</string>
+	<key>Diffs</key>
+	<array>
+		<dict>
+			<key>ModifiedContent</key>
+			<string>// raw values in enum
 enum Titles: Double, CaseIterable {
     
     case VLN = 8
@@ -70,14 +80,16 @@ func print_val&lt;T&gt;(_ val: T) {
 print_val(1)
 
 
-func find_greater&lt;T: Comparable&gt;(_ x: T, _ y: T) {
+func find_greater&lt;T&gt;(_ x: T, _ y: T) {
     print(x, y)
 }
 
 find_greater(3, 3)
 
+
 var my_list: [String] = ["1", "2", "3", "a"]
 
+// but could not do uppercase on string char with Any, cause it's all server side
 print(my_list[3].uppercased())
 
 for i in 0...my_list.count - 1 {
@@ -305,15 +317,14 @@ print(console_game is consoleGame)
 
 // convenience init is just fancy way of defining default init memebers, I don't see it otherwise
 
-
 protocol protocol4 {
     var speed: Int { get set }
     
-    func curr_speed() -> String
+    func curr_speed() -&gt; String
 }
 
 extension protocol4 {
-    func curr_speed() -> String {
+    func curr_speed() -&gt; String {
         return "current speed at \(self.speed) KMPH"
     }
 }
@@ -344,7 +355,7 @@ print(my_car.curr_speed())
 // extension can be added any number of times
 
 extension protocol4 {
-    func addSpeed(_ add_speed: Int) -> String {
+    func addSpeed(_ add_speed: Int) -&gt; String {
         return "car now can go in \(self.speed + add_speed) KMPH"
     }
 }
@@ -354,7 +365,7 @@ print(my_car.addSpeed(5))
 // can also extend pre defined classes
 extension Int {
     // here the Self referes to Int type, self is value it holds
-    mutating func add(_ a: Int) -> Self {
+    mutating func add(_ a: Int) -&gt; Self {
         // self is Int
         self += a
         
@@ -370,20 +381,20 @@ print(my_num)
 
 // Generics
 protocol Walk {
-    func can_walk() -> String
+    func can_walk() -&gt; String
 }
 
 protocol Run {
-    func can_run() -> String
+    func can_run() -&gt; String
 }
 
 // conform multiple protocols
 struct Person: Walk, Run {
-    func can_walk() -> String {
+    func can_walk() -&gt; String {
         return "walking"
     }
     
-    func can_run() -> String {
+    func can_run() -&gt; String {
         "running" // for one lines return keyword is optional
     }
     
@@ -393,7 +404,7 @@ struct Person: Walk, Run {
 // let's say what if I need a function 
 //func walk_and_run(walk: Walk, run: Run) {} not like this but generic function signature, having multiple protocols
 
-func walk_and_run<T: Walk & Run>(_ param: T) -> (String, String) {
+func walk_and_run&lt;T: Walk &amp; Run&gt;(_ param: T) -&gt; (String, String) {
     return (param.can_walk(), param.can_run())
 }
 
@@ -402,10 +413,10 @@ print(walk_and_run(person))
 
 
 // only string arrays are effected
-extension Array<String> {
+extension Array&lt;String&gt; {
     
     // optional is just value or nil, used here for empty array tho it's not possible to call this function on empty array
-    func findZero() -> String? {
+    func findZero() -&gt; String? {
         
         var index: Int = 0
         
@@ -428,6 +439,16 @@ print(["1", "2", "0"].findZero())
 
 // assosciated types
 
-
-
-
+</string>
+			<key>ModifiedRange</key>
+			<string>{0, 8395}</string>
+			<key>OriginalContent</key>
+			<string></string>
+			<key>OriginalRange</key>
+			<string>{0, 0}</string>
+		</dict>
+	</array>
+	<key>FormatVersion</key>
+	<integer>2</integer>
+</dict>
+</plist>
