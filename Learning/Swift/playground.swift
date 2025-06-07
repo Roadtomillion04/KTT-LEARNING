@@ -8,7 +8,7 @@ enum Titles: Double, CaseIterable {
     
 }
 
-func title_rating(on title: Titles) -&gt; Void {
+func title_rating(on title: Titles) -> Void {
     
     var e = Titles(rawValue: title.rawValue) 
     
@@ -61,8 +61,8 @@ var travel: Travel = .car( "private", 1000)
 print(travel.get_values.0)
 
 
-// generics - &lt;T&gt; is type, it's just telling param to accept any data type as argument value 
-func print_val&lt;T&gt;(_ val: T) {
+// generics - <T> is type, it's just telling param to accept any data type as argument value 
+func print_val<T>(_ val: T) {
     print(val)
 }
 
@@ -70,14 +70,16 @@ func print_val&lt;T&gt;(_ val: T) {
 print_val(1)
 
 
-func find_greater&lt;T: Comparable&gt;(_ x: T, _ y: T) {
+func find_greater<T>(_ x: T, _ y: T) {
     print(x, y)
 }
 
 find_greater(3, 3)
 
+
 var my_list: [String] = ["1", "2", "3", "a"]
 
+// but could not do uppercase on string char with Any, cause it's all server side
 print(my_list[3].uppercased())
 
 for i in 0...my_list.count - 1 {
@@ -111,7 +113,7 @@ print(my_list)
 
 // Variadic parameters/ function overload
 
-func add_nums(_ nums: Int...) -&gt; Int {
+func add_nums(_ nums: Int...) -> Int {
     
     var total: Int = 0
     for num in nums {
@@ -176,6 +178,11 @@ class Class1 {
         print(self.name)
     }
     
+    // cannot be accessed by instances
+    private func _unknown() {
+        
+    }
+    
     deinit {
         print("deinitalized")
     }
@@ -236,11 +243,11 @@ protocol protocol2 {
 
 extension protocol2 {
     // initialized values can be accessed here, either x or self.x both works and also as the functions are defined in extension, the class/struct conforms this
-    func describe() -&gt; String {
+    func describe() -> String {
         return "name: \(name), num: \(num)"
     }
     
-    mutating func numOne() -&gt; Int {
+    mutating func numOne() -> Int {
         self.num = 1
         return self.num
     }
@@ -276,11 +283,11 @@ protocol protocol3 {
     var title: String { get }
     var rating: Double { get set }
     
-    mutating func summary() -&gt; String 
+    mutating func summary() -> String 
 }
 
 extension protocol3 {
-    mutating func summary() -&gt; String {
+    mutating func summary() -> String {
         self.rating = self.rating / 2
         return "\(title) rating: \(self.rating)"
     }
@@ -304,7 +311,6 @@ print(console_game is protocol3)
 print(console_game is consoleGame)
 
 // convenience init is just fancy way of defining default init memebers, I don't see it otherwise
-
 
 protocol protocol4 {
     var speed: Int { get set }
@@ -368,7 +374,7 @@ print(my_num.add(50))
 print(my_num)
 
 
-// Generics
+// Generics with accepting more type with &
 protocol Walk {
     func can_walk() -> String
 }
@@ -423,11 +429,203 @@ extension Array<String> {
     }
 }
 
-
-print(["1", "2", "0"].findZero())
+// shorthand if and also unwraps optional, can also use guard but it expects else 
+if let zero_arr = ["1", "2", "0"].findZero() {
+    print(zero_arr)
+}
 
 // assosciated types
+// according to what I understood they are placeholder datatype, when you are uncertain about what 
+
+protocol assosiated_types {
+    // could be Array of Int, Double, String
+    associatedtype DataType
+    
+    var my_collection: Array<DataType> { get set }
+    
+    func desc_type()
+}
+
+extension assosiated_types {
+    
+    func desc_type() {
+        print(type(of: my_collection))
+    }
+}
+
+
+// Now we can have struct for Int
+struct IntCollection: assosiated_types {
+    
+    var my_collection: Array<Int>
+    
+    init(collection: Array<Int>) {
+        self.my_collection = collection
+    }
+    
+}
+
+// and string datatypes conforming single protocol
+struct StringCollection: assosiated_types {
+    
+    var my_collection: Array<String>
+    
+    init(collection: Array<String>) {
+        self.my_collection = collection
+    }
+    
+}
 
 
 
+var int_collection = IntCollection(collection: [1, 2, 3])
+var str_collection = StringCollection(collection: ["a", "b", "c"])
 
+int_collection.desc_type()
+str_collection.desc_type()
+
+
+// generics
+// avoid duplicating reuse the code wherever possible, for example if I do + operation for Int and Double, I don't need to write two function
+
+func numeric_add<N: Numeric>(_ x: N, _ y: N) -> N {
+    return x + y
+}
+
+// this retains as Int
+print(numeric_add(5, 5), type(of: numeric_add(5, 5)))
+
+// and this as Double
+print(numeric_add(6.3, 4.2), type(of: numeric_add(6.3, 4.2)))
+
+
+// Error Handling
+struct PersonInfo {
+    var first_name: String?
+    var last_name: String?
+    
+    // one common practice is to store the Errors in enum (Error protocol) and match it with switch case, these are custom errors
+    enum NameErrors: Error {
+        case FirstNameEmpty
+        case LastNameEmpty
+        case BothNameEmpty
+    }
+    
+    // throws key word used
+    func fullName() throws -> String? {
+        switch (first_name, last_name) {
+        case (.none, .none):
+            throw NameErrors.BothNameEmpty
+            
+            // .some represents there exist value 
+        case (.none, .some):
+            throw NameErrors.FirstNameEmpty
+            
+        case (.some, .none):
+            throw NameErrors.LastNameEmpty
+        
+        // use ! when you are sure it's not nil, it unwraps
+        case (.some, .some) :
+            return "FullName: \(first_name!) \(last_name!)"
+            
+        }
+
+    }
+    
+}
+
+var person1: PersonInfo = PersonInfo()
+var person2: PersonInfo = PersonInfo(first_name: "L", last_name: "L")
+
+// error checking done in try catch
+do {
+    let p1_full_name: String? = try person1.fullName()
+    
+    // lines after try will not be executed if error as we are throwing error to catch with the function above
+    
+} catch {
+    print("Error: \(error)")
+}
+
+
+do {
+    // I think try is messing up with let unwrap, so just use !
+    if let p2_full_name: String? = try person2.fullName() {
+        print(p2_full_name!)
+    }
+    
+        
+} catch {
+    print("Error: \(error)")
+}
+
+
+// throwing error on init
+struct CarModel {
+    var model: String
+    
+    enum modelError: Error {
+        case InvalidModel
+    }
+    
+    init(_ model: String) throws {
+        if model.isEmpty {
+            throw modelError.InvalidModel
+        }
+        
+        self.model = model
+    }
+    
+}
+
+
+do {
+    var my_car_model: CarModel = try CarModel("")
+    
+    print(my_car_model.model)
+}
+// instance specific error
+catch CarModel.modelError.InvalidModel{
+    print("Invalid model")
+} catch {
+    print("other")
+}
+
+
+// according to Vandad, angry try which is try! should never be used in applications, if it fails it crashed the program
+struct Cat {
+    var sleep: Bool?
+    var hungry: Bool?
+    
+    // you can't throw error, if your enum does not confirm Error protocol
+    enum CatSleep: Error {
+        case SleepingCat
+    }
+    
+    enum CatHungry: Error {
+        case HungryCat
+    }
+
+    
+    func play() throws -> String? {
+        if sleep == nil { throw CatSleep.SleepingCat }
+        
+        return "play"
+    }
+    
+    func meow() throws -> String? {
+        if hungry == nil { throw CatHungry.HungryCat }
+        
+        return "meow"
+    }
+    
+}
+
+var my_cat: Cat = Cat()
+
+do {
+    // rememeber only one try catch error in do
+    try my_cat.play()
+} catch Cat.CatSleep.SleepingCat, Cat.CatHungry.HungryCat{
+    print("Error: Cat sleep or Hungry")
+}
