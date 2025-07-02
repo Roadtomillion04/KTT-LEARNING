@@ -7,5 +7,6 @@ target 'MyApp2' do
 
   # Pods for MyApp2
   pod 'RealmSwift', :git => 'https://github.com/realm/realm-swift.git', :branch => 'community'
+  
 
 end
