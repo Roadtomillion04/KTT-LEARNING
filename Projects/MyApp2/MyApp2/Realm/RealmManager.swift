@@ -19,8 +19,9 @@ class RealmManager: ObservableObject {
     @Published var logged_user: User? // is Optional cause we'll be deinit on Logout Press
     // and Published is every time the logged_user is modified, it publishes to every object
     
-    @Published var expense_dict: [String: Expense] = [:] // this will contain Date and Expense
+    @Published var expense_dict: [String: [Expense]] = [:] // this will contain Date and Expense
     
+    @Published var expense_array: [Expense] = []
  
     init() { // calls when class in instansiated
         openRealm()
@@ -161,14 +162,23 @@ class RealmManager: ObservableObject {
         let get_expenses_from_realm = realm.objects(User.self).filter(NSPredicate(format: "_id == %@", user._id)).first?.expenses_list
         
         // okay so I was getting Out of Bounds error while directly delaing with List<Expense> on deleting, and also I was updating expense array in the views, which is not good practise
-        expense_array = [:] // this is used List view
+//        expense_dict.removeAll() 
         // Update: Changing this to dict, I want to use date as List Section now so yeah
+        
+        expense_array = []
+        expense_dict.removeAll()
         
         
         get_expenses_from_realm?.forEach { expense in
-            expense_arra
-            
+            expense_array.append(expense)
         }
+        
+        
+        // This is shortcut grouping for duplicate keys, stores in String, [Array] as I intended
+        expense_dict = Dictionary(grouping: expense_array, by: { $0.date_without_timestamp })
+        
+        print("is")
+        print(expense_dict)
         
     }
     

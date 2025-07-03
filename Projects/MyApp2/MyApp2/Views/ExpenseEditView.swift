@@ -242,7 +242,7 @@ struct ExpenseEditView: View {
                 
                 show_alert = true }) {
                     
-                Text("Save")
+                Text("Update")
                     .frame(maxWidth: .infinity)
                     .frame(height: buttonHeight)
                     .background(Color.blue)

@@ -8,6 +8,8 @@
 import SwiftUI
 import RealmSwift
 
+import Foundation
+
 struct ExpensesView: View {
     
     @ObservedObject var realmManager: RealmManager
@@ -29,6 +31,11 @@ struct ExpensesView: View {
     
     @State private var selected_expense: Expense?
     
+    @State private var show_section: Bool = true
+    
+    private let formatter = DateFormatter()
+    
+
     var body: some View {
         
 //        ViewThatFits(in: .vertical) {
@@ -103,7 +110,7 @@ struct ExpensesView: View {
         
             
         Text("Good Morning, \(realmManager.get_name())")
-                .font(Font.custom("optima", size: titleFont * 0.9))
+                .font(Font.custom("", size: titleFont * 0.9))
                 .frame(maxWidth: .infinity)
                 .foregroundStyle(Color.white)
             
@@ -204,43 +211,59 @@ struct ExpensesView: View {
     
     private func expensesList(smallFont: CGFloat, titleFont: CGFloat, listFont: CGFloat, listTitleFont: CGFloat, listHeight: CGFloat, iconWidth: CGFloat, iconHeight: CGFloat) -> some View {
         
-        List {
+        NavigationStack {
             
-            Section(header: Text("2025-07-02")) {
-            
-                ForEach(realmManager.expense_array, id: \._id) { expense in
+            List {
+                
+                ForEach(Array(realmManager.expense_dict.keys.sorted()), id: \.self) { date in
                     
-                    expenseRow(expense: expense, smallFont: smallFont, titleFont: titleFont, listFont: listFont, listTitleFont: listTitleFont, listHeight: listHeight, iconWidth: iconWidth, iconHeight: iconHeight)
-                    
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                realmManager.delete_expense(id: expense._id)
-                                
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
+                    Section {
+                        
+                        ForEach(realmManager.expense_dict[date] ?? [], id: \._id) { expense in
+                            
+                            expenseRow(expense: expense, smallFont: smallFont, titleFont: titleFont, listFont: listFont, listTitleFont: listTitleFont, listHeight: listHeight, iconWidth: iconWidth, iconHeight: iconHeight)
+                            
+                                .swipeActions(edge: .trailing) {
+                                    
+                                    Button(role: .destructive) {
+                                        realmManager.delete_expense(id: expense._id)
+                                        
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                            
+                                .swipeActions(edge: .leading) {
+                                    Button(action: { selected_expense = expense }) {
+                                        Label("Update", systemImage: "document.badge.plus")
+                                    }
+                                }
                         }
-                    
-                        .swipeActions(edge: .leading) {
-                            Button(action: { selected_expense = expense }) {
-                                Label("Update", systemImage: "document.badge.plus")
-                            }
-                        }
+                    } header: {
+                        
+                        ub 
+                        
+                        Text("\(date)").font(Font.custom("ArialRoundedMTBold", size: listFont - listFont * 0.25))
+                    }
                 }
+                
+            }
+            .listRowSpacing(15)
+            .shadow(radius: 1)
+            
+            .sheet(item: $selected_expense) { expense in
+                ExpenseEditView(realmManager: realmManager, name: expense.name, amount: expense.amount, default_category_selection: expense.category, date: expense.date, _id: expense._id)
             }
             
         }
-        .listRowSpacing(15)
-        .shadow(radius: 1)
+            
         
         // sheet presented is not working, in that case create a identifier on swipe left gesture store the swiped expense and sheet item at end of List
-        .sheet(item: $selected_expense) { expense in
-            ExpenseEditView(realmManager: realmManager, name: expense.name, amount: expense.amount, default_category_selection: expense.category, date: expense.date, _id: expense._id)
-        }
+        
 
 
     }
-    
+        
     private func expenseRow(expense: Expense, smallFont: CGFloat, titleFont: CGFloat, listFont: CGFloat, listTitleFont: CGFloat, listHeight: CGFloat, iconWidth: CGFloat, iconHeight: CGFloat) -> some View {
     
             ZStack {
@@ -272,16 +295,15 @@ struct ExpensesView: View {
                         .font(Font.custom("ArialRoundedMTBold", size: listFont - listFont * 0.25))
                     
                 }
-                
+                .padding(.bottom, 10)
     
                 HStack {
-                    
                     Text("\(expense.name)")
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("\(expense.date.formatted(date: .abbreviated, time: .standard))")
+                    Text("at \(expense.date.formatted(date: .omitted, time: .shortened))")
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
-                .font(Font.custom("optima", size: smallFont))
+                .font(Font.custom("", size: smallFont))
             }
         }
     
