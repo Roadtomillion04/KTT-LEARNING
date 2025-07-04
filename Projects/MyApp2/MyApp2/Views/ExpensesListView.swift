@@ -33,9 +33,21 @@ struct ExpensesView: View {
     
     @State private var show_section: Bool = true
     
-    private let formatter = DateFormatter()
+    private let date_formatter = DateFormatter()
     
+    private let time_formatter = DateFormatter()
+    
+    init(realmManager: RealmManager) {
+        self.realmManager = realmManager
+        
+        date_formatter.dateFormat = "yyyy-MM-dd" // without specifying dateFormat, converting string to date does not work
+        
+        time_formatter.dateFormat = "h:mm a"
+        time_formatter.amSymbol = "AM"
+        time_formatter.pmSymbol = "PM"
+    }
 
+ 
     var body: some View {
         
 //        ViewThatFits(in: .vertical) {
@@ -100,7 +112,6 @@ struct ExpensesView: View {
             
             
             tabBar(iconWidth: iconWidth, iconHeight: iconHeight)
-                
             
         }
         
@@ -215,11 +226,11 @@ struct ExpensesView: View {
             
             List {
                 
-                ForEach(Array(realmManager.expense_dict.keys.sorted()), id: \.self) { date in
+                ForEach(Array(realmManager.expense_dict.keys.sorted()), id: \.self) { dates in
                     
                     Section {
                         
-                        ForEach(realmManager.expense_dict[date] ?? [], id: \._id) { expense in
+                        ForEach(realmManager.expense_dict[dates] ?? [], id: \._id) { expense in
                             
                             expenseRow(expense: expense, smallFont: smallFont, titleFont: titleFont, listFont: listFont, listTitleFont: listTitleFont, listHeight: listHeight, iconWidth: iconWidth, iconHeight: iconHeight)
                             
@@ -241,9 +252,8 @@ struct ExpensesView: View {
                         }
                     } header: {
                         
-                        ub 
-                        
-                        Text("\(date)").font(Font.custom("ArialRoundedMTBold", size: listFont - listFont * 0.25))
+                        Text(date_formatter.date(from: dates) ?? Date(), format: .dateTime.day().month().year())
+                            .font(Font.custom("ArialRoundedMTBold", size: listFont - listFont * 0.25))
                     }
                 }
                 
@@ -253,6 +263,8 @@ struct ExpensesView: View {
             
             .sheet(item: $selected_expense) { expense in
                 ExpenseEditView(realmManager: realmManager, name: expense.name, amount: expense.amount, default_category_selection: expense.category, date: expense.date, _id: expense._id)
+                        .presentationDetents([.fraction(0.66)])
+
             }
             
         }
@@ -298,14 +310,17 @@ struct ExpensesView: View {
                 .padding(.bottom, 10)
     
                 HStack {
+                    
                     Text("\(expense.name)")
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("at \(expense.date.formatted(date: .omitted, time: .shortened))")
+                    
+                    Text( time_formatter.string(from: expense.date) )
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
                 .font(Font.custom("", size: smallFont))
             }
         }
+
     
     private func tabBar(iconWidth: CGFloat, iconHeight: CGFloat) -> some View {
         
@@ -348,6 +363,7 @@ struct ExpensesView: View {
                     }
                     .sheet(isPresented: $show_add_view) {
                         ExpenseAddView(realmManager: realmManager)
+                            .presentationDetents([.fraction(0.66)])
                     }
                 
                 

@@ -9,6 +9,9 @@ import Foundation
 import SwiftUI
 
 
+// Detailed @ObservedObject and @EnvironmentObject explanation - https://stackoverflow.com/questions/63343819/what-is-the-difference-between-environmentobject-and-observedobject
+
+
 @main
 struct StartApp: App {
     
@@ -29,7 +32,7 @@ struct StartApp: App {
 
 struct AppFlow: View {
 
-    @EnvironmentObject var realmManager: RealmManager
+    @EnvironmentObject var realmManager: RealmManager // environemnt object is used here, to keep Appflow(), if observerd object we need to pass initializer
     
     var body: some View {
      

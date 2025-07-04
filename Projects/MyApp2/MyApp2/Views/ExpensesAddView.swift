@@ -42,10 +42,13 @@ struct ExpenseAddView: View {
     enum Alerts {
         case success // expense_create_success
         case fail // expense_greater_than_balance
+   
     }
     
     @State private var alert_status: Alerts?
     @State private var show_alert: Bool = false
+    
+    @State private var credit_amount: Int = 0
     
     
     var body: some View {
@@ -137,6 +140,7 @@ struct ExpenseAddView: View {
 
             
             VStack(spacing: 10) {
+                
                 Text("Amount")
                     .font(Font.custom("GillSans", size: fieldTitleFont))
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -159,16 +163,16 @@ struct ExpenseAddView: View {
                 
                     .focused($focusedField, equals: .amount)
                 
-                    .toolbar {
-                        
-                        ToolbarItemGroup(placement: .keyboard) {
-                            Spacer()
-                            Button("Done") {
-                                focusedField = nil
-                            }
-                        }
-                        
-                    }
+//                    .toolbar {
+//                        
+//                        ToolbarItemGroup(placement: .keyboard) {
+//                            Spacer()
+//                            Button("Done") {
+//                                focusedField = nil
+//                            }
+//                        }
+//                        
+//                    }
             }
             
             
@@ -252,40 +256,86 @@ struct ExpenseAddView: View {
             }
             
             // It appears having two alerts second alert overrides first one
+            // .alert cannot be used as with switch case in this case, as I need TextField for fail, so this is overlay way with manually creatign Rounded Rectangle
             
-            .alert(isPresented: $show_alert) {
+            .overlay() {
                 
-                switch alert_status {
-                
-                case .success:
+                if show_alert {
                     
-                    Alert(title: Text("Expense Created Successfully"), message: Text("Expense \(name) Added"), dismissButton: .default(Text("OK")) {
+                    switch alert_status {
                         
-                        dismiss()
+                    case .success:
+                        RoundedRectangle(cornerRadius: 25)
+                            .foregroundStyle(.bar)
+                            .frame(width: UIScreen.main.bounds.height / 3, height: UIScreen.main.bounds.width / 3.5)
+                            .overlay {
+                                
+                                VStack(alignment: .center) {
+                                    
+                                    Text("Expense \(name) Created")
+                                        .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.25))
+                                    
+                                    Spacer()
+                                    Divider()
+                                    
+                                    Button("Okay") {
+                                        
+                                        dismiss()
+                                    }
+                                    
+                                }
+                                .padding(.vertical, 20)
+                                
+                            }
+                            .padding(.bottom, 150)
+
+                        
+                        
+                        
+                    case .fail:
+                        
+                        RoundedRectangle(cornerRadius: 25)
+                            .foregroundStyle(.bar)
+                            .frame(width: UIScreen.main.bounds.height / 2.5, height: UIScreen.main.bounds.width / 2)
+                            .overlay {
+                                
+                                VStack(alignment: .center) {
+                                    
+                                    Text("Cannot Create Expense \n Enter the amount to be credited")
+                                        .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.25))
+                                    
+                                    
+                                    TextField("", value: $credit_amount, format: .number)
+                                        .textFieldStyle(.roundedBorder)
+                                        .padding(.horizontal,50)
+                                        .padding(.vertical, 15)
+                                        .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.25))
+                                
+                                    
+                                    HStack {
+                                            Button("cancel", role: .cancel) {
+                                                show_alert = false
+                                        }
+                                        
+                                        Spacer()
+                                        
+                                        Button("Confirm") {
+                                            realmManager.add_expense(name: "to \(realmManager.get_account_number())", amount: credit_amount, category: "Credit", date: Date.now)
+                                            
+                                            dismiss()
+                                            
+                                        }
+                                    }
+                                    .padding(.horizontal,50)
+                                }
+                            }
+                            .padding(.bottom, 150)
+
+
+                    default:
+                        Text("") // this will never called anyway
                         
                     }
-                          
-                    )
-                    
-                case .fail:
-                
-                    Alert(title: Text("Cannot create Expense!"), message: Text("Expense \(name) costs \(amount) \n Balance left: \(realmManager.get_bank_balance()) \n Do you need Credits?"), primaryButton: .default(Text("Confirm")) {
-                        realmManager.add_expense(name: "to \(realmManager.get_account_number())", amount: 250, category: "Credit", date: Date.now)
-                        
-                        
-                        dismiss()
-                        
-                    }, secondaryButton: .cancel()
-                          
-                    )
-                    
-                default:
-                    Alert(title: Text(""))
-                    
-                   
-                    }
-                
-                
                 }
                 
             }
@@ -297,12 +347,15 @@ struct ExpenseAddView: View {
                     break
                 }
             }
-   
-            
-        }
         
+        }
+            
+    }
         
 }
+    
+
+
 
 #Preview {
     
