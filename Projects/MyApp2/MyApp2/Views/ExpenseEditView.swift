@@ -16,6 +16,7 @@ struct ExpenseEditView: View {
     
     @State var name: String
     @State var amount: Int
+    @State var notes: String
     @State var default_category_selection: String
     @State var date: Date
     
@@ -181,6 +182,31 @@ struct ExpenseEditView: View {
                     }
             }
             
+            VStack(spacing: 10) {
+                
+                Text("Notes")
+                    .font(Font.custom("GillSans", size: fieldTitleFont))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                
+                
+                TextField("...", text: $notes)
+                    .frame(width: .infinity, height: fieldHeight)
+                    .font(Font.custom("", size: fieldFont - fieldFont * 0.25))
+                    .foregroundStyle(Color.black)
+                
+                
+                    .multilineTextAlignment(.leading)
+                    .padding(.horizontal)
+                    .background(RoundedRectangle(cornerRadius: 5)
+                    ).foregroundStyle(Color(hex:0xF1F5F9))
+                    .padding(.horizontal, 20)
+                
+                    .focused($focusedField, equals: .name)
+                    .textContentType(.givenName)
+                    .submitLabel(.next)
+                
+            }
             
             
             HStack(spacing: 0) {
@@ -236,7 +262,7 @@ struct ExpenseEditView: View {
                     
                 }
                 
-                realmManager.edit_expense(id: _id, name: name, amount: amount, category: default_category_selection, date: date)
+                realmManager.update_expense(id: _id, name: name, amount: amount, notes: notes, category: default_category_selection, date: date)
                 
                 alert_status = .success
                 
@@ -245,7 +271,7 @@ struct ExpenseEditView: View {
                 Text("Update")
                     .frame(maxWidth: .infinity)
                     .frame(height: buttonHeight)
-                    .background(Color.blue)
+                    .background(Color.blue.gradient)
                     .foregroundStyle(.white)
                     .cornerRadius(5)
                 

@@ -22,10 +22,13 @@ class RealmManager: ObservableObject {
     @Published var expense_dict: [String: [Expense]] = [:] // this will contain Date and Expense
     
     @Published var expense_array: [Expense] = []
+    
+    @Published var chart_dict: [String: [Expense]] = [:] // this contains category and Expense for charting
  
+    
     init() { // calls when class in instansiated
         openRealm()
-        
+       
 //        print(Realm.Configuration.defaultConfiguration.fileURL!) // -> Realm path for the simulator
     }
     
@@ -33,7 +36,21 @@ class RealmManager: ObservableObject {
         
         do {
             // schemaVersion is like build version, let's say if you update app in future you could migrate from 1 to 2 with all new features added
-            let config = Realm.Configuration(schemaVersion: 1)
+            let config = Realm.Configuration(schemaVersion: 2) /**{ migration, oldSchemaVersion in
+                if oldSchemaVersion == 1 {
+                    // migration.objects give you only one that is oldObject I think
+                    migration.enumerateObjects(ofType: "Expense") { oldExpense, newExpense in
+                        newExpense?["notes"] = "" // this set empty string for all rows
+                        
+                    }
+                }
+                
+                // to rename property/column
+                // migration.renameProperty(onType: ObjectModel, from: , to: )
+            }**/
+            
+            // migration worked! - Credit -> https://ali-akhtar.medium.com/migration-with-realm-realmswift-part-6-11c3a7b24955
+           
             
             Realm.Configuration.defaultConfiguration = config
             
@@ -47,7 +64,6 @@ class RealmManager: ObservableObject {
         }
     
     }
-    
     
     // let's handle anything related to Realm here, and also Using Bool as return type has one advantage that is I can change screen or show alert in View based on return
     
@@ -64,7 +80,6 @@ class RealmManager: ObservableObject {
             
             read_expense()
             
-            get_date(date: Date.now)
             
             return false // cause we are catching login failed
             
@@ -99,7 +114,7 @@ class RealmManager: ObservableObject {
     }
     
     
-    func add_expense(name: String, amount: Int, category: String, date: Date) -> Bool {
+    func create_expense(name: String, amount: Int, notes: String, category: String, date: Date) -> Bool {
         
         guard let realm = localRealm else { return false }
         
@@ -108,7 +123,7 @@ class RealmManager: ObservableObject {
         
         do {
             
-            let newExpense = Expense(name: name, amount: amount, category: category, date: date)
+            let newExpense = Expense(name: name, amount: amount, notes: notes, category: category, date: date)
             
             try realm.write {
                 
@@ -167,6 +182,7 @@ class RealmManager: ObservableObject {
         
         expense_array = []
         expense_dict.removeAll()
+        chart_dict.removeAll()
         
         
         get_expenses_from_realm?.forEach { expense in
@@ -177,15 +193,17 @@ class RealmManager: ObservableObject {
         // This is shortcut grouping for duplicate keys, stores in String, [Array] as I intended
         expense_dict = Dictionary(grouping: expense_array, by: { $0.date_without_timestamp })
         
-        print("is")
-        print(expense_dict)
+   
+        // Category: [Expense] array, let's handle aggregating in the View
+        chart_dict = Dictionary(grouping: expense_array, by: { $0.category })
+       
         
     }
     
     
     // for whatever reason sending id: \._id from ForEach and here id conforming Object Id matches
     
-    func edit_expense(id: ObjectId, name: String, amount: Int, category: String, date: Date) {
+    func update_expense(id: ObjectId, name: String, amount: Int, notes: String, category: String, date: Date) {
         
         guard let realm = localRealm else { return }
         
@@ -215,6 +233,7 @@ class RealmManager: ObservableObject {
                 
                 expense_to_updated.first?.name = name
                 expense_to_updated.first?.amount = amount
+                expense_to_updated.first?.notes = notes
                 expense_to_updated.first?.category = category
                 expense_to_updated.first?.date = date
                 
@@ -306,25 +325,6 @@ class RealmManager: ObservableObject {
         return logged_user?.bank_account?.receieve_amount ?? 0
     }
 
-    
-    func get_date(date: Date) {
-        
-        guard let realm = localRealm else { return }
-        
-        // just string handling, not with dates
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        let searchDate = dateFormatter.string(from: date)
-        
-        let result = realm.objects(Expense.self).filter("date_without_timestamp == %@", searchDate)
-        
-        for expense in result {
-            print(expense.name, expense.date)
-        }
-        
-    }
     
     // just deinit user, and as published used, app flow returns us to login screen
     func logout() {

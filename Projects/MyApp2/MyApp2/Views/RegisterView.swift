@@ -137,32 +137,7 @@ struct RegisterView: View {
             VStack {
                     
                     ScrollView {
-                        
-                        Button(action: { register_success =   realmManager.register_user(user_name: user_name, user_email: user_email, user_password: user_password, user_bank_name: bank_name, user_account_number: account_number) }) {
-                            
-                            Text("Register")
-                                .frame(maxWidth: .infinity)
-                                .frame(height: buttonHeight)
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(5)
-                                .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.5))
-                            
-                        }
-                        .position(x: layoutProperties.width / 2 - 14, y: layoutProperties.height - layoutProperties.height * 0.25)
-                
-                        .alert(isPresented: $register_success) {
-                            Alert(
-                                title: Text("Register Complete"),
-                                message: Text("User \(user_name) Added"),
-                                dismissButton: .default(Text("OK")) {
-                                    dismiss()
-                                }
-                                
-                            )
-                        }
-                        .padding(.horizontal)
-                    
+ 
                     inputField(title: "Name", text: $user_name, titleFont: fieldTitleFont, fieldFont: fieldFont, height: fieldHeight)
                         .focused($focusedField, equals: .name)
                         .textContentType(.givenName)
@@ -203,35 +178,60 @@ struct RegisterView: View {
                         }
                     
                 }
-                .onSubmit {
-                    switch focusedField {
-                        
-                    case .name:
-                        focusedField = .email
-                    case .email:
-                        focusedField = .password
-                    case .password:
-                        focusedField = .bank_name
-                    case .bank_name:
-                        focusedField = .account_number
-                        
-                    default:
-                        break
-                    }
-                }
-                
-                
-                }
                 .scrollIndicators(.hidden)
                 .scrollBounceBehavior(.basedOnSize)
                 
-                
-                
+                .safeAreaInset(edge: .bottom) { // this under scroll view, sets button at the bottom
+                    Button(action: { register_success =   realmManager.register_user(user_name: user_name, user_email: user_email, user_password: user_password, user_bank_name: bank_name, user_account_number: account_number) }) {
+                        
+                        Text("Register")
+                            .frame(maxWidth: .infinity)
+                            .frame(height: buttonHeight)
+                            .background(Color.blue.gradient)
+                            .foregroundColor(.white)
+                            .cornerRadius(5)
+                            .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.5))
+                        
+                    }
+                    .position(x: layoutProperties.width / 2 - 14, y: layoutProperties.height - layoutProperties.height * 0.25)
+            
+                    .alert(isPresented: $register_success) {
+                        Alert(
+                            title: Text("Register Complete"),
+                            message: Text("User \(user_name) Added"),
+                            dismissButton: .default(Text("OK")) {
+                                dismiss()
+                            }
+                            
+                        )
+                    }
+                    .padding(.horizontal)
+                }
                 
             }
-               
+            .onSubmit {
+                switch focusedField {
+                    
+                case .name:
+                    focusedField = .email
+                case .email:
+                    focusedField = .password
+                case .password:
+                    focusedField = .bank_name
+                case .bank_name:
+                    focusedField = .account_number
+                    
+                default:
+                    break
+                }
+            
+                    
+            }
+
         }
-        
+                   
+    }
+            
     
     func inputField(title: String, text: Binding<String>, titleFont: CGFloat, fieldFont: CGFloat, height: CGFloat) -> some View {
         VStack(spacing: 5) {

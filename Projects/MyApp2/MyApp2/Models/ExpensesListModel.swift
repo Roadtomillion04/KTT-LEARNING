@@ -20,16 +20,20 @@ class Expense: Object, ObjectKeyIdentifiable {
     
     @Persisted var date_without_timestamp: String
     
+    @Persisted var notes: String // this notes is newly added in realm SchemaVersion 2
+    
     // originProperty name "expenses_list" has to be same in Parent class
     @Persisted(originProperty: "expenses_list") var user: LinkingObjects<User>
     
-    convenience init(name: String, amount: Int, category: String, date: Date) {
+    convenience init(name: String, amount: Int, notes: String, category: String, date: Date) {
         self.init()
         
         self.name = name
         self.amount = amount
+        self.notes = notes
         self.category = category
         self.date = date
+        
         
         //
         let formatter = DateFormatter()

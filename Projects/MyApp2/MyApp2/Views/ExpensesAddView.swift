@@ -16,6 +16,7 @@ struct ExpenseAddView: View {
         
     @State var name: String = ""
     @State var amount: Int = 0
+    @State var notes: String = ""
     @State private var default_category_selection: String = "Food"
     @State var date: Date = Date()
     
@@ -134,10 +135,8 @@ struct ExpenseAddView: View {
                     .textContentType(.givenName)
                     .submitLabel(.next)
                 
-               
             }
             
-
             
             VStack(spacing: 10) {
                 
@@ -163,18 +162,44 @@ struct ExpenseAddView: View {
                 
                     .focused($focusedField, equals: .amount)
                 
-//                    .toolbar {
-//                        
-//                        ToolbarItemGroup(placement: .keyboard) {
-//                            Spacer()
-//                            Button("Done") {
-//                                focusedField = nil
-//                            }
-//                        }
-//                        
-//                    }
+            //                    .toolbar {
+            //
+            //                        ToolbarItemGroup(placement: .keyboard) {
+            //                            Spacer()
+            //                            Button("Done") {
+            //                                focusedField = nil
+            //                            }
+            //                        }
+            //
+            //                    }
             }
             
+            
+            VStack(spacing: 10) {
+                
+                Text("Notes")
+                    .font(Font.custom("GillSans", size: fieldTitleFont))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                
+                
+                TextField("...", text: $notes)
+                    .frame(width: .infinity, height: fieldHeight)
+                    .font(Font.custom("", size: fieldFont - fieldFont * 0.25))
+                    .foregroundStyle(Color.black)
+                
+                
+                    .multilineTextAlignment(.leading)
+                    .padding(.horizontal)
+                    .background(RoundedRectangle(cornerRadius: 5)
+                    ).foregroundStyle(Color(hex:0xF1F5F9))
+                    .padding(.horizontal, 20)
+                
+                    .focused($focusedField, equals: .name)
+                    .textContentType(.givenName)
+                    .submitLabel(.next)
+                
+            }
             
             
             HStack(spacing: 0) {
@@ -217,137 +242,143 @@ struct ExpenseAddView: View {
             
             Spacer()
             
-            Button(action: {
+           
                 
-                if amount > realmManager.get_bank_balance() {
-                    alert_status = .fail
-                    
-                    show_alert = true
-                    
-                    return // so no transaction
-                    
-                }
-                
-                realmManager.add_expense(name: name, amount: amount, category: default_category_selection, date: date)
-                
-                
-                alert_status = .success
+        }
+        .onSubmit {
+            switch focusedField {
+            case .name:
+                focusedField = .amount
+            default:
+                break
+            }
+        }
+        
+        .disabled(show_alert)
+        
+        
+        Button(action: {
+            
+            if amount > realmManager.get_bank_balance() {
+                alert_status = .fail
                 
                 show_alert = true
                 
-//                
-//                if realmManager.get_bank_balance() < 100 {
-//                    
-//                    realmManager.add_expense(name: "to \(realmManager.get_account_number())", amount: 250, category: "Credit", date: Date.now)
-//                }
+                return // so no transaction
                 
-                
-            }) {
-                Text("Save")
-                    .frame(maxWidth: .infinity)
-                    .frame(height: buttonHeight)
-                    .background(Color.blue)
-                    .foregroundStyle(.white)
-                    .cornerRadius(5)
-                
-                    .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.25))
-                    .padding(.horizontal)
-  
             }
             
-            // It appears having two alerts second alert overrides first one
-            // .alert cannot be used as with switch case in this case, as I need TextField for fail, so this is overlay way with manually creatign Rounded Rectangle
+            realmManager.create_expense(name: name, amount: amount, notes: notes, category: default_category_selection, date: date)
             
-            .overlay() {
+            
+            alert_status = .success
+            
+            show_alert = true
+            
+            //
+            //                if realmManager.get_bank_balance() < 100 {
+            //
+            //                    realmManager.add_expense(name: "to \(realmManager.get_account_number())", amount: 250, category: "Credit", date: Date.now)
+            //                }
+            
+            
+        }) {
+            Text("Save")
+                .frame(maxWidth: .infinity)
+                .frame(height: buttonHeight)
+                .background(Color.blue.gradient)
+                .foregroundStyle(.white)
+                .cornerRadius(5)
+            
+                .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.25))
+                .padding(.horizontal)
+            
+        }
+        
+        // It appears having two alerts second alert overrides first one
+        // .alert cannot be used as with switch case in this case, as I need TextField for fail, so this is overlay way with manually creatign Rounded Rectangle
+        
+        .overlay() {
+            
+            if show_alert {
                 
-                if show_alert {
+                switch alert_status {
                     
-                    switch alert_status {
-                        
-                    case .success:
-                        RoundedRectangle(cornerRadius: 25)
-                            .foregroundStyle(.bar)
-                            .frame(width: UIScreen.main.bounds.height / 3, height: UIScreen.main.bounds.width / 3.5)
-                            .overlay {
+                case .success:
+                    
+                    RoundedRectangle(cornerRadius: 25)
+                        .foregroundStyle(.bar)
+                        .frame(width: UIScreen.main.bounds.height / 3, height: UIScreen.main.bounds.width / 3.5)
+                        .overlay {
+                            
+                            VStack(alignment: .center) {
                                 
-                                VStack(alignment: .center) {
+                                Text("Expense \(name) Created")
+                                    .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.25))
+                                
+                                Spacer()
+                                Divider()
+                                
+                                Button("Okay") {
                                     
-                                    Text("Expense \(name) Created")
-                                        .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.25))
+                                    show_alert = false
+                                    dismiss()
+                                }
+                                
+                            }
+                            .padding(.vertical, 20)
+                            
+                        }
+                        .padding(.bottom, 150)
+                    
+                    
+                    
+                    
+                case .fail:
+                    
+                    RoundedRectangle(cornerRadius: 25)
+                        .foregroundStyle(.bar)
+                        .frame(width: UIScreen.main.bounds.height / 2.5, height: UIScreen.main.bounds.width / 2)
+                        .overlay {
+                            
+                            VStack(alignment: .center) {
+                                
+                                Text("Cannot Create Expense \n Enter the amount to be credited")
+                                    .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.25))
+                                
+                                
+                                TextField("", value: $credit_amount, format: .number)
+                                    .textFieldStyle(.roundedBorder)
+                                    .padding(.horizontal,50)
+                                    .padding(.vertical, 15)
+                                    .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.25))
+                                
+                                
+                                HStack {
+                                    Button("cancel", role: .cancel) {
+                                        show_alert = false
+                                    }
                                     
                                     Spacer()
-                                    Divider()
                                     
-                                    Button("Okay") {
+                                    Button("Confirm") {
+                                        realmManager.create_expense(name: "to \(realmManager.get_account_number())", amount: credit_amount, notes: "", category: "Credit", date: Date.now)
                                         
                                         dismiss()
-                                    }
-                                    
-                                }
-                                .padding(.vertical, 20)
-                                
-                            }
-                            .padding(.bottom, 150)
-
-                        
-                        
-                        
-                    case .fail:
-                        
-                        RoundedRectangle(cornerRadius: 25)
-                            .foregroundStyle(.bar)
-                            .frame(width: UIScreen.main.bounds.height / 2.5, height: UIScreen.main.bounds.width / 2)
-                            .overlay {
-                                
-                                VStack(alignment: .center) {
-                                    
-                                    Text("Cannot Create Expense \n Enter the amount to be credited")
-                                        .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.25))
-                                    
-                                    
-                                    TextField("", value: $credit_amount, format: .number)
-                                        .textFieldStyle(.roundedBorder)
-                                        .padding(.horizontal,50)
-                                        .padding(.vertical, 15)
-                                        .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.25))
-                                
-                                    
-                                    HStack {
-                                            Button("cancel", role: .cancel) {
-                                                show_alert = false
-                                        }
                                         
-                                        Spacer()
-                                        
-                                        Button("Confirm") {
-                                            realmManager.add_expense(name: "to \(realmManager.get_account_number())", amount: credit_amount, category: "Credit", date: Date.now)
-                                            
-                                            dismiss()
-                                            
-                                        }
                                     }
-                                    .padding(.horizontal,50)
                                 }
+                                .padding(.horizontal,50)
                             }
-                            .padding(.bottom, 150)
-
-
-                    default:
-                        Text("") // this will never called anyway
-                        
-                    }
-                }
-                
-            }
-            .onSubmit {
-                switch focusedField {
-                case .name:
-                    focusedField = .amount
+                        }
+                        .padding(.bottom, 175)
+                    
+                    
                 default:
-                    break
+                    Text("") // this will never called anyway
+                    
                 }
             }
-        
         }
             
     }

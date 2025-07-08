@@ -52,6 +52,7 @@ struct ExpensesView: View {
         
 //        ViewThatFits(in: .vertical) {
             
+        NavigationStack {
             
             mainContent(
                 
@@ -65,20 +66,21 @@ struct ExpensesView: View {
                 
             )
             
-//            mainContent(
-//                
-//                smallFont: layoutProperties.customFontSize.tiny,
-//                titleFont: layoutProperties.customFontSize.small,
-//                listTitleFont: layoutProperties.customFontSize.small,
-//                listFont: layoutProperties.customFontSize.small,
-//                listHeight: layoutProperties.dimensValues.small,
-//                iconHeight: layoutProperties.dimensValues.small,
-//                iconWidth: layoutProperties.dimensValues.small
-//                
-//            )
+            //            mainContent(
+            //
+            //                smallFont: layoutProperties.customFontSize.tiny,
+            //                titleFont: layoutProperties.customFontSize.small,
+            //                listTitleFont: layoutProperties.customFontSize.small,
+            //                listFont: layoutProperties.customFontSize.small,
+            //                listHeight: layoutProperties.dimensValues.small,
+            //                iconHeight: layoutProperties.dimensValues.small,
+            //                iconWidth: layoutProperties.dimensValues.small
+            //
+            //            )
             
-//        }
-        
+            //        }
+            
+        }
     
     }
     
@@ -104,11 +106,13 @@ struct ExpensesView: View {
                     title(titleFont: titleFont)
                         .zIndex(1)
                     
-                    card(titleFont: titleFont, smallFont: smallFont, listFont: listFont, listTitleFont: listTitleFont)
+                    card(titleFont: titleFont, smallFont: smallFont, listFont: listFont, listTitleFont: listTitleFont, iconHeight: iconHeight, iconWidth: iconWidth)
                 }
             }
             
             expensesList(smallFont: smallFont, titleFont: titleFont, listFont: listFont, listTitleFont: listTitleFont, listHeight: listHeight, iconWidth: iconWidth, iconHeight: iconHeight)
+            
+            Spacer()
             
             
             tabBar(iconWidth: iconWidth, iconHeight: iconHeight)
@@ -119,17 +123,20 @@ struct ExpensesView: View {
     
     private func title(titleFont: CGFloat) -> some View {
         
-            
-        Text("Good Morning, \(realmManager.get_name())")
+        HStack {
+         
+            Text("Good Morning, \(realmManager.get_name())")
                 .font(Font.custom("", size: titleFont * 0.9))
                 .frame(maxWidth: .infinity)
                 .foregroundStyle(Color.white)
             
                 .background(.blue)
+            
+        }
 
     }
     
-    private func card(titleFont: CGFloat, smallFont: CGFloat, listFont: CGFloat, listTitleFont: CGFloat) -> some View {
+    private func card(titleFont: CGFloat, smallFont: CGFloat, listFont: CGFloat, listTitleFont: CGFloat, iconHeight: CGFloat, iconWidth: CGFloat) -> some View {
                 
         ZStack {
             
@@ -144,18 +151,47 @@ struct ExpensesView: View {
             
             VStack(spacing: layoutProperties.height - layoutProperties.height * 0.95) {
                 
-                VStack(alignment: .leading) {
+                HStack {
                     
-                    Text("Total Balance")
-                        .font(Font.custom("GillSans", size: listTitleFont))
+                    VStack(alignment: .leading) {
+                        
+                        Text("Total Balance")
+                            .font(Font.custom("GillSans", size: listTitleFont))
+                        
+                        Text("₹\(realmManager.get_bank_balance())")
+                            .font(Font.custom("ArialRoundedMTBold", size: titleFont * 1.25))
+                        
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundStyle(Color.white)
+                    .padding(.horizontal, 10)
                     
-                    Text("₹\(realmManager.get_bank_balance())")
-                        .font(Font.custom("ArialRoundedMTBold", size: titleFont * 1.25))
+                    Button(action: { show_profile_view.toggle() }) {
+                        
+                        Image(systemName: "person.circle")
+                            .resizable()
+                            .frame(width: iconWidth * 2, height: iconHeight * 2)
+                            .foregroundStyle(Color.white)
+                            
+                        
+                    }
+                    .padding(.horizontal)
+                    
+                    
+                    .alert(isPresented: $show_profile_view) {
+                        
+                        Alert(
+                          
+                            title: Text("User Profile"),
+                            message:
+                                Text("Name: \(realmManager.get_name()) \n Email: \(realmManager.get_email()) \n Password: \(realmManager.get_password()) \n Bank Name: \(realmManager.get_bank_name()) \n Account Number: \(realmManager.get_account_number())"),
+                            dismissButton: .cancel(Text("Close"))
+                        )
+                        
+                    }
+                    
                     
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .foregroundStyle(Color.white)
-                .padding(.horizontal, 10)
                 
                 incomeExpenseSection(listFont: listFont)
                 
@@ -163,7 +199,7 @@ struct ExpensesView: View {
             .padding(.horizontal, 25)
             .padding(.bottom)
             .padding(.top)
-            .background(RoundedRectangle(cornerRadius: 30).foregroundStyle(Color.indigo))
+            .background(RoundedRectangle(cornerRadius: 30).foregroundStyle(Color.indigo.gradient))
             .padding(.horizontal)
             .shadow(radius: 10)
         }
@@ -226,7 +262,10 @@ struct ExpensesView: View {
             
             List {
                 
-                ForEach(Array(realmManager.expense_dict.keys.sorted()), id: \.self) { dates in
+                // ForEach expects id to be unique, here we give self itself saying we have all unique values
+                
+                // sorted(by: >) is desc, and < is asc in array
+                ForEach(Array(realmManager.expense_dict.keys).sorted(by: >), id: \.self) { dates in
                     
                     Section {
                         
@@ -242,11 +281,9 @@ struct ExpensesView: View {
                                     } label: {
                                         Label("Delete", systemImage: "trash")
                                     }
-                                }
-                            
-                                .swipeActions(edge: .leading) {
+                              
                                     Button(action: { selected_expense = expense }) {
-                                        Label("Update", systemImage: "document.badge.plus")
+                                        Label("Update", systemImage: "text.document.fill")
                                     }
                                 }
                         }
@@ -262,17 +299,14 @@ struct ExpensesView: View {
             .shadow(radius: 1)
             
             .sheet(item: $selected_expense) { expense in
-                ExpenseEditView(realmManager: realmManager, name: expense.name, amount: expense.amount, default_category_selection: expense.category, date: expense.date, _id: expense._id)
+                ExpenseEditView(realmManager: realmManager, name: expense.name, amount: expense.amount, notes: "", default_category_selection: expense.category, date: expense.date, _id: expense._id)
                         .presentationDetents([.fraction(0.66)])
 
             }
             
         }
-            
-        
         // sheet presented is not working, in that case create a identifier on swipe left gesture store the swiped expense and sheet item at end of List
         
-
 
     }
         
@@ -327,32 +361,21 @@ struct ExpensesView: View {
         // not sure how, but for n buttons n + 1 H spacing works as I intended
         HStack(spacing: layoutProperties.width / 4) {
             
-            Button(action: { show_profile_view.toggle() }) {
-                Image(systemName: "person.fill")
-                    .resizable()
-                    .frame(width: iconWidth, height: iconHeight)
-                    .foregroundStyle(Color.gray)
-                
+            NavigationLink(destination: ExpenseChartView(realmManager: realmManager)) {
+            
+                Image(systemName: "chart.bar.horizontal.page")
+                        .resizable()
+                        .frame(width: iconWidth, height: iconHeight)
+                        .foregroundStyle(Color.green)
             }
             .shadow(radius: 1)
-            
-            .alert(isPresented: $show_profile_view) {
-                
-                Alert(
-                  
-                    title: Text("User Profile"),
-                    message: 
-                        Text("Name: \(realmManager.get_name()) \n Email: \(realmManager.get_email()) \n Password: \(realmManager.get_password()) \n Bank Name: \(realmManager.get_bank_name()) \n Account Number: \(realmManager.get_account_number())"),
-                    dismissButton: .default(Text("Close"))
-                )
-                
-            }
+         
             
             ZStack {
                 
                 Circle()
                     .frame(width: iconWidth * 1.25)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(.blue.gradient)
                 
                 Text("+")
                     .font(Font.custom("GillSans", size: iconHeight))
@@ -364,8 +387,8 @@ struct ExpensesView: View {
                     .sheet(isPresented: $show_add_view) {
                         ExpenseAddView(realmManager: realmManager)
                             .presentationDetents([.fraction(0.66)])
+                           
                     }
-                
                 
             }
             .shadow(radius: 1)
@@ -378,6 +401,15 @@ struct ExpensesView: View {
                         .foregroundStyle(Color.red)
             }
             .shadow(radius: 1)
+            
+            
+//            Button(action: { realmManager.logout() }) {
+//                Image(systemName: "rectangle.portrait.and.arrow.right.fill")
+//                        .resizable()
+//                        .frame(width: iconWidth, height: iconHeight)
+//                        .foregroundStyle(Color.red)
+//            }
+//            .shadow(radius: 1)
             
         }
         

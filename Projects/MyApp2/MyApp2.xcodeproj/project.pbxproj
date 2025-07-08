@@ -7,14 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3293F43F2E12D2BD004D8DFF /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3293F43E2E12D2BD004D8DFF /* CreateAccountView.swift */; };
 		33EB531DAE1FE084813DF7CF /* Pods_MyApp2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13FB74A283D52B2686E88F0D /* Pods_MyApp2.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		13FB74A283D52B2686E88F0D /* Pods_MyApp2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyApp2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		325D38842DFFED60008C155C /* MyApp2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyApp2.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3293F43E2E12D2BD004D8DFF /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
 		7ABBBAB9EF8FE4A7BAF523FA /* Pods-MyApp2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyApp2.debug.xcconfig"; path = "Target Support Files/Pods-MyApp2/Pods-MyApp2.debug.xcconfig"; sourceTree = "<group>"; };
 		BBE151476C75AEE12DAF01C4 /* Pods-MyApp2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyApp2.release.xcconfig"; path = "Target Support Files/Pods-MyApp2/Pods-MyApp2.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -55,7 +53,6 @@
 		325D387B2DFFED60008C155C = {
 			isa = PBXGroup;
 			children = (
-				3293F43E2E12D2BD004D8DFF /* CreateAccountView.swift */,
 				325D38862DFFED60008C155C /* MyApp2 */,
 				325D38852DFFED60008C155C /* Products */,
 				71932225CAC1E70B061A1C91 /* Pods */,
@@ -228,7 +225,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3293F43F2E12D2BD004D8DFF /* CreateAccountView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
