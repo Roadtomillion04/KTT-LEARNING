@@ -38,13 +38,11 @@ class Expense: Object, ObjectKeyIdentifiable {
         //
         let formatter = DateFormatter()
 //        formatter.timeStyle = .none
-        formatter.dateFormat = "yyyy'-'MM'-'dd"
+        formatter.dateFormat = "MMM d, yyyy"
         
-        let get_string_date_from_timestamp = formatter.string(from: self.date)
-   
+        self.date_without_timestamp = formatter.string(from: self.date)
         
-        // date formatting no work for now, so let's handle with strings
-        self.date_without_timestamp = String(String(get_string_date_from_timestamp).prefix(10))
+//        print(formatter.date(from: self.date_without_timestamp)!)
         
     }
         

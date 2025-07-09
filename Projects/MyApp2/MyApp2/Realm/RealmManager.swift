@@ -36,21 +36,38 @@ class RealmManager: ObservableObject {
         
         do {
             // schemaVersion is like build version, let's say if you update app in future you could migrate from 1 to 2 with all new features added
-            let config = Realm.Configuration(schemaVersion: 2) /**{ migration, oldSchemaVersion in
-                if oldSchemaVersion == 1 {
-                    // migration.objects give you only one that is oldObject I think
-                    migration.enumerateObjects(ofType: "Expense") { oldExpense, newExpense in
-                        newExpense?["notes"] = "" // this set empty string for all rows
-                        
-                    }
-                }
-                
-                // to rename property/column
-                // migration.renameProperty(onType: ObjectModel, from: , to: )
-            }**/
+//            let config = Realm.Configuration(schemaVersion: 2) { migration, oldSchemaVersion in
+//                if oldSchemaVersion == 1 {
+//                    // migration.objects give you only one that is oldObject I think
+//                    migration.enumerateObjects(ofType: "Expense") { oldExpense, newExpense in
+//                        newExpense?["notes"] = "" // this set empty string for all rows
+//                        
+//                    }
+//                }
+//                
+//                // to rename property/column
+//                // migration.renameProperty(onType: ObjectModel, from: , to: )
+//            }
             
             // migration worked! - Credit -> https://ali-akhtar.medium.com/migration-with-realm-realmswift-part-6-11c3a7b24955
-           
+        
+            
+            
+            // 2nd migration for formatting Expense.date_without_timestamp to format month day, year
+            
+//            let date_formatter = DateFormatter()
+//            
+//            date_formatter.dateFormat = "MMM d, yyyy"
+//            
+//            let config = Realm.Configuration(schemaVersion: 3) { migraion, oldSchemaVersion in
+//                if oldSchemaVersion == 2 {
+//                    migraion.enumerateObjects(ofType: "Expense") { oldExpense, newExpense in
+//                        newExpense?["date_without_timestamp"] = date_formatter.string(from: oldExpense?["date"] as! Date) // oldExpense is just for semantics
+//                    }
+//                }
+//            }
+            
+            let config = Realm.Configuration(schemaVersion: 3)
             
             Realm.Configuration.defaultConfiguration = config
             
@@ -193,7 +210,10 @@ class RealmManager: ObservableObject {
         // This is shortcut grouping for duplicate keys, stores in String, [Array] as I intended
         expense_dict = Dictionary(grouping: expense_array, by: { $0.date_without_timestamp })
         
-   
+            
+//        print(expense_dict.compactMapValues({ $0.filter( { $0.category == "Food" }) }) )
+        
+        
         // Category: [Expense] array, let's handle aggregating in the View
         chart_dict = Dictionary(grouping: expense_array, by: { $0.category })
        

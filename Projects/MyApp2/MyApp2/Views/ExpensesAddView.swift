@@ -106,7 +106,7 @@ struct ExpenseAddView: View {
         VStack(spacing: 25) {
             
             Text("Add Expense")
-                .font(Font.custom("ArialRoundedMTBold", size: titleFont * 1.25))
+                .font(Font.custom("ArialRoundedMTBold", size: titleFont)).underline()
             
             Divider()
                 .hidden()
@@ -183,14 +183,14 @@ struct ExpenseAddView: View {
                     .padding(.horizontal)
                 
                 
-                TextField("...", text: $notes)
+                TextField("", text: $notes, axis: .vertical)
                     .frame(width: .infinity, height: fieldHeight)
                     .font(Font.custom("", size: fieldFont - fieldFont * 0.25))
                     .foregroundStyle(Color.black)
-                
+                    .lineLimit(2...)
                 
                     .multilineTextAlignment(.leading)
-                    .padding(.horizontal)
+                    .padding()
                     .background(RoundedRectangle(cornerRadius: 5)
                     ).foregroundStyle(Color(hex:0xF1F5F9))
                     .padding(.horizontal, 20)
@@ -242,7 +242,7 @@ struct ExpenseAddView: View {
             
             Spacer()
             
-           
+            
                 
         }
         .onSubmit {

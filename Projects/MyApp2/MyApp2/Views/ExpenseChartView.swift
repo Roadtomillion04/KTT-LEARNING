@@ -38,7 +38,11 @@ struct ExpenseChartView: View {
     @State private var show_popover_menu: Bool = false
 
     @State private var show_annotations: Bool = false
+    
+    
+    @State private var selected_x_value: String?
   
+    
     var body: some View {
         
         VStack(alignment: .leading) {
@@ -54,7 +58,7 @@ struct ExpenseChartView: View {
                 .font(Font.custom("GillSans", size: 20))
             
             // on button action, no need for () calling func
-            Button(action: display_chart ) {
+            Button(action: display_chart) {
                 Text("Show Chart")
                     .padding(7.5)
                     .background(Color.blue)
@@ -75,17 +79,17 @@ struct ExpenseChartView: View {
                 .foregroundStyle(.primary)
                 .font(Font.custom("GillSans", size: 20))
             
-     
+            
             
             Menu("Summary ⌄") {
-                                                    // desc sort
+                // desc sort
                 ForEach(self.expense_chart.sorted(by: { $0.sum < $1.sum }).filter({$0.sum > 0})) { entry in
                     Text("\(entry.category) : ₹\(entry.sum)")
                 }
                 
             }
             
-//            Button("Annotation") { show_annotations.toggle() }
+            //            Button("Annotation") { show_annotations.toggle() }
             .padding(.vertical, 5)
             .padding(.horizontal)
             .background(RoundedRectangle(cornerRadius: 5).fill(Color(hex: 0xF1F5F9)))
@@ -99,64 +103,85 @@ struct ExpenseChartView: View {
         .padding(.bottom)
         .onAppear(perform: display_chart)
         
-        VStack {
-
-            Chart {
+        // < - asc, > - desc
+        Chart {
+            
+            // let's display Credit at last, and change color
+//            ForEach(self.expense_chart.filter({ $0.category != "Credit" })) { entry in
+//
+            ForEach(self.expense_chart.sorted(by: { $0.sum < $1.sum })) { entry in
                 
-                // let's display Credit at last, and change color
-                ForEach(self.expense_chart.filter({ $0.category != "Credit" })) { entry in
-                    
-                    BarMark(
-                        x: .value("Category", entry.category),
-                        y: .value("Spent", entry.sum)
-                    )
-                    .foregroundStyle(.blue.gradient)
-                    
-//                    .annotation(position: .trailing) {
-//                        if show_annotations {
-//                            Text("₹\(entry.sum)")
-//                                .font(Font.custom("GillSans", size: 10))
-//                        }
-//                    }
-                    
+                BarMark(
+                    x: .value("Category", entry.category),
+                    y: .value("Spent", entry.sum)
+                )
+                .foregroundStyle(entry.category == "Credit" ? Color.green.gradient : Color.blue.gradient)
+                
+                .annotation(position: .top) {
+                    if show_annotations {
+                        Text("₹\(entry.sum)")
+                            .font(Font.custom("GillSans", size: 15))
+                    }
                 }
+            }
+
+//                BarMark(
+//                    x: .value("Category", entry.category),
+//                    y: .value("Spent", entry.sum)
+//                )
+//                .foregroundStyle(.blue.gradient)
+//                
+//                //                    .annotation(position: .trailing) {
+//                //                        if show_annotations {
+//                //                            Text("₹\(entry.sum)")
+//                //                                .font(Font.custom("GillSans", size: 10))
+//                //                        }
+//                //                    }
+//                
+//            }
+//                    
+//                    
+//            BarMark(
+//                x: .value("Category", self.expense_chart.filter( { $0.category == "Credit" }).first?.category ?? ""),
+//                
+//                y: .value("Spent", self.expense_chart.filter( { $0.category == "Credit" }).first?.sum ?? 0)
+//            )
+//            .foregroundStyle(.green.gradient)
+                                        
+        }
+        
+        
+        .chartXSelection(value: $selected_x_value)
+        
+        .onChange(of: selected_x_value) { old, new in
+            if new != nil {
+                show_annotations.toggle()
+            }
+            
+//            print(self.expense_chart.filter({ $0.category == selected_x_value }))
+        }
+        
+        
+        // this adding manual legend
+        .chartForegroundStyleScale(["Expenses": Color.blue.gradient, "Credit": Color.green.gradient])
 
         
-                BarMark(
-                    x: .value("Category", self.expense_chart.filter( { $0.category == "Credit" }).first?.category ?? ""),
-                    
-                    y: .value("Spent", self.expense_chart.filter( { $0.category == "Credit" }).first?.sum ?? 0)
-                )
-                .foregroundStyle(.green.gradient)
-                
-//                .annotation(position: .trailing) {
-//                    if show_annotations {
-//                        Text("₹\(self.expense_chart.filter( { $0.category == "Credit" }).first?.sum ?? 0)")
-//                            .font(Font.custom("GillSans", size: 10))
-//                    }
-//                }
-                
-                
-            }
+        .chartYAxis {
             
-            // this adding manual legend
-            .chartForegroundStyleScale(["Expenses": Color.blue.gradient, "Credit": Color.green.gradient])
+            AxisMarks(stroke: StrokeStyle(lineWidth: 0)) // this remove the stroke grid in the background
             
-            .chartYAxis {
-                
-                AxisMarks(stroke: StrokeStyle(lineWidth: 0)) // this remove the stroke grid in the background
-                
-                AxisMarks(position: .leading) // by default y axis is placed at right side
-            }
-            
-            
-            .chartXAxis{
-                AxisMarks(stroke: StrokeStyle(lineWidth: 0))
-            }
-            
-//            .chartYScale(domain: 0...1000) --> setting Y axis scale manually
-            
+            AxisMarks(position: .leading) // by default y axis is placed at right side
         }
+        
+        
+        .chartXAxis{
+            AxisMarks(stroke: StrokeStyle(lineWidth: 0))
+        }
+        
+        //            .chartYScale(domain: 0...1000) --> setting Y axis scale manually
+
+        
+        
         .padding(.horizontal)
         .onAppear(perform: display_chart) // onAppear works, where init() isn't
         

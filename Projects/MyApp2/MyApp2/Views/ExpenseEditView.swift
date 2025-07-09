@@ -37,6 +37,7 @@ struct ExpenseEditView: View {
     enum Field {
         case name
         case amount
+        case notes
     }
     
     @FocusState private var focusedField: Field?
@@ -50,6 +51,8 @@ struct ExpenseEditView: View {
     @State private var alert_status: Alerts?
     @State private var show_alert: Bool = false
     
+    
+    @State private var new_amount: Int = 0
     
 //    init(name: String, amount: Int, category: String, date: Date) {
 //        self.name = name
@@ -110,10 +113,10 @@ struct ExpenseEditView: View {
     ) -> some View {
         
             
-        VStack(spacing: 25) {
+        VStack(spacing: 20) {
             
             Text("Edit Expense")
-                .font(Font.custom("ArialRoundedMTBold", size: titleFont * 1.25))
+                .font(Font.custom("ArialRoundedMTBold", size: titleFont)).underline()
             
             Divider()
                 .hidden()
@@ -173,7 +176,6 @@ struct ExpenseEditView: View {
                     .toolbar {
                         
                         ToolbarItemGroup(placement: .keyboard) {
-                            Spacer()
                             Button("Done") {
                                 focusedField = nil
                             }
@@ -181,6 +183,15 @@ struct ExpenseEditView: View {
                         
                     }
             }
+            .onChange(of: amount) { old, new in // only the subtracted amount should be checked with bank balance
+                if new > amount {
+                    new_amount = new - amount
+                }
+                else {
+                    new_amount = 0
+                }
+            }
+            
             
             VStack(spacing: 10) {
                 
@@ -189,15 +200,15 @@ struct ExpenseEditView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 
-                
-                TextField("...", text: $notes)
+                // axis: .vertical sets multiline
+                TextField("", text: $notes, axis: .vertical)
                     .frame(width: .infinity, height: fieldHeight)
                     .font(Font.custom("", size: fieldFont - fieldFont * 0.25))
                     .foregroundStyle(Color.black)
-                
-                
+                    .lineLimit(2...) // reserves spaces for 2 lines, bigger field
+                    
                     .multilineTextAlignment(.leading)
-                    .padding(.horizontal)
+                    .padding()
                     .background(RoundedRectangle(cornerRadius: 5)
                     ).foregroundStyle(Color(hex:0xF1F5F9))
                     .padding(.horizontal, 20)
@@ -252,7 +263,7 @@ struct ExpenseEditView: View {
             
             Button(action: {
                 
-                if amount > realmManager.get_bank_balance() {
+                if new_amount > realmManager.get_bank_balance() {
                     
                     alert_status = .fail
                     
