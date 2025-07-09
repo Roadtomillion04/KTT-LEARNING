@@ -317,7 +317,7 @@ struct ExpensesView: View {
             
             // ForEach expects id to be unique, here we give self itself saying we have all unique values
             
-            // sorted(by: >) is desc, and < is asc in array
+            // sorted(by: >) is desc, and < is asc in array, and we are comparing by formatting it to date, String sort giving wrong results
             ForEach(Array(search_filter().keys).sorted(by: { date_formatter.date(from: $0)! > date_formatter.date(from: $1)! }), id: \.self) { dates in
                 
                 Section {

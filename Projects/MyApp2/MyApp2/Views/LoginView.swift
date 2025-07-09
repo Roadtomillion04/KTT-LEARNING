@@ -140,7 +140,6 @@ struct LoginView: View {
                 //        .ignoresSafeArea(.keyboard, edges: .all)
                 
             }
-            .navigationViewStyle(.stack)
 //            .frame(maxHeight: .infinity)
 //            .background(.red)
             
@@ -165,7 +164,13 @@ struct LoginView: View {
            
         VStack(spacing: 20) {
             
-            ScrollView {  
+            ScrollView(.vertical) {
+                
+                signUpLink(smallFont: smallFont)
+                        .position(x: layoutProperties.width / 2 - 12, y: layoutProperties.height - layoutProperties.height * 0.1)
+                // this is the working one as I intended I can bring for now
+                
+                
             
             title(titleFont: titleFont)
             
@@ -190,17 +195,14 @@ struct LoginView: View {
                 .hidden()
             
             socialLoginSection(smallFont: smallFont, buttonHeight: buttonHeight)
-            
 
         }
         .scrollIndicators(.hidden)
         .scrollBounceBehavior(.basedOnSize)
-        .safeAreaInset(edge: .bottom) { // this should be under scroll view to set this at bottom
-            signUpLink(smallFont: smallFont)
-            }
         
         }
         .padding(.horizontal)
+        
         
         
     }
@@ -316,7 +318,7 @@ struct LoginView: View {
                     .font(.custom("GillSans", size: buttonFont - buttonFont * 0.25))
                     .frame(maxWidth: .infinity)
                     .frame(height: buttonHeight)
-                    .background(Color.blue.gradient)
+                    .background(Color.blue)
                     .foregroundColor(.white)
                     .cornerRadius(5)
             }

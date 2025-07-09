@@ -58,50 +58,50 @@ struct RegisterView: View {
                     
                     
 //                    mainContent(
-//                        
+//
 //                        titleFont: layoutProperties.customFontSize.mediumLarge,
 //                        fieldTitleFont: layoutProperties.customFontSize.mediumLarge,
 //                        fieldFont: layoutProperties.customFontSize.mediumLarge,
 //                        fieldHeight: layoutProperties.dimensValues.mediumLarge,
 //                        buttonHeight: layoutProperties.dimensValues.mediumLarge,
 //                        buttonFont: layoutProperties.customFontSize.mediumLarge
-//                        
+//
 //                    )
-//                    
-//                    
+//
+//
 //                    mainContent(
-//                        
+//
 //                        titleFont: layoutProperties.customFontSize.medium,
 //                        fieldTitleFont: layoutProperties.customFontSize.medium,
 //                        fieldFont: layoutProperties.customFontSize.medium,
 //                        fieldHeight: layoutProperties.dimensValues.medium,
 //                        buttonHeight: layoutProperties.dimensValues.medium,
 //                        buttonFont: layoutProperties.customFontSize.medium
-//                        
+//
 //                    )
-//                    
+//
 //                    mainContent(
-//                        
+//
 //                        titleFont: layoutProperties.customFontSize.smallMedium,
 //                        fieldTitleFont: layoutProperties.customFontSize.smallMedium,
 //                        fieldFont: layoutProperties.customFontSize.smallMedium,
 //                        fieldHeight: layoutProperties.dimensValues.smallMedium,
 //                        buttonHeight: layoutProperties.dimensValues.smallMedium,
 //                        buttonFont: layoutProperties.customFontSize.smallMedium
-//                        
+//
 //                    )
-//                    
+//
 //                    mainContent(
-//                        
+//
 //                        titleFont: layoutProperties.customFontSize.small,
 //                        fieldTitleFont: layoutProperties.customFontSize.small,
 //                        fieldFont: layoutProperties.customFontSize.small,
 //                        fieldHeight: layoutProperties.dimensValues.small,
 //                        buttonHeight: layoutProperties.dimensValues.small,
 //                        buttonFont: layoutProperties.customFontSize.small
-//                        
+//
 //                    )
-//                    
+//
 //                }
             
       
@@ -136,58 +136,14 @@ struct RegisterView: View {
                 
             VStack {
                     
-                    ScrollView {
- 
-                    inputField(title: "Name", text: $user_name, titleFont: fieldTitleFont, fieldFont: fieldFont, height: fieldHeight)
-                        .focused($focusedField, equals: .name)
-                        .textContentType(.givenName)
-                        .submitLabel(.next)
-                        .disableAutocorrection(true)
+                ScrollView {
                     
-                    inputField(title: "Email", text: $user_email, titleFont: fieldTitleFont, fieldFont: fieldFont, height: fieldHeight)
-                        .focused($focusedField, equals: .email)
-                        .textContentType(.emailAddress)
-                        .submitLabel(.next)
-                        .disableAutocorrection(true)
-                    
-                    secureField(title: "Password", text: $user_password, titleFont: fieldTitleFont, fieldFont: fieldFont, height: fieldHeight)
-                        .focused($focusedField, equals: .password)
-                        .textContentType(.newPassword)
-                        .submitLabel(.next)
-                        .disableAutocorrection(true)
-                    
-                    inputField(title: "Bank", text: $bank_name, titleFont: fieldTitleFont, fieldFont: fieldFont, height: fieldHeight)
-                        .focused($focusedField, equals: .bank_name)
-                        .textContentType(.name)
-                        .submitLabel(.next)
-                        .disableAutocorrection(true)
-                    
-                    inputField(title: "Account Number", text: $account_number, titleFont: fieldTitleFont, fieldFont: fieldFont, height: fieldHeight)
-                        .focused($focusedField, equals: .account_number)
-                        .textContentType(.creditCardNumber)
-                    
-                        .toolbar {
-                            
-                            ToolbarItemGroup(placement: .keyboard) {
-                                Spacer()
-                                Button("Done") {
-                                    focusedField = nil
-                                }
-                            }
-                            
-                        }
-                    
-                }
-                .scrollIndicators(.hidden)
-                .scrollBounceBehavior(.basedOnSize)
-                
-                .safeAreaInset(edge: .bottom) { // this under scroll view, sets button at the bottom
                     Button(action: { register_success =   realmManager.register_user(user_name: user_name, user_email: user_email, user_password: user_password, user_bank_name: bank_name, user_account_number: account_number) }) {
                         
                         Text("Register")
                             .frame(maxWidth: .infinity)
                             .frame(height: buttonHeight)
-                            .background(Color.blue.gradient)
+                            .background(Color.blue)
                             .foregroundColor(.white)
                             .cornerRadius(5)
                             .font(Font.custom("ArialRoundedMTBold", size: buttonFont - buttonFont * 0.5))
@@ -206,7 +162,45 @@ struct RegisterView: View {
                         )
                     }
                     .padding(.horizontal)
-                }
+                
+                inputField(title: "Name", text: $user_name, titleFont: fieldTitleFont, fieldFont: fieldFont, height: fieldHeight)
+                    .focused($focusedField, equals: .name)
+                    .textContentType(.givenName)
+                    .submitLabel(.next)
+                    .disableAutocorrection(true)
+                
+                inputField(title: "Email", text: $user_email, titleFont: fieldTitleFont, fieldFont: fieldFont, height: fieldHeight)
+                    .focused($focusedField, equals: .email)
+                    .textContentType(.emailAddress)
+                    .submitLabel(.next)
+                    .disableAutocorrection(true)
+                
+                secureField(title: "Password", text: $user_password, titleFont: fieldTitleFont, fieldFont: fieldFont, height: fieldHeight)
+                    .focused($focusedField, equals: .password)
+                    .textContentType(.newPassword)
+                    .submitLabel(.next)
+                    .disableAutocorrection(true)
+                
+                inputField(title: "Bank", text: $bank_name, titleFont: fieldTitleFont, fieldFont: fieldFont, height: fieldHeight)
+                    .focused($focusedField, equals: .bank_name)
+                    .textContentType(.name)
+                    .submitLabel(.next)
+                    .disableAutocorrection(true)
+                
+                inputField(title: "Account Number", text: $account_number, titleFont: fieldTitleFont, fieldFont: fieldFont, height: fieldHeight)
+                    .focused($focusedField, equals: .account_number)
+                    .textContentType(.creditCardNumber)
+                
+                    .toolbar {
+                        
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
+                            Button("Done") {
+                                focusedField = nil
+                            }
+                        }
+                        
+                    }
                 
             }
             .onSubmit {
@@ -224,14 +218,20 @@ struct RegisterView: View {
                 default:
                     break
                 }
-            
-                    
             }
-
-        }
-                   
-    }
             
+            
+            }
+            .scrollIndicators(.hidden)
+            .scrollBounceBehavior(.basedOnSize)
+            
+            
+            
+            
+        }
+           
+    }
+        
     
     func inputField(title: String, text: Binding<String>, titleFont: CGFloat, fieldFont: CGFloat, height: CGFloat) -> some View {
         VStack(spacing: 5) {
