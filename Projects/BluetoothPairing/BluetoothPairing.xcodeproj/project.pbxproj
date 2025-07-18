@@ -6,8 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F808FB4595EC8E2AC8126352 /* Pods_BluetoothPairing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E960DA92A68347102E9A1BAC /* Pods_BluetoothPairing.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		32BFE42C2E1E987600EC2B57 /* BluetoothPairing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BluetoothPairing.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D9AA9BE7FCF06EC0CD0C0ED /* Pods-BluetoothPairing.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BluetoothPairing.release.xcconfig"; path = "Target Support Files/Pods-BluetoothPairing/Pods-BluetoothPairing.release.xcconfig"; sourceTree = "<group>"; };
+		88883A5BE1BDE3347CAC0834 /* Pods-BluetoothPairing.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BluetoothPairing.debug.xcconfig"; path = "Target Support Files/Pods-BluetoothPairing/Pods-BluetoothPairing.debug.xcconfig"; sourceTree = "<group>"; };
+		E960DA92A68347102E9A1BAC /* Pods_BluetoothPairing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BluetoothPairing.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -36,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F808FB4595EC8E2AC8126352 /* Pods_BluetoothPairing.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,6 +55,8 @@
 			children = (
 				32BFE42E2E1E987600EC2B57 /* BluetoothPairing */,
 				32BFE42D2E1E987600EC2B57 /* Products */,
+				6A5B432A9C9E273C09215701 /* Pods */,
+				B8B37E9BE1634587092D2922 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,6 +68,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6A5B432A9C9E273C09215701 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				88883A5BE1BDE3347CAC0834 /* Pods-BluetoothPairing.debug.xcconfig */,
+				7D9AA9BE7FCF06EC0CD0C0ED /* Pods-BluetoothPairing.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		B8B37E9BE1634587092D2922 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E960DA92A68347102E9A1BAC /* Pods_BluetoothPairing.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -65,9 +92,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 32BFE4372E1E987800EC2B57 /* Build configuration list for PBXNativeTarget "BluetoothPairing" */;
 			buildPhases = (
+				41848CC52E21AC7ED4E270A8 /* [CP] Check Pods Manifest.lock */,
 				32BFE4282E1E987600EC2B57 /* Sources */,
 				32BFE4292E1E987600EC2B57 /* Frameworks */,
 				32BFE42A2E1E987600EC2B57 /* Resources */,
+				3773DBD1757375D12C1015C1 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -77,8 +106,6 @@
 				32BFE42E2E1E987600EC2B57 /* BluetoothPairing */,
 			);
 			name = BluetoothPairing;
-			packageProductDependencies = (
-			);
 			productName = BluetoothPairing;
 			productReference = 32BFE42C2E1E987600EC2B57 /* BluetoothPairing.app */;
 			productType = "com.apple.product-type.application";
@@ -126,6 +153,52 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3773DBD1757375D12C1015C1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BluetoothPairing/Pods-BluetoothPairing-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BluetoothPairing/Pods-BluetoothPairing-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BluetoothPairing/Pods-BluetoothPairing-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		41848CC52E21AC7ED4E270A8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BluetoothPairing-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		32BFE4282E1E987600EC2B57 /* Sources */ = {
@@ -265,6 +338,7 @@
 		};
 		32BFE4382E1E987800EC2B57 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 88883A5BE1BDE3347CAC0834 /* Pods-BluetoothPairing.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -273,6 +347,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3H3S5846M9;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BluetoothPairing/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Allow Bluetooth Always";
@@ -302,6 +377,7 @@
 		};
 		32BFE4392E1E987800EC2B57 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7D9AA9BE7FCF06EC0CD0C0ED /* Pods-BluetoothPairing.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -310,6 +386,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3H3S5846M9;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BluetoothPairing/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Allow Bluetooth Always";

@@ -1,0 +1,31 @@
+PODS:
+  - Realm (20.0.3):
+    - Realm/Headers (= 20.0.3)
+  - Realm/Headers (20.0.3)
+  - RealmSwift (20.0.3):
+    - Realm (= 20.0.3)
+
+DEPENDENCIES:
+  - RealmSwift (from `https://github.com/realm/realm-swift.git`, branch `community`)
+
+SPEC REPOS:
+  trunk:
+    - Realm
+
+EXTERNAL SOURCES:
+  RealmSwift:
+    :branch: community
+    :git: https://github.com/realm/realm-swift.git
+
+CHECKOUT OPTIONS:
+  RealmSwift:
+    :commit: 6260534683132eb981338c7c39fd5e69205876e6
+    :git: https://github.com/realm/realm-swift.git
+
+SPEC CHECKSUMS:
+  Realm: 853e5089d6042dff807bda000277eadfe2da93d2
+  RealmSwift: f33c19577cefcbf681345d721fcbc7b42be4c949
+
+PODFILE CHECKSUM: 7fe575f50c6ef1263989c71a4c4aedd963d1cf06
+
+COCOAPODS: 1.16.2

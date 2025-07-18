@@ -1,0 +1,11 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'BluetoothPairing' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for BluetoothPairing
+  pod 'RealmSwift', :git => 'https://github.com/realm/realm-swift.git', :branch => 'community'
+
+end
