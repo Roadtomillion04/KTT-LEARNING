@@ -82,6 +82,7 @@ struct LoginView: View {
                 VStack(spacing: 0) { // no spacing as per original app
                     
                     TextField("Mobile No.", text: $mobileNumber)
+                        .foregroundStyle(.black)
                         .keyboardType(.numberPad)
                         .textContentType(.telephoneNumber)
                         .padding(12)
@@ -117,6 +118,7 @@ struct LoginView: View {
                     
                     if showOtpField {
                         TextField("OTP", text: $otp)
+                            .foregroundStyle(.black)
                             .keyboardType(.numberPad)
                             .textContentType(.oneTimeCode)
                             .padding(12)

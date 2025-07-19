@@ -16,7 +16,6 @@ class User: Object, ObjectKeyIdentifiable {
     
     @Persisted var loginStatus: Bool
     
-    @Persisted var pairedPeripheral: List<PairedPeripherals>
     
     convenience init(mobileNumber: String) {
         self.init()

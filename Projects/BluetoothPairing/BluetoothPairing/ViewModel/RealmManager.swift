@@ -16,8 +16,6 @@ class RealmManager: ObservableObject {
     @Published var currentUser: User?
     
     
-    @Published var pairedPeripheralList: [PairedPeripherals] = []
-    
     init() {
         openRealm()
         
@@ -35,7 +33,6 @@ class RealmManager: ObservableObject {
         if let user = realm.objects(User.self).filter("loginStatus == YES").first {
             currentUser = user
             
-            readPeripheral()
         }
         
     }
@@ -45,7 +42,7 @@ class RealmManager: ObservableObject {
         
         do {
             
-            let config = Realm.Configuration(schemaVersion: 1)
+            let config = Realm.Configuration(schemaVersion: 1, deleteRealmIfMigrationNeeded: true)
             Realm.Configuration.defaultConfiguration = config
             localRealm = try Realm()
             
@@ -72,8 +69,7 @@ class RealmManager: ObservableObject {
                 try realm.write { // modifying Realm Object outside write scope throws you error
                     currentUser?.loginStatus = true
                 }
-                
-                readPeripheral()
+
                 
                 return
                 
@@ -121,60 +117,57 @@ class RealmManager: ObservableObject {
     }
     
     
-    func addPeripheral(name: String, UUID: String) {
-        
-        guard let realm = localRealm else { return }
-        
-        guard let user = currentUser else { return }
-        
-        // same case here, check for duplicates pairing just in case, okay so I had this doubt UUID might be chagning well the answer is no for the peripheral
-        if realm.objects(PairedPeripherals.self).filter("peripheralName == '\(name)' AND peripheralName == '\(UUID)'").first != nil {
-            
-                return
-            
-        }
-        
-        do {
-            
-            let newPeripheral = PairedPeripherals(peripheralName: name, peripheralUUID: UUID)
-            
-            try realm.write {
-                
-                user.pairedPeripheral.append(newPeripheral)
-                
-            }
-            
-            readPeripheral()
-            
-        }
-        
-        catch {
-            print("Error adding peripheral: \(error)")
-        }
-        
-    }
+    // ios has lot of restriction..., forget about storing peripherals
     
-    
-    func readPeripheral() {
-        
-        guard let realm = localRealm else { return }
-               
-        guard let user = currentUser else { return }
-        
-
-        print("bi")
-        
-        let pairedPeripherals = realm.objects(User.self).filter(NSPredicate(format: "_id == %@", user._id)).first?.pairedPeripheral
-        
-        
-        pairedPeripheralList.removeAll()
-        
-        pairedPeripherals?.forEach { peripheral in
-            pairedPeripheralList.append(peripheral)
-        }
-        
-        // as @Published is used, it automatically announces to all objects and refresh the view
-        
-    }
+//    func addPeripheral(name: String, services: [String]) {
+//        
+//        guard let realm = localRealm else { return }
+//        
+//        // same case here, check for duplicates pairing just in case, okay so I had this doubt UUID might be chagning well the answer is no for the peripheral
+//        if realm.objects(PairedPeripherals.self).filter("peripheralName == '\(name)'").first != nil {
+//            
+//                return
+//            
+//        }
+//        
+//        do {
+//            
+//            let first = services[0]
+//            
+//            let newPeripheral = PairedPeripherals(peripheralName: name, peripheralServices: first)
+//            
+//            try realm.write {
+//                
+//                realm.add(newPeripheral)
+//                
+//            }
+//            
+//            readPeripheral()
+//            
+//        }
+//        
+//        catch {
+//            print("Error adding peripheral: \(error)")
+//        }
+//        
+//    }
+//    
+//    
+//    func readPeripheral() {
+//        
+//        guard let realm = localRealm else { return }
+//
+//        
+//        let pairedPeripherals = realm.objects(PairedPeripherals.self)
+//        
+//        pairedPeripheralList.removeAll()
+//        
+//        pairedPeripherals.forEach { peripheral in
+//            pairedPeripheralList.append(peripheral)
+//        }
+//        
+//        // as @Published is used, it automatically announces to all objects and refresh the view
+//        
+//    }
     
 }

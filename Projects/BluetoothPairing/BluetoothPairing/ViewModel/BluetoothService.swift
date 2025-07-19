@@ -33,17 +33,20 @@ class BluetoothService: NSObject, ObservableObject {
     // okay so Publish refresh the view when changed real time, so it works as intended in my view
     @Published var peripheralsList: [CBPeripheral] = []
 
-    var command: String = ""
-    var peripheral_string: String = ""
+    @Published var commandExecutionResult: [String] = []
+    
+    var peripheralSubscribedCharacteristics: [CBCharacteristic] = []
     
     // This CBUUID is defined by Bluetooth standards by SIG,
     // for example for aa15 search it's UUID value / use LightBlue/nrfConnect to see the serivces
 //    let targetPeripheralService: CBUUID = CBUUID(string: "49535343-FE7D-4AE5-8FA9-9FAFD205E455")
     
     // this is the characteristic that is executing commands
-    let targetPeripheralCharacteristic: CBUUID = CBUUID(string: "49535343-1E4D-4BD9-BA61-23C647249616")
+//    let targetPeripheralCharacteristic: CBUUID = CBUUID(string: "49535343-1E4D-4BD9-BA61-23C647249616")
     
     @Published var connectionStatus: BluetoothStatus = .disconnected
+    
+    var arr: [String] = []
     
     override init() {
         super.init()
@@ -53,8 +56,8 @@ class BluetoothService: NSObject, ObservableObject {
     
     
     func searchDevices() {
-        connectionStatus = .searching
-        centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+        connectionStatus = .searching // commented for case .none in HomeView
+        centralManager.scanForPeripherals(withServices: [], options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
         // so uhh Peripherals usually exihibut services and characteristics, and we use protocol, GATT is for reading, heart rate is a service under this characterisitcs will be bpm, nil here indicates no particular services we looking for on searching
     }
     
@@ -67,7 +70,6 @@ class BluetoothService: NSObject, ObservableObject {
        
         targetPeripheral = peripheral
         centralManager.connect(targetPeripheral!)
-        connectionStatus = .pairing
         
     }
     
@@ -77,10 +79,8 @@ class BluetoothService: NSObject, ObservableObject {
         centralManager.stopScan()
     }
     
-    func custom_connect(peripheralUUID: String) {
-        
-        centralManager.scanForPeripherals(withServices: [CBUUID(string: peripheralUUID)])
-        
+    func disconnectPeripheral() {
+        centralManager.cancelPeripheralConnection(targetPeripheral!)
     }
     
     
@@ -92,14 +92,13 @@ extension BluetoothService: CBCentralManagerDelegate {
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         
-        //        if central.state == .poweredOn {
-        //            searchDevices()
-        //
-        //        }
+        if central.state == .poweredOn {
+            searchDevices()
+
+        }
         
         if central.state == .poweredOff {
-            peripheralsList = []
-            centralManager.stopScan()
+            stop()
         }
         
     }
@@ -122,6 +121,7 @@ extension BluetoothService: CBCentralManagerDelegate {
         connectionStatus = .connected
         
         print("Connected \(peripheral.name ?? ""), \(peripheral.identifier.uuidString)")
+ 
         
         peripheral.delegate = self
         peripheral.discoverServices([]) // nil or [], both works
@@ -137,13 +137,13 @@ extension BluetoothService: CBCentralManagerDelegate {
         
     }
     
-    // this is not calling when it's failing to connect
+    
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: (any Error)?) {
         
         connectionStatus = .error
 //        print(error?.localizedDescription ?? "Can't read error")
         
-        // so it's called when pairing is canceled
+        // so it's called when pairing is canceled and it's paired with another device
 //        peripheralsList.remove(at: peripheralsList.firstIndex(of: peripheral) ?? 0)
         
         print(peripheral.name ?? "no_name")
@@ -158,11 +158,13 @@ extension BluetoothService: CBPeripheralDelegate {
     
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: (any Error)?) {
+
         
         for service in peripheral.services ?? [] {
 //            if service.uuid == targetPeripheralService {
                 
-                peripheral.discoverCharacteristics([], for: service)
+            
+            peripheral.discoverCharacteristics([], for: service)
 //            }
 //            print()
 //            print(service)
@@ -187,6 +189,7 @@ extension BluetoothService: CBPeripheralDelegate {
                 
                 
                 peripheral.setNotifyValue(true, for: characteristic)
+            
                 
 //            }
             
@@ -195,44 +198,65 @@ extension BluetoothService: CBPeripheralDelegate {
     }
 
     
-    // this delegate will be called, when new data arrive from characteristic
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: (any Error)?) {
-        
-        print("Reading \(characteristic.uuid): \(String(decoding: characteristic.value ?? Data(), as: UTF8.self))")
-        
-    }
-    
     
     // for setNotifyValue, this delegate will be triggered
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: (any Error)?) {
-        
-//        print("command: \(self.command)")
         
         if characteristic.properties.contains(.write) && characteristic.isNotifying { // only for the true
         
             print("Subscribed: \(characteristic.uuid)")
             
-            write(command: self.command + "\n", characteristic: characteristic, peripheral: peripheral)
+            peripheralSubscribedCharacteristics.append(characteristic)
             
 //            peripheral.readValue(for: characteristic)
+            
+//            write(command: command + "\n", characteristic: characteristic, peripheral: peripheral)
             
         }
         
     }
     
     
-    func write(command: String, characteristic: CBCharacteristic, peripheral: CBPeripheral) {
+    func write(commandText: String) {
+
+        peripheralSubscribedCharacteristics.forEach { characteristic in
+            targetPeripheral?.writeValue(commandText.data(using: .ascii)!, for: characteristic, type: .withResponse)
+        }
+        
+    }
+    
+    // okay so reading in didWriteValueFor produces returned value of all Subscribed characteristics
+    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: (any Error)?) {
         
 //        print("UUID: \(characteristic.uuid), notifying: \(characteristic.isNotifying)")
     
+//        print("Reading in didWriteValueFor \(characteristic.uuid): \(String(decoding: characteristic.value ?? Data(), as: UTF8.self))")
         
         // 10 Bit ASCII Text Format? mentioned in manual
         
         // okay, so the answer to get this thing working is adding new line or return carrigage at end of each commands
-        peripheral.writeValue(command.data(using: .ascii)!, for: characteristic, type: .withResponse)
         
+        arr.append(String(decoding: characteristic.value ?? Data(), as: UTF8.self))
+        
+        // let's for now append the result with largest response
+        let largestResponse: [String] = arr.sorted(by: { $0.count > $1.count } )
+        
+        print(largestResponse.first)
+        
+        commandExecutionResult.append(largestResponse[0])
 
+        
     }
+    
+    
+    // and this delegate will be called, when new data arrive from characteristic
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: (any Error)?) {
+        
+//        print("Reading \(characteristic.uuid): \(String(decoding: characteristic.value ?? Data(), as: UTF8.self))")
+        
+                
+    }
+    
     
     
 }
