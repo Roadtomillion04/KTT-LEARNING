@@ -33,7 +33,7 @@ class BluetoothService: NSObject, ObservableObject {
     // okay so Publish refresh the view when changed real time, so it works as intended in my view
     @Published var peripheralsList: [CBPeripheral] = []
 
-    @Published var commandExecutionResult: [String] = []
+    var commandExecutionResult: String = ""
     
     var peripheralSubscribedCharacteristics: [CBCharacteristic] = []
     
@@ -42,11 +42,9 @@ class BluetoothService: NSObject, ObservableObject {
 //    let targetPeripheralService: CBUUID = CBUUID(string: "49535343-FE7D-4AE5-8FA9-9FAFD205E455")
     
     // this is the characteristic that is executing commands
-//    let targetPeripheralCharacteristic: CBUUID = CBUUID(string: "49535343-1E4D-4BD9-BA61-23C647249616")
+    let targetPeripheralCharacteristic: CBUUID = CBUUID(string: "49535343-1E4D-4BD9-BA61-23C647249616")
     
     @Published var connectionStatus: BluetoothStatus = .disconnected
-    
-    var arr: [String] = []
     
     override init() {
         super.init()
@@ -206,7 +204,11 @@ extension BluetoothService: CBPeripheralDelegate {
         
             print("Subscribed: \(characteristic.uuid)")
             
-            peripheralSubscribedCharacteristics.append(characteristic)
+            if characteristic.uuid == targetPeripheralCharacteristic {
+                
+                peripheralSubscribedCharacteristics.append(characteristic)
+                
+            }
             
 //            peripheral.readValue(for: characteristic)
             
@@ -219,11 +221,14 @@ extension BluetoothService: CBPeripheralDelegate {
     
     func write(commandText: String) {
 
-        peripheralSubscribedCharacteristics.forEach { characteristic in
-            targetPeripheral?.writeValue(commandText.data(using: .ascii)!, for: characteristic, type: .withResponse)
-        }
+//        peripheralSubscribedCharacteristics.forEach { characteristic in
+            
+        targetPeripheral?.writeValue(commandText.data(using: .ascii)!, for: peripheralSubscribedCharacteristics.first!, type: .withResponse)
+                
+//        }
         
     }
+    
     
     // okay so reading in didWriteValueFor produces returned value of all Subscribed characteristics
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: (any Error)?) {
@@ -236,15 +241,8 @@ extension BluetoothService: CBPeripheralDelegate {
         
         // okay, so the answer to get this thing working is adding new line or return carrigage at end of each commands
         
-        arr.append(String(decoding: characteristic.value ?? Data(), as: UTF8.self))
-        
-        // let's for now append the result with largest response
-        let largestResponse: [String] = arr.sorted(by: { $0.count > $1.count } )
-        
-        print(largestResponse.first)
-        
-        commandExecutionResult.append(largestResponse[0])
-
+        print("out")
+        print(characteristic.value ?? Data())
         
     }
     
@@ -254,9 +252,11 @@ extension BluetoothService: CBPeripheralDelegate {
         
 //        print("Reading \(characteristic.uuid): \(String(decoding: characteristic.value ?? Data(), as: UTF8.self))")
         
-                
+        print("in")
+        print(characteristic.value ?? Data())
+        
+        commandExecutionResult = String(decoding: characteristic.value ?? Data(), as: UTF8.self)
+        
     }
-    
-    
     
 }

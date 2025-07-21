@@ -255,147 +255,172 @@ struct CommandSendingView: View  {
     @State private var connectionStatus: ConnectionStatus = .none
     
     var body: some View {
-        
+            
         VStack {
             
-            List {
+//            ScrollViewReader { proxy in
                 
-                // for enumerated, Hashable protcol need to be conformed
-                ForEach(Array(commandExecutionResult.enumerated()), id: \.element) { index, execution in
-                   
-                    HStack {
+                List {
+                    
+                    // for enumerated, Hashable protcol need to be conformed
+                    ForEach(Array(commandExecutionResult.enumerated()), id: \.element) { index, execution in
                         
-                        Text("\(index + 1)")
-                            .font(Font.custom("Monaco", size: 15))
-                        
-                        VStack(alignment: .leading, spacing: 10) {
+                        HStack {
                             
-                            Text("Command: \(execution.command)")
-                                .font(Font.custom("Monaco", size: 20))
+                            Text("\(index + 1)")
+                                .font(Font.custom("Monaco", size: 15))
+
                             
-                            Text("Output: \(execution.result ?? "")")
-                                .font(Font.custom("Monaco", size: 20))
+                            VStack(alignment: .leading, spacing: 10) {
+                                
+                                Text("Command: \(execution.command)")
+                                    .font(Font.custom("", size: 17.5))
+                                
+                                Text("Output: \(execution.result ?? "")")
+                                    .font(Font.custom("", size: 17.5))
+                                
+                            }
+
                             
                         }
+//                        .id(commandExecutionResult.count + 1)
+                        
+                    }
+                    
+                }
+                .listRowSpacing(15)
+                .scrollIndicators(.hidden)
+                
+//                .onChange(of: commandExecutionResult.count) { old, new in
+//                    proxy.scrollTo(new + 1)
+//                    
+//                }
+                
+                .scrollDismissesKeyboard(.immediately)
+                
+                // also styling cannot be added to naviagtion title
+                .navigationTitle(bluetoothService.targetPeripheral?.name ?? "")
+                
+            
+                Spacer()
+                
+                HStack {
+                    
+                    TextField("", text: $commandText)
+                        .font(Font.custom("Monaco", size: 25))
+                        .foregroundStyle(.black)
+                        .autocorrectionDisabled()
+                    
+                    
+                    Button(action: commandSubmitAction) {
+                        Image(systemName: "paperplane")
+                            .resizable()
+                            .frame(width: 48, height: 48)
+                            .foregroundStyle(.black)
+                    }
+                    .disabled(commandText.isEmpty)
+                    
+                }
+                .safeAreaPadding(.all)
+                .background(RoundedRectangle(cornerRadius: 15).fill(Color(hex: 0xF1F5F9)).shadow(radius: 2))
+                
+            }
+            .padding(.horizontal)
+            
+            
+            .onChange(of: bluetoothService.connectionStatus) { old, new in
+                
+                switch new {
+                    
+                case .searching:
+                    break
+                    
+                case .pairing:
+                    break
+                    
+                case .connected:
+                    connectionStatus = .successful
+                    showStatusAlert = true
+                    
+                case .disconnected:
+                    connectionStatus = .disconnected
+                    showStatusAlert = true
+                    
+                case .error:
+                    connectionStatus = .failed
+                    showStatusAlert = true
+                    
+                    
+                }
+                
+            }
+            
+            .alert(isPresented: $showStatusAlert) {
+                
+                switch connectionStatus {
+                    
+                case .successful:
+                    Alert(title: Text("Connection Successful"), message: Text("Connected to the device"), dismissButton: .default(Text("OK")) { showStatusAlert = false })
+                    
+                case .disconnected:
+                    Alert(title: Text("Connection Interupted"), message: Text("Device is disconnected"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
+                    
+                case .failed:
+                    Alert(title: Text("Connection Failed"), message: Text("Cannot connect to the device"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
+                    
+                case .none:
+                    Alert(title: Text("Device not Found"), message: Text("Please try again"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
+                    
+                }
+                
+            }
+            
+            //        .onSubmit {
+            //            // which is on return press in keyboard
+            //            commandSubmitAction()
+            //        }
+            
+            .onAppear {
+                // okay, wait for 5 sec, if no connection successful, must be peripheral is turned off and the list is not refreshed case
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    if connectionStatus == .none {
+                        showStatusAlert = true
                     }
                 }
-                            
             }
-            .listRowSpacing(15)
-            .scrollIndicators(.hidden)
-               
-            // also styling cannot be added to naviagtion title
-            .navigationTitle(bluetoothService.targetPeripheral?.name ?? "")
             
-            Spacer()
-            
-            HStack {
+            .onDisappear { // let's disconnect on going back, otherwise peripheral stay connected and no visible in search
+                bluetoothService.disconnectPeripheral()
                 
-                TextField("", text: $commandText)
-                    .font(Font.custom("Monaco", size: 25))
-                    .foregroundStyle(.black)
-                
-                
-                Button(action: commandSubmitAction) {
-                    Image(systemName: "paperplane")
-                        .resizable()
-                        .frame(width: 48, height: 48)
-                        .foregroundStyle(.black)
-                }
-                .disabled(commandText.isEmpty)
-                        
-            }
-            .safeAreaPadding(.all)
-            .background(RoundedRectangle(cornerRadius: 15).fill(Color(hex: 0xF1F5F9)).shadow(radius: 2))
-            
-        }
-        .padding(.horizontal)
-        
-        
-        .onChange(of: bluetoothService.connectionStatus) { old, new in
-            
-            switch new {
-                
-            case .searching:
-                break
-            
-            case .pairing:
-                break
-                
-            case .connected:
-                connectionStatus = .successful
-                showStatusAlert = true
-                
-            case .disconnected:
-                connectionStatus = .disconnected
-                showStatusAlert = true
-                
-            case .error:
-                connectionStatus = .failed
-                showStatusAlert = true
-                
+                // and clean up the commands
+                commandText.removeAll()
+                commandExecutionResult.removeAll()
+                bluetoothService.peripheralSubscribedCharacteristics.removeAll()
+                bluetoothService.commandExecutionResult = ""
                 
             }
             
-        }
-        
-        .alert(isPresented: $showStatusAlert) {
-            
-            switch connectionStatus {
-                
-            case .successful:
-                Alert(title: Text("Connection Successful"), message: Text("Connected to the device"), dismissButton: .default(Text("OK")) { showStatusAlert = false })
-                
-            case .disconnected:
-                Alert(title: Text("Connection Interupted"), message: Text("Device is disconnected"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
-                
-            case .failed:
-                Alert(title: Text("Connection Failed"), message: Text("Cannot connect to the device"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
-                
-            case .none:
-                Alert(title: Text("Device not Found"), message: Text("Please try again"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
-                
-            }
-            
-        }
-        
-//        .onSubmit {
-//            // which is on return press in keyboard
-//            commandSubmitAction()
-//        }
-        
-        .onAppear {
-            // okay, wait for 5 sec, if no connection successful, must be peripheral is turned off and the list is not refreshed case
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                if connectionStatus == .none {
-                    showStatusAlert = true
-                }
-            }
-        }
-        
-        .onDisappear { // let's disconnect on going back, otherwise peripheral stay connected and no visible in search
-            bluetoothService.disconnectPeripheral()
-            
-            // and clean up the commands
-            commandText.removeAll()
-            commandExecutionResult.removeAll()
-            bluetoothService.peripheralSubscribedCharacteristics.removeAll()
-            bluetoothService.commandExecutionResult.removeAll()
-            
-        }
-        
         
     }
     
     
     private func commandSubmitAction() {
         
-        bluetoothService.write(commandText: commandText + "\n")
+        bluetoothService.commandExecutionResult = ""
         
-        commandExecutionResult.append(
-            .init(id: UUID(), command: commandText, result: bluetoothService.commandExecutionResult.last)
-        )
-
+        bluetoothService.write(commandText: commandText + "\n")
+            
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            
+            commandExecutionResult.append(
+                .init(id: UUID(), command: commandText, result: bluetoothService.commandExecutionResult)
+            )
+            
+            commandText.removeAll() // clearing input, qol?
+            
+        }
+       
+        
     }
     
 }
