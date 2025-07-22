@@ -14,11 +14,13 @@ struct HomeView: View {
     
     @ObservedObject var bluetoothService: BluetoothService
     @ObservedObject var realmManager: RealmManager
+    @ObservedObject var notificationService: NotificationService
     
     @State private var showAbout: Bool = false
     
     @State private var path = NavigationPath()
     
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         
@@ -130,7 +132,7 @@ struct HomeView: View {
                     }
                     .padding(.horizontal, 4)
                     .padding(.vertical)
-                    
+        
                 }
                 
             }
@@ -165,6 +167,19 @@ struct HomeView: View {
             // let's just stick with forever searching route, could have used timer but oh well
             
             bluetoothService.searchDevices()
+        }
+        
+        // scencePhase .background calls when user move to home screen while app running, also by default notification pop up when app on background
+        .onChange(of: scenePhase) { old, new in
+            
+            if new == .active {
+                notificationService.checkAuthorization()
+            }
+            
+            if new == .background {
+                // let's trigger the notification implying bluetooth is connected
+                notificationService.pushNotification(peripheralName: bluetoothService.targetPeripheral?.name ?? "")
+            }
         }
         
         .onDisappear {
@@ -280,7 +295,6 @@ struct CommandSendingView: View  {
                                     .font(Font.custom("", size: 17.5))
                                 
                             }
-
                             
                         }
 //                        .id(commandExecutionResult.count + 1)
@@ -350,7 +364,6 @@ struct CommandSendingView: View  {
                     connectionStatus = .failed
                     showStatusAlert = true
                     
-                    
                 }
                 
             }
@@ -399,7 +412,6 @@ struct CommandSendingView: View  {
                 bluetoothService.commandExecutionResult = ""
                 
             }
-            
         
     }
     
@@ -419,7 +431,6 @@ struct CommandSendingView: View  {
             commandText.removeAll() // clearing input, qol?
             
         }
-       
         
     }
     
