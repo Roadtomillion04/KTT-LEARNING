@@ -52,7 +52,6 @@ class BluetoothService: NSObject, ObservableObject {
         
     }
     
-    
     func searchDevices() {
         connectionStatus = .searching // commented for case .none in HomeView
         centralManager.scanForPeripherals(withServices: [], options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
@@ -81,7 +80,6 @@ class BluetoothService: NSObject, ObservableObject {
         centralManager.cancelPeripheralConnection(targetPeripheral!)
     }
     
-    
 }
 
 
@@ -92,6 +90,8 @@ extension BluetoothService: CBCentralManagerDelegate {
         
         if central.state == .poweredOn {
             searchDevices()
+            
+//            centralManager.retrieveConnectedPeripherals(withServices: [])
 
         }
         
@@ -108,7 +108,8 @@ extension BluetoothService: CBCentralManagerDelegate {
         let peripheral_name: String = peripheral.name ?? ""
         
         // using this list has one issue, which is when ble device disconnect on searching, and im not sure how to capture that peripheral to remove that device name from the list
-        if !peripheral_name.isEmpty && !peripheralsList.contains(peripheral) {
+        if !peripheral_name.isEmpty && !peripheralsList.contains(peripheral) /*&& peripheral_name.uppercased().starts(with: "KTT")*/ {
+            // filter KTT products only
             peripheralsList.append(peripheral)
         }
         
@@ -119,14 +120,14 @@ extension BluetoothService: CBCentralManagerDelegate {
         connectionStatus = .connected
         
         print("Connected \(peripheral.name ?? ""), \(peripheral.identifier.uuidString)")
- 
         
+
         peripheral.delegate = self
         peripheral.discoverServices([]) // nil or [], both works
         centralManager.stopScan()
     }
     
-    
+  
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: (any Error)?) {
         connectionStatus = .disconnected
         
@@ -154,14 +155,11 @@ extension BluetoothService: CBCentralManagerDelegate {
 // Now, Peripheral part (server)
 extension BluetoothService: CBPeripheralDelegate {
     
-    
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: (any Error)?) {
-
         
         for service in peripheral.services ?? [] {
 //            if service.uuid == targetPeripheralService {
                 
-            
             peripheral.discoverCharacteristics([], for: service)
 //            }
 //            print()
@@ -194,7 +192,6 @@ extension BluetoothService: CBPeripheralDelegate {
         }
         
     }
-
     
     
     // for setNotifyValue, this delegate will be triggered
@@ -209,10 +206,6 @@ extension BluetoothService: CBPeripheralDelegate {
                 peripheralSubscribedCharacteristics.append(characteristic)
                 
             }
-            
-//            peripheral.readValue(for: characteristic)
-            
-//            write(command: command + "\n", characteristic: characteristic, peripheral: peripheral)
             
         }
         
@@ -232,8 +225,6 @@ extension BluetoothService: CBPeripheralDelegate {
     
     // okay so reading in didWriteValueFor produces returned value of all Subscribed characteristics
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: (any Error)?) {
-        
-//        print("UUID: \(characteristic.uuid), notifying: \(characteristic.isNotifying)")
     
 //        print("Reading in didWriteValueFor \(characteristic.uuid): \(String(decoding: characteristic.value ?? Data(), as: UTF8.self))")
         

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+ 
 
 struct HomeView: View {
     
@@ -16,11 +16,12 @@ struct HomeView: View {
     @ObservedObject var realmManager: RealmManager
     @ObservedObject var notificationService: NotificationService
     
+    @ObservedObject var locktotpService: LockTOTPService
+    
     @State private var showAbout: Bool = false
     
     @State private var path = NavigationPath()
     
-    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         
@@ -44,7 +45,7 @@ struct HomeView: View {
                     
                     Spacer()
                     
-                    
+
                     Menu("⋮") {
                         
                         Button("About") {
@@ -59,6 +60,7 @@ struct HomeView: View {
                     .font(Font.custom("Monaco", size: 25))
                     .bold()
                     .tint(.primary)
+
                     
                     .alert(isPresented: $showAbout) {
                         Alert(title: Text("BLE-Connect"), message: Text("Build 1.0"))
@@ -128,7 +130,6 @@ struct HomeView: View {
                         .font(Font.custom("Georgia", size: 25))
                         .tint(.primary)
                         
-                        
                     }
                     .padding(.horizontal, 4)
                     .padding(.vertical)
@@ -146,7 +147,6 @@ struct HomeView: View {
                     bluetoothService.stop()
                     bluetoothService.searchDevices()
                 }
-                
                
             }
             
@@ -154,11 +154,11 @@ struct HomeView: View {
             .navigationDestination(for: String.self) { paths in
                 switch paths {
                     case "CommandSendingView":
-                    CommandSendingView(path: $path, bluetoothService: bluetoothService)
+                        CommandSendingView(path: $path, bluetoothService: bluetoothService, notificationService: notificationService)
                     
                     default:
                         Text("")
-                    }
+                }
             }
             
         }
@@ -167,21 +167,23 @@ struct HomeView: View {
             // let's just stick with forever searching route, could have used timer but oh well
             
             bluetoothService.searchDevices()
-        }
-        
-        // scencePhase .background calls when user move to home screen while app running, also by default notification pop up when app on background
-        .onChange(of: scenePhase) { old, new in
             
-            if new == .active {
-                notificationService.checkAuthorization()
+            Task {
+            
+                while true {
+                    
+                    try await Task.sleep(for: .seconds(1))
+                    
+                    let key = locktotpService.generateSymmetricKey(deviceName: "iPhone", macAddress: "00:00:00:00:00:00")
+                    
+                    print(locktotpService.generateTOTP(key: key))
+                    
+                }
             }
             
-            if new == .background {
-                // let's trigger the notification implying bluetooth is connected
-                notificationService.pushNotification(peripheralName: bluetoothService.targetPeripheral?.name ?? "")
-            }
         }
         
+      
         .onDisappear {
 
             bluetoothService.stop()
@@ -250,13 +252,14 @@ struct CommandSendingView: View  {
     @Binding var path: NavigationPath
     
     @ObservedObject var bluetoothService: BluetoothService
+    @ObservedObject var notificationService: NotificationService
     
     @State private var commandText: String = ""
     
     @State private var commandExecutionResult: [CommandExecution] = []
     
     @Environment(\.dismiss) var dismiss
-    
+    @Environment(\.scenePhase) var scenePhase
     
     @State private var showStatusAlert: Bool = false
     
@@ -275,144 +278,166 @@ struct CommandSendingView: View  {
             
 //            ScrollViewReader { proxy in
                 
-                List {
+            List {
+                
+                // for enumerated, Hashable protcol need to be conformed
+                ForEach(Array(commandExecutionResult.enumerated()), id: \.element) { index, execution in
                     
-                    // for enumerated, Hashable protcol need to be conformed
-                    ForEach(Array(commandExecutionResult.enumerated()), id: \.element) { index, execution in
+                    HStack {
                         
-                        HStack {
-                            
-                            Text("\(index + 1)")
-                                .font(Font.custom("Monaco", size: 15))
+                        Text("\(index + 1)")
+                            .font(Font.custom("Monaco", size: 15))
 
+                        
+                        VStack(alignment: .leading, spacing: 10) {
                             
-                            VStack(alignment: .leading, spacing: 10) {
-                                
-                                Text("Command: \(execution.command)")
-                                    .font(Font.custom("", size: 17.5))
-                                
-                                Text("Output: \(execution.result ?? "")")
-                                    .font(Font.custom("", size: 17.5))
-                                
-                            }
+                            Text("Command: \(execution.command)")
+                                .font(Font.custom("", size: 17.5))
+                            
+                            Text("Output: \(execution.result ?? "")")
+                                .font(Font.custom("", size: 17.5))
                             
                         }
-//                        .id(commandExecutionResult.count + 1)
                         
                     }
+//                        .id(commandExecutionResult.count + 1)
                     
                 }
-                .listRowSpacing(15)
-                .scrollIndicators(.hidden)
                 
+            }
+            .listRowSpacing(15)
+            .scrollIndicators(.hidden)
+            
 //                .onChange(of: commandExecutionResult.count) { old, new in
 //                    proxy.scrollTo(new + 1)
-//                    
+//
 //                }
-                
-                .scrollDismissesKeyboard(.immediately)
-                
-                // also styling cannot be added to naviagtion title
-                .navigationTitle(bluetoothService.targetPeripheral?.name ?? "")
-                
             
-                Spacer()
-                
-                HStack {
-                    
-                    TextField("", text: $commandText)
-                        .font(Font.custom("Monaco", size: 25))
-                        .foregroundStyle(.black)
-                        .autocorrectionDisabled()
-                    
-                    
-                    Button(action: commandSubmitAction) {
-                        Image(systemName: "paperplane")
-                            .resizable()
-                            .frame(width: 48, height: 48)
-                            .foregroundStyle(.black)
-                    }
-                    .disabled(commandText.isEmpty)
-                    
-                }
-                .safeAreaPadding(.all)
-                .background(RoundedRectangle(cornerRadius: 15).fill(Color(hex: 0xF1F5F9)).shadow(radius: 2))
-                
-            }
-            .padding(.horizontal)
+            .scrollDismissesKeyboard(.immediately)
             
+            // also styling cannot be added to naviagtion title
+            .navigationTitle(bluetoothService.targetPeripheral?.name ?? "")
             
-            .onChange(of: bluetoothService.connectionStatus) { old, new in
-                
-                switch new {
-                    
-                case .searching:
-                    break
-                    
-                case .pairing:
-                    break
-                    
-                case .connected:
-                    connectionStatus = .successful
-                    showStatusAlert = true
-                    
-                case .disconnected:
-                    connectionStatus = .disconnected
-                    showStatusAlert = true
-                    
-                case .error:
-                    connectionStatus = .failed
-                    showStatusAlert = true
-                    
-                }
-                
-            }
-            
-            .alert(isPresented: $showStatusAlert) {
-                
-                switch connectionStatus {
-                    
-                case .successful:
-                    Alert(title: Text("Connection Successful"), message: Text("Connected to the device"), dismissButton: .default(Text("OK")) { showStatusAlert = false })
-                    
-                case .disconnected:
-                    Alert(title: Text("Connection Interupted"), message: Text("Device is disconnected"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
-                    
-                case .failed:
-                    Alert(title: Text("Connection Failed"), message: Text("Cannot connect to the device"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
-                    
-                case .none:
-                    Alert(title: Text("Device not Found"), message: Text("Please try again"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
-                    
-                }
-                
-            }
-            
-            //        .onSubmit {
-            //            // which is on return press in keyboard
-            //            commandSubmitAction()
-            //        }
-            
-            .onAppear {
-                // okay, wait for 5 sec, if no connection successful, must be peripheral is turned off and the list is not refreshed case
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                    if connectionStatus == .none {
-                        showStatusAlert = true
-                    }
-                }
-            }
-            
-            .onDisappear { // let's disconnect on going back, otherwise peripheral stay connected and no visible in search
-                bluetoothService.disconnectPeripheral()
-                
-                // and clean up the commands
-                commandText.removeAll()
-                commandExecutionResult.removeAll()
-                bluetoothService.peripheralSubscribedCharacteristics.removeAll()
-                bluetoothService.commandExecutionResult = ""
-                
-            }
         
+            Spacer()
+            
+            HStack {
+                
+                TextField("", text: $commandText)
+                    .font(Font.custom("Monaco", size: 25))
+                    .foregroundStyle(.black)
+                    .autocorrectionDisabled()
+                
+                
+                Button(action: commandSubmitAction) {
+                    Image(systemName: "paperplane")
+                        .resizable()
+                        .frame(width: 48, height: 48)
+                        .foregroundStyle(.black)
+                }
+                .disabled(commandText.isEmpty)
+                
+            }
+            .safeAreaPadding(.all)
+            .background(RoundedRectangle(cornerRadius: 15).fill(Color(hex: 0xF1F5F9)).shadow(radius: 2))
+            
+        }
+        .padding(.horizontal)
+        
+        
+        .onChange(of: bluetoothService.connectionStatus) { old, new in
+            
+            switch new {
+                
+            case .searching:
+                break
+                
+            case .pairing:
+                break
+                
+            case .connected:
+                connectionStatus = .successful
+                showStatusAlert = true
+                
+            case .disconnected:
+                connectionStatus = .disconnected
+                showStatusAlert = true
+                
+            case .error:
+                connectionStatus = .failed
+                showStatusAlert = true
+                
+            }
+            
+        }
+        
+        .alert(isPresented: $showStatusAlert) {
+            
+            switch connectionStatus {
+                
+            case .successful:
+                Alert(title: Text("Connection Successful"), message: Text("Connected to the device"), dismissButton: .default(Text("OK")) { showStatusAlert = false })
+                
+            case .disconnected:
+                Alert(title: Text("Connection Interupted"), message: Text("Device is disconnected"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
+                
+            case .failed:
+                Alert(title: Text("Connection Failed"), message: Text("Cannot connect to the device"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
+                
+            case .none:
+                Alert(title: Text("Device not Found"), message: Text("Please try again"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
+                
+            }
+            
+        }
+        
+        //        .onSubmit {
+        //            // which is on return press in keyboard
+        //            commandSubmitAction()
+        //        }
+        
+        .onAppear {
+            // okay, wait for 5 sec, if no connection successful, must be peripheral is turned off and the list is not refreshed case
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                if connectionStatus == .none {
+                    showStatusAlert = true
+                }
+                
+                print("mu")
+                print(bluetoothService.centralManager.retrieveConnectedPeripherals(withServices: []))
+                    
+            }
+        }
+        
+        
+        // scencePhase .background calls when user move to home screen while app running, also by default notification pop up when app on background
+        .onChange(of: scenePhase) { old, new in
+            
+//            if new == .active {
+//                notificationService.checkAuthorization()
+//            }
+            
+            if new == .background {
+                // push if notification allowed in the phone
+                if notificationService.checkNotificationEnabled() {
+                    // let's trigger the notification implying bluetooth is connected
+                    notificationService.pushNotification(peripheralName: bluetoothService.targetPeripheral?.name ?? "")
+                }
+            }
+        }
+        
+        
+        .onDisappear { // let's disconnect on going back, otherwise peripheral stay connected and no visible in search
+            bluetoothService.disconnectPeripheral()
+            
+            // and clean up the commands
+            commandText.removeAll()
+            commandExecutionResult.removeAll()
+            bluetoothService.peripheralSubscribedCharacteristics.removeAll()
+            bluetoothService.commandExecutionResult = ""
+            
+        }
+    
     }
     
     
@@ -421,12 +446,11 @@ struct CommandSendingView: View  {
         bluetoothService.commandExecutionResult = ""
         
         bluetoothService.write(commandText: commandText + "\n")
-            
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25)  // let's block to write function is called
+        {
             commandExecutionResult.append(
-                .init(id: UUID(), command: commandText, result: bluetoothService.commandExecutionResult)
-            )
+                .init(id: UUID(), command: commandText, result: bluetoothService.commandExecutionResult))
             
             commandText.removeAll() // clearing input, qol?
             

@@ -7,10 +7,10 @@
 
 import Foundation
 import UserNotifications
-import UIKit
+import UIKit // also UIKit is for open settings in iphone, swiftui cant do that yet
 
 
-@MainActor
+@MainActor // oh and for UIkit to open system settings, the task should be executed in main thread, UI updates should not be done in background threads
 class NotificationService: ObservableObject {
     
     private var current = UNUserNotificationCenter.current()
@@ -20,27 +20,38 @@ class NotificationService: ObservableObject {
     }
     
     
-    func checkAuthorization() {
+    func checkNotificationEnabled() -> Bool {
+        
+        var notificationEnabled: Bool?
+        
         current.getNotificationSettings(completionHandler: { notificationPermission in
             
             switch notificationPermission.authorizationStatus {
                 
             case .authorized:
-                print("Mmm")
+                print("notification enabled")
+                notificationEnabled = true
+                break
                 
             case .denied:
-                print("araa")
-                self.openNotificationSettings()
+                print("not enabled notification")
+//                self.openNotificationSettings()
+                break
                 
             default:
-                print("...")
+                print("other")
+                break
                 
             }
-
+            
         })
+        
+        return notificationEnabled == true
+        
     }
     
-    // bro it just open the settings in simulator, maybe work in real phone?
+    
+    // it open the settings in simulator
     func openNotificationSettings() {
         if let url = URL(string: UIApplication.openNotificationSettingsURLString) {
             Task { // is basically asynchorus for non asynochourus functions
@@ -61,6 +72,7 @@ class NotificationService: ObservableObject {
         }
     }
     
+    
     // the term push generally say is from Apple push network, remotely, but here we doing local notification
     func pushNotification(peripheralName: String) {
         
@@ -69,18 +81,28 @@ class NotificationService: ObservableObject {
         notificationContent.subtitle = "Bluetooth connection stays active in background"
         notificationContent.sound = .default
         
+        // scheduling should be something like this
+        var scheduledNotification = DateComponents()
+        scheduledNotification.hour = 10
+        scheduledNotification.minute = 28
+        let trigger = UNCalendarNotificationTrigger(dateMatching: scheduledNotification, repeats: true)
+        // repeats true is for everyday and false for one time, and also is useless for local pushing, as if app is closed no program is running, so scheduled is for remote
         
         let request = UNNotificationRequest(
         
             identifier: UUID().uuidString,
             content: notificationContent,
-            trigger: UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-            
+            trigger: UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false) // 1 is seconds
+//            trigger: trigger
         )
         
         current.add(request)
         
     }
     
+    
+    func cancelScheduledNotifications() {
+        current.removeAllPendingNotificationRequests() // description says remove local only
+    }
     
 }

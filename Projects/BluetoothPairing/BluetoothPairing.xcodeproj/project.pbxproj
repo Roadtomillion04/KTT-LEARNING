@@ -350,6 +350,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BluetoothPairing/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Allow Bluetooth Always";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "All BLE Access";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -389,6 +390,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BluetoothPairing/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Allow Bluetooth Always";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "All BLE Access";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

@@ -11,6 +11,7 @@ import SwiftUI
 struct LoginView: View {
     
     @ObservedObject var realmManager: RealmManager
+    @ObservedObject var messagingService: MessagingSerive
     
     @State private var mobileNumber: String = ""
     @State private var otp: String = ""
@@ -142,36 +143,49 @@ struct LoginView: View {
                 
                 Button("LOGIN") {
                     
-                    switch loginState {
-                        // this is first time, after entering number, we also need to check if count is 10
-                    case .numberEntered:
+                    Task {
                         
-                        if mobileNumber.count == 10 {
-                            showOtpField = true
-                            disableMobileNumberField = true
-                            loginState = .otpSent
-                        } else {
-                            loginError = .mobileNumberError
-                            showAlert = true
+                        switch loginState {
+                            // this is first time, after entering number, we also need to check if count is 10
+                        case .numberEntered:
+                            
+                            if mobileNumber.count == 10 {
+                                showOtpField = true
+                                disableMobileNumberField = true
+                                loginState = .otpSent
+                                
+                               messagingService.sendOTP(mobileNumber: mobileNumber)
+                                
+                            } else {
+                                loginError = .mobileNumberError
+                                showAlert = true
+                            }
+                            
+                            // on second click should be checking otp validity
+                        case .otpSent:
+                            
+                            messagingService.verifyOTP(mobileNumber: mobileNumber, OTPNumber: otp)
+                            
+                            // await/@Published not working, let's add timer trick for now
+                            
+                            try await Task.sleep(for: .seconds(1)) // sleeps 1 sec before proceeding, yield() should have worked but oh well
+                                
+                                
+                            if messagingService.otpVerificationStatus == true {
+                                loginState = .otpVerified
+                                fallthrough // is the only way to make switch do two/more actions in single check
+                                
+                            } else {
+                                loginError = .otpIncorrectError
+                                showAlert = true
+                            }
+                            
+                        case .otpVerified:
+                            
+                            realmManager.registerNewUser(mobileNumber: mobileNumber)
+                            
                         }
-                        
-                        // on second click should be checking otp validity
-                    case .otpSent:
-                        
-                        if otp == "1234" {
-                            loginState = .otpVerified
-                            fallthrough // is the only way to make switch do two/more actions in single check
-                        } else {
-                            loginError = .otpIncorrectError
-                            showAlert = true
-                        }
-                        
-                    case .otpVerified:
-                        
-                        realmManager.registerNewUser(mobileNumber: mobileNumber)
-                        
                     }
-                    
                 }
                 .frame(maxWidth: .infinity)
                 .padding(12)
@@ -201,7 +215,7 @@ struct LoginView: View {
                 })
                 
             default:
-                Alert(title: Text("ojo"))
+                Alert(title: Text("how did you come here??"))
                 
             }
             
