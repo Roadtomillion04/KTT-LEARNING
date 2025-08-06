@@ -8,44 +8,106 @@
 import Foundation
 import CryptoKit
 
-
-class LockTOTPService: ObservableObject {
-
- 
-    func generateSymmetricKey(deviceName: String, macAddress: String?, time: Date = Date()) -> SymmetricKey {
+@MainActor
+final class LockTOTPService: ObservableObject {
+    
+    @Published var totpCode: String = ""
+    
+    let step: TimeInterval = 60
+    let digits = 4
+    let initialTime: TimeInterval = 0
+    let flexibility: TimeInterval = 60
+    
+    let secretKey = Bundle.main.infoDictionary?["SECRET_KEY"] as? String ?? ""
         
-        let formatter = ISO8601DateFormatter()
-        let timestamp = formatter.string(from: time)
-
-        let inputString = "\(deviceName)+\(macAddress ?? "unknown")+\(timestamp)"
-        let inputData = Data(inputString.utf8)
-
+    
+    func timeFactor(for date: Date = Date()) -> UInt64 {
         
-        let hash = Insecure.SHA1.hash(data: inputData)
- 
-        return SymmetricKey(data: Data(hash))
+        let timeSinceInitial = date.timeIntervalSince1970 - self.initialTime
+        
+        return UInt64(timeSinceInitial / self.step)
         
     }
     
-    func generateTOTP(key: SymmetricKey, timeStep: TimeInterval = 30, digits: Int = 6) -> String {
-        let timestamp = Date().timeIntervalSince1970
-        let counter = UInt64(timestamp / timeStep)
+    
+    private func hmacSha1(key: Data, message: Data) -> Data {
         
-        var bigEndianCounter = counter.bigEndian
-        let counterData = Data(bytes: &bigEndianCounter, count: MemoryLayout.size(ofValue: bigEndianCounter))
+        let keySym = SymmetricKey(data: key)
+        let mac = HMAC<Insecure.SHA1>.authenticationCode(for: message, using: keySym)
         
-        let hmac = HMAC<Insecure.SHA1>.authenticationCode(for: counterData, using: key)
-        let hmacData = Data(hmac)
+        return Data(mac)
         
-        let offset = Int(hmacData.last! & 0x0F)
-        let truncated = hmacData[offset..<offset+4]
-        
-        let code = truncated.withUnsafeBytes { ptr in
-            ptr.loadUnaligned(as: UInt32.self)
-        }.bigEndian & 0x7FFFFFFF
-        
-        let otp = code % UInt32(pow(10, Float(digits)))
-        return String(format: "%0*u", digits, otp)
     }
     
+    
+    private func truncate(_ hash: Data) -> String {
+        
+        let offset = Int(hash.last! & 0x0f)
+        let subdata = hash.subdata(in: offset..<offset+4)
+        var number = UInt32(bigEndian: subdata.withUnsafeBytes { $0.load(as: UInt32.self) }) & 0x7fffffff
+        
+        number = number % UInt32(pow(10, Float(self.digits)))
+        
+        return String(format: "%0*u", self.digits, number)
+        
+    }
+    
+    
+    func generateTOTP(code: String, pass: String, time: Date = Date()) -> String {
+        
+        let input = code + pass + secretKey.replacingOccurrences(of: "\"", with: "")  // secretKey had quotes on getting from infoDict
+        let timeHex = String(format: "%016X", timeFactor(for: time))
+        let timeData = Data(hexString: timeHex)
+        let keyData = input.data(using: .utf8)!
+        let hash = hmacSha1(key: keyData, message: timeData)
+        
+        totpCode = truncate(hash)
+        
+        return truncate(hash)
+        
+    }
+    
+    
+    // so no server side validation, authenticator runs on asset tracker just like google authenticator for every lock?, and user enter otp to this app and verify locally
+    func verifyTOTP(code: String, pass: String, otp: String, time: Date = Date(), flexible: Bool = false) -> Bool {
+        
+        if generateTOTP(code: code, pass: pass, time: time) == otp {
+            return true
+        }
+        
+        if flexible {
+            let past = time.addingTimeInterval(-self.flexibility)
+            return generateTOTP(code: code, pass: pass, time: past) == otp
+        }
+        
+        return false
+
+    }
+    
+}
+
+extension Data {
+    
+    init(hexString: String) {
+        
+        var data = Data()
+        var tempHex = hexString
+        if tempHex.count % 2 != 0 {
+            tempHex = "0" + tempHex
+        }
+        
+        for i in stride(from: 0, to: tempHex.count, by: 2) {
+            
+            let start = tempHex.index(tempHex.startIndex, offsetBy: i)
+            let end = tempHex.index(start, offsetBy: 2)
+            let byteString = tempHex[start..<end]
+            if let byte = UInt8(byteString, radix: 16) {
+                data.append(byte)
+                
+            }
+        }
+        
+        self = data
+        
+    }
 }

@@ -11,7 +11,7 @@ import UIKit // also UIKit is for open settings in iphone, swiftui cant do that 
 
 
 @MainActor // oh and for UIkit to open system settings, the task should be executed in main thread, UI updates should not be done in background threads
-class NotificationService: ObservableObject {
+final class NotificationService: ObservableObject {
     
     private var current = UNUserNotificationCenter.current()
     

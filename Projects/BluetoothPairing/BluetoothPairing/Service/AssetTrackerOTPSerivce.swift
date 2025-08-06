@@ -9,9 +9,17 @@ import Foundation
 
 
 @MainActor // Published needs to be updated in main thread
-class MessagingSerive: ObservableObject {
+final class MessagingSerive: ObservableObject {
     
     @Published var otpVerificationStatus: Bool = false
+    
+    var applicationId = Bundle.main.infoDictionary?["APPLICATION_ID"] as? String ?? ""
+    var restApiKey = Bundle.main.infoDictionary?["REST_API_KEY"] as? String ?? ""
+    
+    init() {
+        applicationId = applicationId.replacingOccurrences(of: "\"", with: "")
+        restApiKey = restApiKey.replacingOccurrences(of: "\"", with: "")
+    }
     
     func sendOTP(mobileNumber: String) {
 
@@ -20,8 +28,8 @@ class MessagingSerive: ObservableObject {
         
         let url = URL(string: "https://api.kttelematic.com/api/locks/login?phone=\(mobileNumber)")!
         let headers = [
-            "x-at-application-id": "yQnKHdwqhEVEgNEFr5V5hxFWzhFp2sMpn2AU6P9s",
-            "x-at-rest-api-key": "KxwFJm85xBPLZW3UvMEhLtep38AWiRSiXf9rXT7n"
+            "x-at-application-id": applicationId,
+            "x-at-rest-api-key": restApiKey
         ]
 
         var request = URLRequest(url: url)
@@ -49,8 +57,8 @@ class MessagingSerive: ObservableObject {
         let url = URL(string: "https://api.kttelematic.com/api/locks/verifyOtp?phone=\(mobileNumber)")!
         let headers = [
             "content-type": "application/json",
-            "x-at-application-id": "yQnKHdwqhEVEgNEFr5V5hxFWzhFp2sMpn2AU6P9s",
-            "x-at-rest-api-key": "KxwFJm85xBPLZW3UvMEhLtep38AWiRSiXf9rXT7n"
+            "x-at-application-id": applicationId,
+            "x-at-rest-api-key": restApiKey
         ]
 
         var request = URLRequest(url: url)

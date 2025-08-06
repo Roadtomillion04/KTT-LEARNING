@@ -9,11 +9,11 @@ import Foundation
 import RealmSwift
 
 
-class User: Object, ObjectKeyIdentifiable {
+final class User: Object, ObjectKeyIdentifiable {
+    
     @Persisted(primaryKey: true) var _id: ObjectId
     
     @Persisted var mobileNumber: String
-    
     @Persisted var loginStatus: Bool
     
     

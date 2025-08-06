@@ -16,7 +16,7 @@ struct HomeView: View {
     @ObservedObject var realmManager: RealmManager
     @ObservedObject var notificationService: NotificationService
     
-    @ObservedObject var locktotpService: LockTOTPService
+    @ObservedObject var lockTotpService: LockTOTPService
     
     @State private var showAbout: Bool = false
     
@@ -168,21 +168,8 @@ struct HomeView: View {
             
             bluetoothService.searchDevices()
             
-            Task {
-            
-                while true {
-                    
-                    try await Task.sleep(for: .seconds(1))
-                    
-                    let key = locktotpService.generateSymmetricKey(deviceName: "iPhone", macAddress: "00:00:00:00:00:00")
-                    
-                    print(locktotpService.generateTOTP(key: key))
-                    
-                }
-            }
             
         }
-        
       
         .onDisappear {
 
@@ -190,49 +177,6 @@ struct HomeView: View {
         }
         
     }
-    
-    
-    //    @ViewBuilder
-    //    private func pairedDevicesContent() -> some View {
-    //
-    //        List {
-    //
-    //            ForEach(realmManager.pairedPeripheralList, id: \._id) { peripheral in
-    //
-    //                HStack(spacing: 20) {
-    //
-    //                    Image("lock-svgrepo-com")
-    //                        .resizable()
-    //                        .frame(width: 32, height: 32)
-    //
-    //                    VStack(alignment: .leading, spacing: 10) {
-    //
-    //                        Text(peripheral.peripheralName)
-    //                            .font(Font.custom("Monaco", size: 20))
-    //                            .foregroundStyle(.primary)
-    //
-    //                    }
-    //
-    //                    Spacer()
-    //
-    //                    Button(">") {
-    //
-    //                    }
-    //                    .font(Font.custom("Georgia", size: 25))
-    //                    .tint(.primary)
-    //
-    //
-    //                }
-    //                .padding(.horizontal, 4)
-    //                .padding(.vertical)
-    //
-    //            }
-    //
-    //        }
-    //        .listRowSpacing(15)
-    //        .shadow(radius: 1)
-    //
-    //    }
     
 }
 

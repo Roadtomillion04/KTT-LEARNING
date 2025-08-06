@@ -18,7 +18,7 @@ struct BluetoothPairingApp: App {
     @StateObject var notificationService: NotificationService = NotificationService()
     @StateObject var messagingService: MessagingSerive = MessagingSerive()
     
-    @StateObject var locktotpService: LockTOTPService = LockTOTPService()
+    @StateObject var lockTotpService: LockTOTPService = LockTOTPService()
     
     var body: some Scene {
         
@@ -28,7 +28,9 @@ struct BluetoothPairingApp: App {
                         
             if realmManager.currentUser?.loginStatus == true  {
                 
-                HomeView(bluetoothService: bluetoothService, realmManager: realmManager, notificationService: notificationService, locktotpService: locktotpService)
+//                HomeView(bluetoothService: bluetoothService, realmManager: realmManager, notificationService: notificationService, locktotpService: locktotpService)
+                
+                AuthenticatorView(realmManager: realmManager, lockTotpService: lockTotpService)
                 
             }
             
