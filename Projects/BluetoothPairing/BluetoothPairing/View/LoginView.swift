@@ -16,10 +16,6 @@ struct LoginView: View {
     @State private var mobileNumber: String = ""
     @State private var otp: String = ""
     
-    // for focused, @FocusState is required
-//    @FocusState private var activeTextFieldIsFocused: Bool
-    
-    
     // this is alternative way for Binding?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
@@ -83,32 +79,7 @@ struct LoginView: View {
                 VStack(spacing: 0) { // no spacing as per original app
                     
                     TextField("Mobile No.", text: $mobileNumber)
-                        .foregroundStyle(.black)
-                        .keyboardType(.numberPad)
-                        .textContentType(.telephoneNumber)
-                        .padding(12)
-                        .padding(.horizontal, 36)
-                    // background only shadow
-                        .background(RoundedRectangle(cornerRadius: 5).fill(Color(hex: 0xF1F5F9)).shadow(radius: 1))
-                        .font(Font.custom("Monaco", size: 16))
-                    
-                        .overlay(alignment: .leading) {
-                            Image(systemName: "phone.fill")
-                                .foregroundStyle(.secondary)
-                                .padding(.horizontal, 12)
-                        }
-                    
-//                                    .focused($activeTextFieldIsFocused)
-//
-//                                    .toolbar {
-//                                        ToolbarItemGroup(placement: .keyboard) {
-//                                            Spacer() // spacer is horizontal
-//                                            Button("ok") {
-//                                                activeTextFieldIsFocused = false
-//                                            }
-//                                        }
-//                                    }
-                    
+                        .modifier(TextFieldModifier())
                         .disabled(disableMobileNumberField)
                     
                     // prefix cuts off after 10, and also as @State is used View will be updated, thus display only 10 numbers
@@ -119,26 +90,12 @@ struct LoginView: View {
                     
                     if showOtpField {
                         TextField("OTP", text: $otp)
-                            .foregroundStyle(.black)
-                            .keyboardType(.numberPad)
-                            .textContentType(.oneTimeCode)
-                            .padding(12)
-                            .padding(.horizontal, 36)
-                            .background(RoundedRectangle(cornerRadius: 5).fill(Color(hex: 0xF1F5F9)).shadow(radius: 1))
-                            .font(Font.custom("Monaco", size: 16))
-                        
-                            .overlay(alignment: .leading) {
-                                Image(systemName: "lock.ipad")
-                                    .foregroundStyle(.secondary)
-                                    .padding(.horizontal, 12)
-                            }
-                        
-                        
+                            .modifier(TextFieldModifier())
+
                             .onChange(of: otp) { old, new in
-                                otp = String(new.prefix(4))
-                            }
+                            otp = String(new.prefix(4))
+                        }
                     }
-                    
                 }
                 
                 Button("LOGIN") {
@@ -166,12 +123,10 @@ struct LoginView: View {
                             
                             messagingService.verifyOTP(mobileNumber: mobileNumber, OTPNumber: otp)
                             
-                            // await/@Published not working, let's add timer trick for now
-                            
                             try await Task.sleep(for: .seconds(1)) // sleeps 1 sec before proceeding, yield() should have worked but oh well
                                 
                                 
-                            if messagingService.otpVerificationStatus == true {
+                            if messagingService.otpVerificationStatus {
                                 loginState = .otpVerified
                                 fallthrough // is the only way to make switch do two/more actions in single check
                                 
@@ -224,6 +179,30 @@ struct LoginView: View {
     }
     
 }
+
+
+struct TextFieldModifier: ViewModifier { // could also do extension View to make it available anywhere in the project
+    
+    func body(content: Content) -> some View {
+        content
+            .foregroundStyle(.black)
+            .keyboardType(.numberPad)
+            .textContentType(.telephoneNumber)
+            .padding(12)
+            .padding(.horizontal, 36)
+        // background only shadow
+            .background(RoundedRectangle(cornerRadius: 5).fill(Color(hex: 0xF1F5F9)).shadow(radius: 1))
+            .font(Font.custom("Monaco", size: 16))
+        
+            .overlay(alignment: .leading) {
+                Image(systemName: "phone.fill")
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 12)
+            }
+    }
+    
+}
+
 
 #Preview {
 //    LoginView()

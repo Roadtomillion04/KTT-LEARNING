@@ -12,12 +12,17 @@ struct AuthenticatorView: View {
     @ObservedObject var realmManager: RealmManager
     @ObservedObject var lockTotpService: LockTOTPService
     
+    let currentSecond: TimeInterval = 60 - TimeInterval(Calendar.current.component(.second, from: Date()))
+    
     @State private var searchText = ""
-    @State var timerProgress: TimeInterval = 60 - TimeInterval(Calendar.current.component(.second, from: Date()))
+   
+    @State var timerProgress: TimeInterval = -1
+    
     @State private var totpCode: String = ""
     
     // setting 0.1 instead of 1 second, cause of the animation is not smooth
     let timer = Timer.publish(every: 0.1, on: .main , in: .common).autoconnect()
+    
     
     var body: some View {
         
@@ -32,6 +37,10 @@ struct AuthenticatorView: View {
                     
                     timerProgress -= 0.1
                     
+                }
+            
+                .onAppear {
+                    timerProgress = currentSecond // one opening page, get current second
                 }
             
             listAuthenticator()
@@ -74,6 +83,7 @@ struct AuthenticatorView: View {
                         Text(totpCode)
                             .font(Font.custom("ArialRoundedMTBold", size: 25))
                             .foregroundStyle(.primary)
+                            
                         
                         VStack(alignment: .leading, spacing: 5) {
                          
@@ -96,7 +106,7 @@ struct AuthenticatorView: View {
                     
                     .onChange(of: lockTotpService.totpCode) { old, new in
                         
-                        if new != old{
+                        if new != old {
                             totpCode = lockTotpService.totpCode
                             
                             if !old.isEmpty {

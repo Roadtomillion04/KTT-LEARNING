@@ -8,13 +8,12 @@
 import Foundation
 
 
-@MainActor // Published needs to be updated in main thread
 final class MessagingSerive: ObservableObject {
     
-    @Published var otpVerificationStatus: Bool = false
+    var otpVerificationStatus: Bool = false
     
-    var applicationId = Bundle.main.infoDictionary?["APPLICATION_ID"] as? String ?? ""
-    var restApiKey = Bundle.main.infoDictionary?["REST_API_KEY"] as? String ?? ""
+    private var applicationId = Bundle.main.infoDictionary?["APPLICATION_ID"] as? String ?? ""
+    private var restApiKey = Bundle.main.infoDictionary?["REST_API_KEY"] as? String ?? ""
     
     init() {
         applicationId = applicationId.replacingOccurrences(of: "\"", with: "")
@@ -40,7 +39,7 @@ final class MessagingSerive: ObservableObject {
         
         Task {
             
-            let (data, response) = try! await URLSession.shared.data(for: request)
+            let (data, response) = try await URLSession.shared.data(for: request)
                 
             print(String(data: data, encoding: .utf8) ?? "")
             
@@ -68,7 +67,7 @@ final class MessagingSerive: ObservableObject {
         
         Task {
             
-            let (data, response) = try! await URLSession.shared.data(for: request)
+            let (data, response) = try await URLSession.shared.data(for: request)
             
             // let's parse json and check the verified status
             
@@ -81,6 +80,7 @@ final class MessagingSerive: ObservableObject {
             otpVerificationStatus = verifiedStatus?.success ?? false
             
         }
+
         
     }
     

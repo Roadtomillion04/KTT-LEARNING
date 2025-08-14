@@ -8,17 +8,17 @@
 import Foundation
 import CryptoKit
 
-@MainActor
+
 final class LockTOTPService: ObservableObject {
     
-    @Published var totpCode: String = ""
+    var totpCode: String = ""
     
     let step: TimeInterval = 60
     let digits = 4
     let initialTime: TimeInterval = 0
     let flexibility: TimeInterval = 60
     
-    let secretKey = Bundle.main.infoDictionary?["SECRET_KEY"] as? String ?? ""
+    private let secretKey = Bundle.main.infoDictionary?["SECRET_KEY"] as? String ?? ""
         
     
     func timeFactor(for date: Date = Date()) -> UInt64 {

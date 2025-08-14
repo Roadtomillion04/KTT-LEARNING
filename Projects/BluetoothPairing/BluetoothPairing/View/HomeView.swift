@@ -15,13 +15,19 @@ struct HomeView: View {
     @ObservedObject var bluetoothService: BluetoothService
     @ObservedObject var realmManager: RealmManager
     @ObservedObject var notificationService: NotificationService
-    
     @ObservedObject var lockTotpService: LockTOTPService
+    @ObservedObject var userActionLogService: UserActionLogService
     
     @State private var showAbout: Bool = false
+    @State private var showSideMenu: Bool = false
+    @State private var menuIsShowing: Bool = false
+    @State private var bluetoohEnabledStatus: String?
     
     @State private var path = NavigationPath()
     
+    let sideMenuView: SideMenuView = SideMenuView()
+ 
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         
@@ -31,7 +37,7 @@ struct HomeView: View {
                 
                 HStack(spacing: 25) {
                     
-                    Button(action: {  }) {
+                    Button(action: { showSideMenu.toggle() }) {
                         Image(systemName: "line.3.horizontal")
                             .resizable()
                             .frame(width: 15, height: 15)
@@ -45,7 +51,7 @@ struct HomeView: View {
                     
                     Spacer()
                     
-
+                    
                     Menu("⋮") {
                         
                         Button("About") {
@@ -60,7 +66,6 @@ struct HomeView: View {
                     .font(Font.custom("Monaco", size: 25))
                     .bold()
                     .tint(.primary)
-
                     
                     .alert(isPresented: $showAbout) {
                         Alert(title: Text("BLE-Connect"), message: Text("Build 1.0"))
@@ -70,9 +75,23 @@ struct HomeView: View {
                 
                 HStack {
                     
-                    Text("PAIR DEVICE")
-                        .font(Font.custom("Monaco", size: 25))
+                    Text(bluetoohEnabledStatus ?? "")
+                        .font(Font.custom("Monaco", size: 20))
                         .tint(.primary)
+                        
+                        .onChange(of: bluetoothService.bluetoothIsDisabled) { old, new in
+                            switch new {
+                                case true:
+                                    bluetoohEnabledStatus = "BLUETOOH IS DISABLED"
+                                
+                                case false:
+                                    bluetoohEnabledStatus = "PAIR DEVICE"
+                                
+                                default:
+                                    break
+                            }
+                        }
+                    
                     
                     Spacer()
                     
@@ -87,6 +106,7 @@ struct HomeView: View {
             .padding(.horizontal)
             .frame(maxWidth: .infinity)
             .frame(height: 100)
+            
             
             //            .background(RoundedRectangle(cornerRadius: 5).fill(.white).shadow(radius: 2).ignoresSafeArea())
             //
@@ -146,21 +166,27 @@ struct HomeView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     bluetoothService.stop()
                     bluetoothService.searchDevices()
+                    
+                    userActionLogService.checkNetworkAvailability(logs: realmManager.getUserActionLog())
+                
                 }
                
             }
             
             // is the only way if you don't want to give up the Button, and also this handles complex Navigation very well
             .navigationDestination(for: String.self) { paths in
+                
                 switch paths {
+                    
                     case "CommandSendingView":
-                        CommandSendingView(path: $path, bluetoothService: bluetoothService, notificationService: notificationService)
+                    
+                        CommandSendingView(path: $path, bluetoothService: bluetoothService, notificationService: notificationService, lockTotpService: lockTotpService, realmManager: realmManager, userActionLogService: userActionLogService)
                     
                     default:
                         Text("")
+                    
                 }
             }
-            
         }
         
         .onAppear {
@@ -168,12 +194,33 @@ struct HomeView: View {
             
             bluetoothService.searchDevices()
             
+            realmManager.createUserActionLog(macAddress: "00:00:00:00:00:00")
             
         }
+        
       
         .onDisappear {
 
             bluetoothService.stop()
+            
+            userActionLogService.checkNetworkAvailability(logs: realmManager.getUserActionLog())
+            
+        }
+        
+        
+        .onChange(of: scenePhase) { old, new in
+            
+            switch new {
+                
+                case .active:
+                    // let's check for network scenePhase active and onDissapear(Logout, in case of autoconnect), List refreshing and when commandSent to store or post/ depending on network availability, also in commandSending view
+                    userActionLogService.checkNetworkAvailability(logs: realmManager.getUserActionLog())
+
+                
+                default:
+                    break
+                
+            }
         }
         
     }
@@ -197,6 +244,9 @@ struct CommandSendingView: View  {
     
     @ObservedObject var bluetoothService: BluetoothService
     @ObservedObject var notificationService: NotificationService
+    @ObservedObject var lockTotpService: LockTOTPService
+    @ObservedObject var realmManager: RealmManager
+    @ObservedObject var userActionLogService: UserActionLogService
     
     @State private var commandText: String = ""
     
@@ -216,12 +266,16 @@ struct CommandSendingView: View  {
     
     @State private var connectionStatus: ConnectionStatus = .none
     
+    
+    @State private var lockOTPSheetIsPresented: Bool = false
+    @State private var lockOTP: String = ""
+    @State private var lockOTPVerified: Bool = false
+
+    
     var body: some View {
             
         VStack {
-            
-//            ScrollViewReader { proxy in
-                
+
             List {
                 
                 // for enumerated, Hashable protcol need to be conformed
@@ -230,7 +284,7 @@ struct CommandSendingView: View  {
                     HStack {
                         
                         Text("\(index + 1)")
-                            .font(Font.custom("Monaco", size: 15))
+                            .font(Font.custom("ArialRoundedMTBold", size: 15))
 
                         
                         VStack(alignment: .leading, spacing: 10) {
@@ -244,19 +298,13 @@ struct CommandSendingView: View  {
                         }
                         
                     }
-//                        .id(commandExecutionResult.count + 1)
-                    
+
                 }
                 
             }
             .listRowSpacing(15)
             .scrollIndicators(.hidden)
-            
-//                .onChange(of: commandExecutionResult.count) { old, new in
-//                    proxy.scrollTo(new + 1)
-//
-//                }
-            
+
             .scrollDismissesKeyboard(.immediately)
             
             // also styling cannot be added to naviagtion title
@@ -320,7 +368,7 @@ struct CommandSendingView: View  {
             switch connectionStatus {
                 
             case .successful:
-                Alert(title: Text("Connection Successful"), message: Text("Connected to the device"), dismissButton: .default(Text("OK")) { showStatusAlert = false })
+                Alert(title: Text("Connection Successful"), message: Text("Connected to the device"), dismissButton: .default(Text("OK")) { showStatusAlert = false; lockOTPSheetIsPresented = true })   // after the dismissal, let's pop up the lockOTP sheet
                 
             case .disconnected:
                 Alert(title: Text("Connection Interupted"), message: Text("Device is disconnected"), dismissButton: .default(Text("OK")) { dismiss(); showStatusAlert = false })
@@ -335,10 +383,20 @@ struct CommandSendingView: View  {
             
         }
         
-        //        .onSubmit {
-        //            // which is on return press in keyboard
-        //            commandSubmitAction()
-        //        }
+//                .onSubmit {
+//                    // which is on return press in keyboard
+//                    commandSubmitAction()
+//                }
+        
+        
+        .sheet(isPresented: $lockOTPSheetIsPresented) {
+            lockOTPEnterView()
+                .presentationDetents([.medium])
+                .interactiveDismissDisabled()
+            
+                .animation(.easeInOut(duration: 1), value: lockOTPSheetIsPresented)
+        }
+    
         
         .onAppear {
             // okay, wait for 5 sec, if no connection successful, must be peripheral is turned off and the list is not refreshed case
@@ -346,10 +404,6 @@ struct CommandSendingView: View  {
                 if connectionStatus == .none {
                     showStatusAlert = true
                 }
-                
-                print("mu")
-                print(bluetoothService.centralManager.retrieveConnectedPeripherals(withServices: []))
-                    
             }
         }
         
@@ -357,16 +411,22 @@ struct CommandSendingView: View  {
         // scencePhase .background calls when user move to home screen while app running, also by default notification pop up when app on background
         .onChange(of: scenePhase) { old, new in
             
-//            if new == .active {
-//                notificationService.checkAuthorization()
-//            }
+            switch new {
+                
+            case .active:
+                userActionLogService.checkNetworkAvailability(logs: realmManager.getUserActionLog()) // case if user exit app and turn internet on and open app from background or quick settings/control center
             
-            if new == .background {
+                
+            case .background:
                 // push if notification allowed in the phone
                 if notificationService.checkNotificationEnabled() {
                     // let's trigger the notification implying bluetooth is connected
                     notificationService.pushNotification(peripheralName: bluetoothService.targetPeripheral?.name ?? "")
                 }
+                
+            default:
+                break
+                
             }
         }
         
@@ -390,8 +450,9 @@ struct CommandSendingView: View  {
         bluetoothService.commandExecutionResult = ""
         
         bluetoothService.write(commandText: commandText + "\n")
+
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25)  // let's block to write function is called
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25)  // let's block so that write function is called
         {
             commandExecutionResult.append(
                 .init(id: UUID(), command: commandText, result: bluetoothService.commandExecutionResult))
@@ -399,6 +460,56 @@ struct CommandSendingView: View  {
             commandText.removeAll() // clearing input, qol?
             
         }
+        
+        // actually just logging every time and posting if network available, no such thing as posting directly without logging is implemented, realm is fast anyway so shouldn't be issue
+        realmManager.createUserActionLog(macAddress: "00:00:00:00:00:00")
+        
+        userActionLogService.checkNetworkAvailability(logs: realmManager.getUserActionLog())
+        
+    }
+    
+    
+    @ViewBuilder
+    private func lockOTPEnterView() -> some View {
+        
+        VStack(spacing: 25) {
+            
+            Text("Connected to \(bluetoothService.targetPeripheral?.name ?? "")")
+                .font(Font.custom("Monaco", size: 16))
+            
+            Text("Verify OTP before sending commands")
+                .font(Font.custom("Monaco", size: 16))
+            
+            TextField("", text: $lockOTP)
+                .foregroundStyle(.black)
+                .keyboardType(.numberPad)
+                .textContentType(.telephoneNumber)
+                .background(RoundedRectangle(cornerRadius: 5).fill(Color(hex: 0xF1F5F9)).shadow(radius: 1))
+                .font(Font.custom("Monaco", size: 16))
+                .multilineTextAlignment(.center)
+                .lineLimit(1)
+                .frame(width: 64)
+            
+                .onChange(of: lockOTP) { old, new in
+                    lockOTP = String(new.prefix(4))
+                }
+            
+            
+            Button("Submit") {
+               lockOTPVerified = lockTotpService.verifyTOTP(code: "lock1", pass: "00:00:00:00:00:00", otp: lockOTP) // elock name and mac go here
+                
+                if lockOTPVerified {
+                    lockOTPSheetIsPresented = false // dismiss the sheet, if lockOTP is correct
+                }
+                
+            }
+            .foregroundStyle(.white)
+            .font(Font.custom("Georgia", size: 16))
+            .padding(5)
+            .background(RoundedRectangle(cornerRadius: 5).fill(Color.blue).shadow(radius: 1))
+            
+        }
+        .padding(.horizontal)
         
     }
     

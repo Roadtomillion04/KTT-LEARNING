@@ -37,12 +37,14 @@ class BluetoothService: NSObject, ObservableObject {
     
     var peripheralSubscribedCharacteristics: [CBCharacteristic] = []
     
+    var bluetoothIsDisabled: Bool?
+    
     // This CBUUID is defined by Bluetooth standards by SIG,
     // for example for aa15 search it's UUID value / use LightBlue/nrfConnect to see the serivces
 //    let targetPeripheralService: CBUUID = CBUUID(string: "49535343-FE7D-4AE5-8FA9-9FAFD205E455")
     
-    // this is the characteristic that is executing commands
-    let targetPeripheralCharacteristic: CBUUID = CBUUID(string: "49535343-1E4D-4BD9-BA61-23C647249616")
+    // this is the characteristic that is executing commands for Translogik,
+//    let targetPeripheralCharacteristic: CBUUID = CBUUID(string: "49535343-1E4D-4BD9-BA61-23C647249616")
     
     @Published var connectionStatus: BluetoothStatus = .disconnected
     
@@ -89,6 +91,7 @@ extension BluetoothService: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         
         if central.state == .poweredOn {
+            bluetoothIsDisabled = false
             searchDevices()
             
 //            centralManager.retrieveConnectedPeripherals(withServices: [])
@@ -96,6 +99,7 @@ extension BluetoothService: CBCentralManagerDelegate {
         }
         
         if central.state == .poweredOff {
+            bluetoothIsDisabled = true
             stop()
         }
         
@@ -109,7 +113,7 @@ extension BluetoothService: CBCentralManagerDelegate {
         
         // using this list has one issue, which is when ble device disconnect on searching, and im not sure how to capture that peripheral to remove that device name from the list
         if !peripheral_name.isEmpty && !peripheralsList.contains(peripheral) /*&& peripheral_name.uppercased().starts(with: "KTT")*/ {
-            // filter KTT products only
+            // filter KTT ble only
             peripheralsList.append(peripheral)
         }
         
@@ -201,11 +205,11 @@ extension BluetoothService: CBPeripheralDelegate {
         
             print("Subscribed: \(characteristic.uuid)")
             
-            if characteristic.uuid == targetPeripheralCharacteristic {
+//            if characteristic.uuid == targetPeripheralCharacteristic {
                 
                 peripheralSubscribedCharacteristics.append(characteristic)
                 
-            }
+//            }
             
         }
         
