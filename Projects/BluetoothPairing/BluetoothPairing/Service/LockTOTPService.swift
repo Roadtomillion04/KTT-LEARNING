@@ -19,7 +19,8 @@ final class LockTOTPService: ObservableObject {
     let flexibility: TimeInterval = 60
     
     private let secretKey = Bundle.main.infoDictionary?["SECRET_KEY"] as? String ?? ""
-        
+    
+    
     
     func timeFactor(for date: Date = Date()) -> UInt64 {
         

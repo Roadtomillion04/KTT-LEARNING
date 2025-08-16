@@ -6,57 +6,60 @@
 //
 
 import Foundation
-import Network
+import Reachability
 
+
+@MainActor
 final class UserActionLogService: ObservableObject {
     
     // so we have to check for internet Availability first, if available POST no logging, if no available log and when available check for logs, POST and clear logs, which is Realm in this case
-        
-     var isNetworkAvailable: String = "" // can use optional but have to handle ?? so empty string is better way
     
     private var applicationId = Bundle.main.infoDictionary?["APPLICATION_ID"] as? String ?? ""
     private var restApiKey = Bundle.main.infoDictionary?["REST_API_KEY"] as? String ?? ""
-
-        
-    // NWPathMonitor is not consistent when truning off and on Wifi in simulator
     
-    let monitor = NWPathMonitor(prohibitedInterfaceTypes: [.other, .wiredEthernet])
-        
+    private let reachability = try! Reachability()
+    
+    @Published var isConnected: Bool = true
+    @Published var isResponseSuccess: Bool = false
+    
     init() {
-        // realm needs to be accessed in main thread
-        monitor.start(queue: .main) // gloabal is background thread
-        
+    
         applicationId = applicationId.replacingOccurrences(of: "\"", with: "")
         restApiKey = restApiKey.replacingOccurrences(of: "\"", with: "")
+        
     }
     
     
-    func checkNetworkAvailability(logs: [UserActionLog]) {
+    func checkReachability(logs: [UserActionLog]) {
         
-        monitor.pathUpdateHandler = { path in
+        reachability.whenReachable = { reachability in
             
-            switch path.status {
+            Task {
                 
-                case .satisfied:
-                    print("connected")
-                                                                 
-                        // posting Logs only when connected state and is not empty
-                        if !logs.isEmpty {
-                            self.postLogs(logs: logs)
-                            
-                        }
-                    
-                case .unsatisfied:
-                    print("disconnected")
-                    
-                case .requiresConnection:
-                    
-                    print("waiting for connection...")
-                    
-                default:
-                    break
-                    
+                self.isConnected = true
+                
+                self.postLogs(logs: logs)
+                
             }
+            
+        }
+        
+        reachability.whenUnreachable = { _ in
+            
+            Task {
+                
+                self.isConnected = false
+                                
+            }
+            
+        }
+        
+        do {
+            
+            try reachability.startNotifier()
+            
+        } catch {
+            print("Unable to start Reachability notifier: \(error)")
         }
         
     }
@@ -100,19 +103,17 @@ final class UserActionLogService: ObservableObject {
             
             let (data, response) = try await URLSession.shared.data(for: request)
             
-            let decoder = JSONDecoder()
-            
-            let jsonResponse = try? decoder.decode(Response.self, from: data)
-            
-            print(jsonResponse?.userLogs ?? -1)
+            // let's just check response == 200 to determine, connection is successful
+            if let httpResponse = response as? HTTPURLResponse {
+                
+                if httpResponse.statusCode == 200 {
+                    isResponseSuccess = true
+                }
+                
+            }
             
         }
         
-    }
-
-    
-    struct Response: Decodable {
-        let userLogs: Int
     }
 
 }

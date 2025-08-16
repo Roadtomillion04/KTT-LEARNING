@@ -80,7 +80,6 @@ app.post('/api/logs', authenticateKey, function (req, res) {
 	
 	console.log(body)
 
-	//res.json(body)
 	
 })
 

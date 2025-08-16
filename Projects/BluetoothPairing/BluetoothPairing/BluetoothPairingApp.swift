@@ -19,7 +19,6 @@ struct BluetoothPairingApp: App {
     @StateObject var messagingService: MessagingSerive = MessagingSerive()
     @StateObject var lockTotpService: LockTOTPService = LockTOTPService()
     @StateObject var userActionLogService: UserActionLogService = UserActionLogService()
-
     
     var body: some Scene {
         

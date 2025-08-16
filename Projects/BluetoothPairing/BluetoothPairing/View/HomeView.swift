@@ -51,6 +51,18 @@ struct HomeView: View {
                     
                     Spacer()
                     
+                    if userActionLogService.isConnected {
+                        Image(systemName: "wifi")
+                            .resizable()
+                            .frame(width: 25, height: 18)
+                            .tint(.primary)
+                    } else {
+                        Image(systemName: "wifi.slash")
+                            .resizable()
+                            .frame(width: 25, height: 18)
+                            .tint(.secondary)
+                    }
+                    
                     
                     Menu("⋮") {
                         
@@ -80,7 +92,9 @@ struct HomeView: View {
                         .tint(.primary)
                         
                         .onChange(of: bluetoothService.bluetoothIsDisabled) { old, new in
+                            
                             switch new {
+                                
                                 case true:
                                     bluetoohEnabledStatus = "BLUETOOH IS DISABLED"
                                 
@@ -106,16 +120,19 @@ struct HomeView: View {
             .padding(.horizontal)
             .frame(maxWidth: .infinity)
             .frame(height: 100)
-            
-            
-            //            .background(RoundedRectangle(cornerRadius: 5).fill(.white).shadow(radius: 2).ignoresSafeArea())
-            //
+
             
             pairDeviceContent()
             
         }
         
+        .onReceive(userActionLogService.$isResponseSuccess) { val in
+            print(val)
+        }
+        
     }
+    
+    
     
     
     @ViewBuilder // also can be shown with NavigationLink, very flexible
@@ -167,8 +184,7 @@ struct HomeView: View {
                     bluetoothService.stop()
                     bluetoothService.searchDevices()
                     
-                    userActionLogService.checkNetworkAvailability(logs: realmManager.getUserActionLog())
-                
+                    userActionLogService.checkReachability(logs: realmManager.getUserActionLog())
                 }
                
             }
@@ -193,9 +209,7 @@ struct HomeView: View {
             // let's just stick with forever searching route, could have used timer but oh well
             
             bluetoothService.searchDevices()
-            
-            realmManager.createUserActionLog(macAddress: "00:00:00:00:00:00")
-            
+                        
         }
         
       
@@ -203,7 +217,7 @@ struct HomeView: View {
 
             bluetoothService.stop()
             
-            userActionLogService.checkNetworkAvailability(logs: realmManager.getUserActionLog())
+            userActionLogService.checkReachability(logs: realmManager.getUserActionLog())
             
         }
         
@@ -214,7 +228,7 @@ struct HomeView: View {
                 
                 case .active:
                     // let's check for network scenePhase active and onDissapear(Logout, in case of autoconnect), List refreshing and when commandSent to store or post/ depending on network availability, also in commandSending view
-                    userActionLogService.checkNetworkAvailability(logs: realmManager.getUserActionLog())
+                    userActionLogService.checkReachability(logs: realmManager.getUserActionLog())
 
                 
                 default:
@@ -353,11 +367,25 @@ struct CommandSendingView: View  {
                 
             case .disconnected:
                 connectionStatus = .disconnected
-                showStatusAlert = true
+                
+                if lockOTPSheetIsPresented {
+                    lockOTPSheetIsPresented = false
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // slight delay make it work
+                    showStatusAlert = true
+                }
                 
             case .error:
                 connectionStatus = .failed
-                showStatusAlert = true
+                
+                if lockOTPSheetIsPresented {
+                    lockOTPSheetIsPresented = false
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    showStatusAlert = true
+                }
                 
             }
             
@@ -414,7 +442,7 @@ struct CommandSendingView: View  {
             switch new {
                 
             case .active:
-                userActionLogService.checkNetworkAvailability(logs: realmManager.getUserActionLog()) // case if user exit app and turn internet on and open app from background or quick settings/control center
+                userActionLogService.checkReachability(logs: realmManager.getUserActionLog()) // case if user exit app and turn internet on and open app from background or quick settings/control center
             
                 
             case .background:
@@ -464,7 +492,7 @@ struct CommandSendingView: View  {
         // actually just logging every time and posting if network available, no such thing as posting directly without logging is implemented, realm is fast anyway so shouldn't be issue
         realmManager.createUserActionLog(macAddress: "00:00:00:00:00:00")
         
-        userActionLogService.checkNetworkAvailability(logs: realmManager.getUserActionLog())
+        userActionLogService.checkReachability(logs: realmManager.getUserActionLog())
         
     }
     
@@ -475,41 +503,51 @@ struct CommandSendingView: View  {
         VStack(spacing: 25) {
             
             Text("Connected to \(bluetoothService.targetPeripheral?.name ?? "")")
-                .font(Font.custom("Monaco", size: 16))
+                .font(Font.custom("Monaco", size: 18))
             
-            Text("Verify OTP before sending commands")
-                .font(Font.custom("Monaco", size: 16))
+            Text("Verify OTP")
+                .font(Font.custom("Monaco", size: 18))
             
             TextField("", text: $lockOTP)
                 .foregroundStyle(.black)
                 .keyboardType(.numberPad)
                 .textContentType(.telephoneNumber)
                 .background(RoundedRectangle(cornerRadius: 5).fill(Color(hex: 0xF1F5F9)).shadow(radius: 1))
-                .font(Font.custom("Monaco", size: 16))
+                .font(Font.custom("Monaco", size: 18))
                 .multilineTextAlignment(.center)
                 .lineLimit(1)
-                .frame(width: 64)
+                .frame(width: 72) // 18 * 4 digits;
             
                 .onChange(of: lockOTP) { old, new in
                     lockOTP = String(new.prefix(4))
                 }
             
             
-            Button("Submit") {
-               lockOTPVerified = lockTotpService.verifyTOTP(code: "lock1", pass: "00:00:00:00:00:00", otp: lockOTP) // elock name and mac go here
-                
-                if lockOTPVerified {
-                    lockOTPSheetIsPresented = false // dismiss the sheet, if lockOTP is correct
+            HStack {
+
+                Button("Back") {
+                    lockOTPSheetIsPresented = false
+                    
+                    dismiss()
                 }
+                .padding(.horizontal)
+                
+                Button("Submit") {
+                    lockOTPVerified = lockTotpService.verifyTOTP(code: "lock1", pass: "00:00:00:00:00:00", otp: lockOTP) // elock name and mac go here
+                    
+                    if lockOTPVerified {
+                        lockOTPSheetIsPresented = false // dismiss the sheet, if lockOTP is correct
+                    }
+                    
+                }
+                .foregroundStyle(.white)
+                .font(Font.custom("Georgia", size: 16))
+                .padding(7.5)
+                .background(RoundedRectangle(cornerRadius: 5).fill(Color.blue).shadow(radius: 1))
                 
             }
-            .foregroundStyle(.white)
-            .font(Font.custom("Georgia", size: 16))
-            .padding(5)
-            .background(RoundedRectangle(cornerRadius: 5).fill(Color.blue).shadow(radius: 1))
-            
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
         
     }
     
