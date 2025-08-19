@@ -1,5 +1,5 @@
 PODS:
-  - ReachabilitySwift (5.2.4)
+  - Connectivity (8.0.1)
   - Realm (20.0.3):
     - Realm/Headers (= 20.0.3)
   - Realm/Headers (20.0.3)
@@ -7,12 +7,12 @@ PODS:
     - Realm (= 20.0.3)
 
 DEPENDENCIES:
-  - ReachabilitySwift
+  - Connectivity
   - RealmSwift (from `https://github.com/realm/realm-swift.git`, branch `community`)
 
 SPEC REPOS:
   trunk:
-    - ReachabilitySwift
+    - Connectivity
     - Realm
 
 EXTERNAL SOURCES:
@@ -26,10 +26,10 @@ CHECKOUT OPTIONS:
     :git: https://github.com/realm/realm-swift.git
 
 SPEC CHECKSUMS:
-  ReachabilitySwift: 32793e867593cfc1177f5d16491e3a197d2fccda
+  Connectivity: f9e562568f32d7a297412d939edac9f3959db96f
   Realm: 853e5089d6042dff807bda000277eadfe2da93d2
   RealmSwift: f33c19577cefcbf681345d721fcbc7b42be4c949
 
-PODFILE CHECKSUM: fd16728993063f3e3dce43097c2beda1acb918a8
+PODFILE CHECKSUM: 756ab08099ebcfcb1fcd6e692ba2d59a68934f36
 
 COCOAPODS: 1.16.2

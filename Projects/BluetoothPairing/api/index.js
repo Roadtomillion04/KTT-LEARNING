@@ -85,6 +85,6 @@ app.post('/api/logs', authenticateKey, function (req, res) {
 
 
 
-app.listen(9000, function () {})
+app.listen(9000, '192.168.110.20', function () {})
 
 

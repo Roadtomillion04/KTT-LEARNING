@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Reachability
+import Connectivity
 
 
 @MainActor
@@ -17,49 +17,29 @@ final class UserActionLogService: ObservableObject {
     private var applicationId = Bundle.main.infoDictionary?["APPLICATION_ID"] as? String ?? ""
     private var restApiKey = Bundle.main.infoDictionary?["REST_API_KEY"] as? String ?? ""
     
-    private let reachability = try! Reachability()
+    private var connectivity = Connectivity()
     
-    @Published var isConnected: Bool = true
     @Published var isResponseSuccess: Bool = false
     
     init() {
     
         applicationId = applicationId.replacingOccurrences(of: "\"", with: "")
         restApiKey = restApiKey.replacingOccurrences(of: "\"", with: "")
-        
+
     }
+
     
-    
+    // okay, now it works one off checking as intended
     func checkReachability(logs: [UserActionLog]) {
         
-        reachability.whenReachable = { reachability in
+        connectivity.checkConnectivity { connectivity in
             
-            Task {
-                
-                self.isConnected = true
-                
+            if !logs.isEmpty && connectivity.status == .connected {
+            
                 self.postLogs(logs: logs)
                 
             }
             
-        }
-        
-        reachability.whenUnreachable = { _ in
-            
-            Task {
-                
-                self.isConnected = false
-                                
-            }
-            
-        }
-        
-        do {
-            
-            try reachability.startNotifier()
-            
-        } catch {
-            print("Unable to start Reachability notifier: \(error)")
         }
         
     }
@@ -82,7 +62,7 @@ final class UserActionLogService: ObservableObject {
         
         let data = try! JSONSerialization.data(withJSONObject: jsonData, options: [])
         
-        let url = URL(string: "http://127.0.0.1:9000/api/logs")!
+        let url = URL(string: "http://192.168.110.20:9000/api/logs")!
         
         let headers = [
             "application_id": applicationId,
@@ -96,8 +76,6 @@ final class UserActionLogService: ObservableObject {
         request.httpBody = data as Data
         
         request.cachePolicy = .reloadIgnoringLocalCacheData // we are doing POST operation,so no caching
-        request.timeoutInterval = 10
-        
         
         Task {
             
@@ -106,7 +84,7 @@ final class UserActionLogService: ObservableObject {
             // let's just check response == 200 to determine, connection is successful
             if let httpResponse = response as? HTTPURLResponse {
                 
-                if httpResponse.statusCode == 200 {
+                if httpResponse.statusCode == 200 || httpResponse.statusCode == 201 {
                     isResponseSuccess = true
                 }
                 

@@ -7,7 +7,7 @@ target 'BluetoothPairing' do
 
   # Pods for BluetoothPairing
   pod 'RealmSwift', :git => 'https://github.com/realm/realm-swift.git', :branch => 'community'
-  pod 'ReachabilitySwift'
+  pod 'Connectivity'
 
 end
 

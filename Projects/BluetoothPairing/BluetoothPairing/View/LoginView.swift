@@ -80,6 +80,12 @@ struct LoginView: View {
                     
                     TextField("Mobile No.", text: $mobileNumber)
                         .modifier(TextFieldModifier())
+                        .overlay(alignment: .leading) {
+                            Image(systemName: "phone.fill")
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 12)
+                        }
+                    
                         .disabled(disableMobileNumberField)
                     
                     // prefix cuts off after 10, and also as @State is used View will be updated, thus display only 10 numbers
@@ -91,6 +97,11 @@ struct LoginView: View {
                     if showOtpField {
                         TextField("OTP", text: $otp)
                             .modifier(TextFieldModifier())
+                            .overlay(alignment: .leading) {
+                                Image(systemName: "iphone.gen1")
+                                    .foregroundStyle(.secondary)
+                                    .padding(.horizontal, 12)
+                            }
 
                             .onChange(of: otp) { old, new in
                             otp = String(new.prefix(4))
@@ -194,11 +205,7 @@ struct TextFieldModifier: ViewModifier { // could also do extension View to make
             .background(RoundedRectangle(cornerRadius: 5).fill(Color(hex: 0xF1F5F9)).shadow(radius: 1))
             .font(Font.custom("Monaco", size: 16))
         
-            .overlay(alignment: .leading) {
-                Image(systemName: "phone.fill")
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 12)
-            }
+           
     }
     
 }

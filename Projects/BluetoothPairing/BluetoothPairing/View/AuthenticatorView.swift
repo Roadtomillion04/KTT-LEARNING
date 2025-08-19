@@ -100,7 +100,7 @@ struct AuthenticatorView: View {
                     
                     .onReceive(timer) { _ in
                             
-                        lockTotpService.generateTOTP(code: authenticator.name, pass: authenticator.macAddress)
+                        lockTotpService.generateTOTP(name: authenticator.name)
                         
                     }
                     

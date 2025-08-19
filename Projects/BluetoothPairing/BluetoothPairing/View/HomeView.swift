@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
- 
+
 
 struct HomeView: View {
     
@@ -51,17 +51,17 @@ struct HomeView: View {
                     
                     Spacer()
                     
-                    if userActionLogService.isConnected {
-                        Image(systemName: "wifi")
-                            .resizable()
-                            .frame(width: 25, height: 18)
-                            .tint(.primary)
-                    } else {
-                        Image(systemName: "wifi.slash")
-                            .resizable()
-                            .frame(width: 25, height: 18)
-                            .tint(.secondary)
-                    }
+//                    if userActionLogService.isConnected {
+//                        Image(systemName: "wifi")
+//                            .resizable()
+//                            .frame(width: 25, height: 18)
+//                            .tint(.primary)
+//                    } else {
+//                        Image(systemName: "wifi.slash")
+//                            .resizable()
+//                            .frame(width: 25, height: 18)
+//                            .tint(.secondary)
+//                    }
                     
                     
                     Menu("⋮") {
@@ -126,8 +126,15 @@ struct HomeView: View {
             
         }
         
-        .onReceive(userActionLogService.$isResponseSuccess) { val in
-            print(val)
+        .onReceive(userActionLogService.$isResponseSuccess) { success in
+            
+            if success {
+                
+                realmManager.deleteAllUserActionLog()
+                
+                userActionLogService.isResponseSuccess = false
+                
+            }
         }
         
     }
@@ -209,7 +216,7 @@ struct HomeView: View {
             // let's just stick with forever searching route, could have used timer but oh well
             
             bluetoothService.searchDevices()
-                        
+            
         }
         
       
@@ -228,6 +235,7 @@ struct HomeView: View {
                 
                 case .active:
                     // let's check for network scenePhase active and onDissapear(Logout, in case of autoconnect), List refreshing and when commandSent to store or post/ depending on network availability, also in commandSending view
+                
                     userActionLogService.checkReachability(logs: realmManager.getUserActionLog())
 
                 
@@ -349,6 +357,7 @@ struct CommandSendingView: View  {
             
         }
         .padding(.horizontal)
+        .opacity(lockOTPSheetIsPresented ? 0.5 : 1)
         
         
         .onChange(of: bluetoothService.connectionStatus) { old, new in
@@ -493,7 +502,7 @@ struct CommandSendingView: View  {
         realmManager.createUserActionLog(macAddress: "00:00:00:00:00:00")
         
         userActionLogService.checkReachability(logs: realmManager.getUserActionLog())
-        
+    
     }
     
     
@@ -533,7 +542,7 @@ struct CommandSendingView: View  {
                 .padding(.horizontal)
                 
                 Button("Submit") {
-                    lockOTPVerified = lockTotpService.verifyTOTP(code: "lock1", pass: "00:00:00:00:00:00", otp: lockOTP) // elock name and mac go here
+                    lockOTPVerified = lockTotpService.verifyTOTP(name: bluetoothService.targetPeripheral?.name ?? "", otp: lockOTP) // elock name and mac go here
                     
                     if lockOTPVerified {
                         lockOTPSheetIsPresented = false // dismiss the sheet, if lockOTP is correct

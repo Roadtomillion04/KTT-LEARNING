@@ -21,7 +21,6 @@ final class LockTOTPService: ObservableObject {
     private let secretKey = Bundle.main.infoDictionary?["SECRET_KEY"] as? String ?? ""
     
     
-    
     func timeFactor(for date: Date = Date()) -> UInt64 {
         
         let timeSinceInitial = date.timeIntervalSince1970 - self.initialTime
@@ -54,9 +53,9 @@ final class LockTOTPService: ObservableObject {
     }
     
     
-    func generateTOTP(code: String, pass: String, time: Date = Date()) -> String {
+    func generateTOTP(name: String, time: Date = Date()) -> String {
         
-        let input = code + pass + secretKey.replacingOccurrences(of: "\"", with: "")  // secretKey had quotes on getting from infoDict
+        let input = name + secretKey.replacingOccurrences(of: "\"", with: "")  // secretKey had quotes on getting from infoDict
         let timeHex = String(format: "%016X", timeFactor(for: time))
         let timeData = Data(hexString: timeHex)
         let keyData = input.data(using: .utf8)!
@@ -70,15 +69,15 @@ final class LockTOTPService: ObservableObject {
     
     
     // so no server side validation, authenticator runs on asset tracker just like google authenticator for every lock?, and user enter otp to this app and verify locally
-    func verifyTOTP(code: String, pass: String, otp: String, time: Date = Date(), flexible: Bool = false) -> Bool {
+    func verifyTOTP(name: String, otp: String, time: Date = Date(), flexible: Bool = false) -> Bool {
         
-        if generateTOTP(code: code, pass: pass, time: time) == otp {
+        if generateTOTP(name: name, time: time) == otp {
             return true
         }
         
         if flexible {
             let past = time.addingTimeInterval(-self.flexibility)
-            return generateTOTP(code: code, pass: pass, time: past) == otp
+            return generateTOTP(name: name, time: past) == otp
         }
         
         return false

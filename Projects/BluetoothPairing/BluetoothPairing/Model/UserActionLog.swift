@@ -31,7 +31,6 @@ final class UserActionLog: Object, ObjectKeyIdentifiable, Codable {
         
 //        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ" // ISO 8601, internationally accepted date and time format
         
-        
         self.date = ISO8601DateFormatter().string(from: Date())
     }
 
