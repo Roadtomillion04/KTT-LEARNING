@@ -1,0 +1,460 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "(%@)" : {
+
+    },
+    "%@" : {
+
+    },
+    "%@ KM" : {
+
+    },
+    "%@ KM in 00 hr: 00 min" : {
+
+    },
+    "%@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      }
+    },
+    "%lld Trips" : {
+
+    },
+    "%lld uploaded" : {
+
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "© %@ Driver App." : {
+
+    },
+    "+" : {
+
+    },
+    "₹%@" : {
+
+    },
+    "0" : {
+
+    },
+    "Account Status" : {
+
+    },
+    "Add Trip Expenses" : {
+
+    },
+    "Advances" : {
+
+    },
+    "App Version %@" : {
+
+    },
+    "Approved" : {
+
+    },
+    "Attendance" : {
+
+    },
+    "Attendance checked in successfully" : {
+
+    },
+    "Attendance Detail" : {
+
+    },
+    "Attendance Log" : {
+
+    },
+    "Attendance Logs (Last 30 Days)" : {
+
+    },
+    "Call %@ to learn more." : {
+
+    },
+    "cancel" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Cancel Zone" : {
+
+    },
+    "Capture Document Image to Upload" : {
+
+    },
+    "Capture Image to Upload" : {
+
+    },
+    "Certificate of Registration" : {
+
+    },
+    "Check In" : {
+
+    },
+    "CHECK IN" : {
+
+    },
+    "Choose from gallery" : {
+
+    },
+    "CLOSE" : {
+
+    },
+    "Comments" : {
+
+    },
+    "Contact: %@ (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Contact: %1$@ (%2$@)"
+          }
+        }
+      }
+    },
+    "Current ODO" : {
+
+    },
+    "Dashboard" : {
+
+    },
+    "Date" : {
+
+    },
+    "Date of Birth" : {
+
+    },
+    "Date:" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Distance" : {
+
+    },
+    "Doc" : {
+
+    },
+    "Documents" : {
+
+    },
+    "Documents (Doc)" : {
+
+    },
+    "Driver App" : {
+
+    },
+    "Driver Profile Not Found" : {
+
+    },
+    "Driving License" : {
+
+    },
+    "Driving Liscense" : {
+
+    },
+    "END" : {
+
+    },
+    "End ODO" : {
+
+    },
+    "Expiry Date" : {
+
+    },
+    "Failed" : {
+
+    },
+    "Fitness Certificate" : {
+
+    },
+    "From" : {
+
+    },
+    "From Date" : {
+
+    },
+    "Fuel" : {
+
+    },
+    "Good Morning, %@" : {
+
+    },
+    "Head Load Charges?" : {
+
+    },
+    "ID Proof" : {
+
+    },
+    "In Total" : {
+
+    },
+    "Insurance" : {
+
+    },
+    "Invalid Mobile Number" : {
+
+    },
+    "Invalid OTP" : {
+
+    },
+    "KM Driven" : {
+
+    },
+    "Language Settings" : {
+
+    },
+    "Leave History" : {
+
+    },
+    "Leave Request" : {
+
+    },
+    "License" : {
+
+    },
+    "License Expiry" : {
+
+    },
+    "Limit Reached" : {
+
+    },
+    "Loading - In & Out" : {
+
+    },
+    "Location" : {
+
+    },
+    "Location:" : {
+
+    },
+    "Lorry Receipt (LR)" : {
+
+    },
+    "LR" : {
+
+    },
+    "Media Viewer" : {
+
+    },
+    "New to Driver App?" : {
+
+    },
+    "No" : {
+
+    },
+    "No." : {
+
+    },
+    "None" : {
+
+    },
+    "Notes" : {
+
+    },
+    "Notfications" : {
+
+    },
+    "Ok" : {
+
+    },
+    "OK" : {
+
+    },
+    "On Time" : {
+
+    },
+    "OP" : {
+
+    },
+    "Operating Expenses" : {
+
+    },
+    "Payment Mode" : {
+
+    },
+    "Pending" : {
+
+    },
+    "Please Contact Admin" : {
+
+    },
+    "Please Enter correct OTP pin" : {
+
+    },
+    "Please Enter valid Mobile Number" : {
+
+    },
+    "Please select the cancellation reason for this zone" : {
+
+    },
+    "Please try again!" : {
+
+    },
+    "POD" : {
+
+    },
+    "POI" : {
+
+    },
+    "Profile" : {
+
+    },
+    "proof of Delivery (POD)" : {
+
+    },
+    "Proof of Delivery (POD)" : {
+
+    },
+    "Ref No:-" : {
+
+    },
+    "Rejected" : {
+
+    },
+    "RTO / Home" : {
+
+    },
+    "Save" : {
+
+    },
+    "Select Document Type" : {
+
+    },
+    "Select Doument Type" : {
+
+    },
+    "Select Reason" : {
+
+    },
+    "Select Zone Type" : {
+
+    },
+    "Set Image" : {
+
+    },
+    "Settings" : {
+
+    },
+    "START" : {
+
+    },
+    "Start ODO" : {
+
+    },
+    "Success" : {
+
+    },
+    "Take a picture" : {
+
+    },
+    "Tap to Capture the document" : {
+
+    },
+    "Tap to Capture the lorry receipt (LR) images" : {
+
+    },
+    "Tap to Capture the proof of delivary (POD) images" : {
+
+    },
+    "Target" : {
+      "localizations" : {
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "இலக்கு"
+          }
+        }
+      }
+    },
+    "Text" : {
+
+    },
+    "Time:" : {
+
+    },
+    "To" : {
+
+    },
+    "To Date" : {
+
+    },
+    "Today's Attendance" : {
+
+    },
+    "Toll" : {
+
+    },
+    "Total Advances" : {
+
+    },
+    "Total Expenses" : {
+
+    },
+    "Trip Advances" : {
+
+    },
+    "Trip Assignment Date" : {
+
+    },
+    "Trip Expenses" : {
+
+    },
+    "Trip Id - %@" : {
+
+    },
+    "Trip Settlement" : {
+
+    },
+    "Trip Status" : {
+
+    },
+    "Trips" : {
+
+    },
+    "Unloading - In & Out" : {
+
+    },
+    "Upload" : {
+
+    },
+    "Verified" : {
+
+    },
+    "View" : {
+
+    },
+    "View All" : {
+
+    },
+    "View Less" : {
+
+    },
+    "View More" : {
+
+    },
+    "Yes" : {
+
+    }
+  },
+  "version" : "1.0"
+}

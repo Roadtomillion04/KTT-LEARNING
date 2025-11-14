@@ -1,0 +1,20 @@
+PODS:
+  - Connectivity (8.0.1)
+  - SwiftyJSON (5.0.2)
+
+DEPENDENCIES:
+  - Connectivity
+  - SwiftyJSON (= 5.0.2)
+
+SPEC REPOS:
+  trunk:
+    - Connectivity
+    - SwiftyJSON
+
+SPEC CHECKSUMS:
+  Connectivity: f9e562568f32d7a297412d939edac9f3959db96f
+  SwiftyJSON: f5b1bf1cd8dd53cd25887ac0eabcfd92301c6a5a
+
+PODFILE CHECKSUM: dca3792eb92a80d799fcca27286f2308452c7dc7
+
+COCOAPODS: 1.16.2
