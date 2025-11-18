@@ -27,7 +27,7 @@ struct HomeView: View {
                     Text("POI")
                 }
                 .tag(HomeTab.poi)
-            
+                
             
             TripsView()
                 .tabItem {

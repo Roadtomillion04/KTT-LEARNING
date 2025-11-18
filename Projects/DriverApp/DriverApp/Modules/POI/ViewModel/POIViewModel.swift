@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import MapKit
+
 
 // selection fuel, toll and poi has to retain value accross views
 
@@ -39,22 +39,30 @@ class POIViewModel: ObservableObject {
     // user location
     @Published var userLatitude: Double = 0
     @Published var userLongitude: Double = 0
-    @Published var userLocation: CLLocation = .init()
     
     @MainActor
-    func onAppear(apiService: APIService, locationManager: LocationManager) {
+    func onAppear(apiService: APIService, locationManager: LocationManager) async {
+        
+        do {
+            try await apiService.getFuelList()
+            try await apiService.getPoiZones()
+            try await apiService.getTollList()
+        } catch {
+            
+        }
+        
         parseFuelList(apiService: apiService)
         parsePoiList(apiService: apiService)
         
         userLatitude = locationManager.location?.latitude ?? 0
         userLongitude = locationManager.location?.longitude ?? 0
         
-        userLocation = CLLocation(latitude: userLatitude, longitude: userLongitude)
+        
     }
     
     @MainActor
     func parsePoiList(apiService: APIService) {
-        
+
         for data in apiService.poiListAttributes.result {
             poiList.append(POI(
                 name: data.name ?? "",
@@ -70,7 +78,7 @@ class POIViewModel: ObservableObject {
     
     @MainActor
     func parseFuelList(apiService: APIService) {
-        
+
         for data in apiService.fuelListAttributes.result {
             fuelList.append(Fuel(
                 name: data.roname ?? "",

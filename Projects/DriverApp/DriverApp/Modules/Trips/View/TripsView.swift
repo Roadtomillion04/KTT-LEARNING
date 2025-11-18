@@ -118,10 +118,12 @@ struct TripsView: View {
         }
         .padding(.horizontal)
         
+        .task {
+            await vm.onAppear(apiService: apiService)
+        }
+        
         .refreshable {
-            Task {
-                try await apiService.getTripsData(startDate: vm.startDate.toString(), endDate: vm.endDate.toString(), cachePolicy: .reloadIgnoringLocalCacheData)
-            }
+            await vm.onAppear(apiService: apiService, cachePolicy: .reloadIgnoringLocalCacheData)
         }
         
     }

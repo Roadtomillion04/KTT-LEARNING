@@ -796,6 +796,35 @@ class APIService: ObservableObject {
     
     @Published var poiListAttributes: PoiZoneList = .init()
     
+    struct TollList {
+        var success: Bool?
+        var result: [Results] = []
+        
+        struct Results {
+            var id: Int?
+            var type: String?
+            var data: DataClass?
+            var active: Bool?
+            var createdAt, updatedAt: String?
+        }
+        
+        struct DataClass {
+            var tollName: String?
+            var latitude, longitude: Double?
+            var plazaCode, type, city, state: String?
+            var carRateSingle, carRateDouble, lcvRateSingle, lcvRateDouble: Int?
+            var multiAxleRateSingle, multiAxleRateDouble, hcvRateSingle, hcvRateDouble: Int?
+            var sixAxleRateSingle, sixAxleRateDouble, sevenAxleRateSingle, sevenAxleRateDouble: Int?
+            var address: String?
+        }
+        
+        mutating func reset() {
+            self = .init() // it overwrites the struct instance
+        }
+    }
+    
+    @Published var tollListAttributes: TollList = .init()
+    
     struct FuelList {
         var result: [Results] = []
         
@@ -810,6 +839,10 @@ class APIService: ObservableObject {
             var lng: Double?
             var lupdate: String?
             var co: Int?
+        }
+        
+        mutating func reset() {
+            self = .init() // it overwrites the struct instance
         }
     }
     
@@ -2232,6 +2265,8 @@ extension APIService {
         
         let jsonData = try? JSON(data: data)
         
+        poiListAttributes.reset()
+        
         poiListAttributes.success = jsonData?["success"].bool
         
         var idx = 0
@@ -2258,7 +2293,63 @@ extension APIService {
         }
     }
     
-    func getFuelList() async throws{
+    func getTollList() async throws {
+        
+        let url = URL(string: apiUrl + "/drivers/listToll")!
+        
+        var request = URLRequest(url: url)
+        request.allHTTPHeaderFields = headers
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                throw CustomErrorDescription.badResponse
+            }
+        
+        let jsonData = try? JSON(data: data)
+        
+        tollListAttributes.reset()
+        
+        tollListAttributes.success = jsonData?["success"].bool
+        
+        for data in jsonData?["results"] ?? [] {
+            
+            tollListAttributes.result.append(TollList.Results(
+                id: data.1["id"].int,
+                type: data.1["type"].string,
+                data: TollList.DataClass(
+                    tollName: data.1["data"]["TollName"].string,
+                    latitude: data.1["data"]["latitude"].double,
+                    longitude: data.1["data"]["longitude"].double,
+                    plazaCode: data.1["data"]["plazaCode"].string,
+                    type: data.1["data"]["type"].string,
+                    city: data.1["data"]["city"].string,
+                    state: data.1["data"]["state"].string,
+                    carRateSingle: data.1["data"]["carRateSingle"].int,
+                    carRateDouble: data.1["data"]["carRateDouble"].int,
+                    lcvRateSingle: data.1["data"]["LCVRateSingle"].int,
+                    lcvRateDouble: data.1["data"]["LCVRateDouble"].int,
+                    multiAxleRateSingle: data.1["data"]["multiAxleRateSingle"].int,
+                    multiAxleRateDouble: data.1["data"]["multiAxleRateDouble"].int,
+                    hcvRateSingle: data.1["data"]["HCVRateSingle"].int,
+                    hcvRateDouble: data.1["data"]["HCVRateDouble"].int,
+                    sixAxleRateSingle: data.1["data"]["sixAxleRateSingle"].int,
+                    sixAxleRateDouble: data.1["data"]["sizeAxleRateDouble"].int,
+                    sevenAxleRateSingle: data.1["data"]["sevenAxleRateSingle"].int,
+                    sevenAxleRateDouble: data.1["data"]["sevenAxleRateDouble"].int,
+                    address: data.1["data"]["address"].string
+                ),
+                active: data.1["active"].bool,
+                createdAt: data.1["createdAt"].string,
+                updatedAt: data.1["updatedAt"].string
+            ))
+            
+        }
+        
+        
+    }
+    
+    func getFuelList() async throws {
         
         let url = URL(string: "https://kttelematic.com/images/india-fuel-small.json")!
         
@@ -2272,7 +2363,8 @@ extension APIService {
             }
         
         let jsonData = try? JSON(data: data)
-        
+
+        fuelListAttributes.reset()
         
         for data in jsonData?["d"] ?? [] {
             fuelListAttributes.result.append(FuelList.Results(

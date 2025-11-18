@@ -120,16 +120,6 @@
     "Comments" : {
 
     },
-    "Contact: %@ (%@)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Contact: %1$@ (%2$@)"
-          }
-        }
-      }
-    },
     "Current ODO" : {
 
     },

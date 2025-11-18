@@ -101,6 +101,20 @@ final class DashboardViewModel: ObservableObject {
     @Published var selectedTrip: Trip?
     
     @MainActor
+    func onAppear(apiService: APIService, cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad) async {
+        
+        do {
+            try await apiService.getDriverStatus(cachePolicy: cachePolicy)
+            try await apiService.getDeliveryCancellationReasons()
+        } catch {
+            
+        }
+        
+        parseData(apiService: apiService)
+        
+    }
+    
+    @MainActor
     func parseData(apiService: APIService) {
         
         if trips.isEmpty {

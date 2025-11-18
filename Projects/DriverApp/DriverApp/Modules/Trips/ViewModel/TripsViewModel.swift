@@ -124,6 +124,14 @@ class TripsViewModel: ObservableObject {
 //        
 //    }
     
+    func onAppear(apiService: APIService, cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad) async {
+        do {
+            try await apiService.getTripsData(cachePolicy: cachePolicy)
+        } catch {
+            
+        }
+    }
+    
     
     func calculateAdvance(_ tripAdvance: [APIService.TripsDataAttributes.TripAdvance]) -> String {
         

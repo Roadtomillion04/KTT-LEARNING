@@ -44,11 +44,8 @@ struct SceneHandlerView: View {
                 // as per se android app, few api on launch
                     
                 do {
-                    try await apiService.getFuelList()
-                    try await apiService.getPoiZones()
-                    try await apiService.getDriverStatus()
-                    try await apiService.getTripsData()
-                    try await apiService.getDeliveryCancellationReasons()
+                    // isSessionValid api should come here
+                    
                 } catch {
                     errorDescription = error.localizedDescription
                     showAlert = true
@@ -87,25 +84,6 @@ struct SceneHandlerView: View {
                 case .miscellaneous(let route):
                     MiscellaneousViewHandler(miscellaneousPath: route)
                     
-                        
-//                    case .poi:
-//                        POIView()
-//                        
-//                    case .trips(let route):
-//                        TripsViewHandler(tripPath: route)
-//                        
-//                    case .dashboard(let route):
-//                        DashboardViewHandler(dashboardPath: route)
-//                        
-//                        
-//                    case .setting(let route):
-//                        SettingViewHandler(settingPath: route)
-//                        
-//                    case .miscellaneous(let route):
-//                        MiscellaneousViewHandler(miscellaneousPath: route)
-                        
-                        
-//                    }
                     
                 }
             }

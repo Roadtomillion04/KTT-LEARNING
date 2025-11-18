@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import MapKit
-
 
 struct POIView: View {
     
@@ -23,180 +21,101 @@ struct POIView: View {
  
     var body: some View {
         
-        Map {
-            
-            UserAnnotation() // show user location
-            
-            if vm.poiSelected {
-                
-                ForEach(vm.poiList, id: \.self) { poi in
-                    
-                    Annotation(poi.city, coordinate: CLLocationCoordinate2D(latitude: poi.lat, longitude: poi.lng)) {
-                        Image(systemName: "location.north.circle.fill")
-                            .font(.title)
-                            .foregroundStyle(.red)
-                    }
-                    
-                }
-                
+        GoogleMapViewControllerWrapper(vm: vm) // uikit view display
+        
+            .task {
+                await vm.onAppear(apiService: apiService, locationManager: locationManager)
             }
-            
-            if vm.fuelSelected {
+        
+            .overlay {
                 
-                ForEach(vm.fuelList, id: \.self) { fuel in
+                Image(systemName: "square.stack.3d.up.fill")
+                    .font(.headline)
+                    .padding()
+                    .background(Circle().fill(.white))
+                    .padding()
+                
+                    // positioning like this finally works
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                
+                    .onTapGesture {
+                        showPopover.toggle()
+                    }
+                
+                
+                if showPopover {
                     
-                    if vm.userLocation.distance(from: CLLocation(latitude: fuel.lat, longitude: fuel.lng)) < 200000 {
+                    HStack(spacing: 25) {
                         
-                        Annotation(fuel.locationName, coordinate: CLLocationCoordinate2D(latitude: fuel.lat, longitude: fuel.lng)) {
+                        VStack {
                             
                             Image(systemName: "fuelpump.fill")
                                 .font(.title)
-                                .foregroundStyle(fuel.color == 1 ? .orange : .blue)
-                            
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(.white)
+                                        .border(vm.fuelSelected ? .orange : .gray)
+                                )
+                                
                                 .onTapGesture {
-                                    vm.selectedSnippet = fuel
-                                    
-                                    showAlert = true
-                                    
+                                    vm.fuelSelected.toggle()
                                 }
                             
-                            
-                                .customAlert(isPresented: $showAlert) {
-                                    
-                                    VStack(alignment: .center, spacing: 10) {
-                                        
-                                        Text(vm.selectedSnippet?.name ?? "")
-                                            .bold()
-                                        
-                                        Divider()
-                                        
-                                        Text(vm.selectedSnippet?.locationName ?? "")
-                                        
-                                        Text("Contact: \(vm.selectedSnippet?.contactName ?? "") (\(vm.selectedSnippet?.contactPhone ?? ""))")
-                                        
-                                    }
-                                    
-                                }
-                            
+                            Text("Fuel")
                         }
                         
-                    }
-                    
-                }
-                
-            }
-        
-        }
-        .mapControls {
-            MapUserLocationButton()
-            MapCompass()
-        }
-        
-        .onAppear {
-            vm.onAppear(apiService: apiService, locationManager: locationManager)
-        }
- 
-        .overlay {
-            Image(systemName: "square.stack.3d.up.fill")
-                .font(.headline)
-                .padding()
-                .background(Circle().fill(.white))
-                .padding()
-            
-                .onTapGesture {
-                    showPopover.toggle()
-                }
-            
-                // positioning like this finally works
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-            
-                .background(
-                    Rectangle() // clear not working, which is favourable now following android app
-                        .fill(showPopover ? .white.opacity(0.1) : .clear)
-                    
-                    // tapping/swiping outside
-                    .onTapGesture {
-                        showPopover = false
-                    }
-                
-                    .gesture(
-                        DragGesture()
-                            .onChanged { _ in
-                                showPopover = false
-                            }
-                    )
-        
-                )
-            
-            if showPopover {
-                
-                HStack(spacing: 25) {
-                    
-                    VStack {
+                        VStack {
+                            Image(systemName: "building.fill")
+                                .font(.title)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(.white)
+                                        .border(vm.tollSelected ? .orange : .gray)
+                                )
+                                .onTapGesture {
+                                    vm.tollSelected.toggle()
+                                }
+                            Text("Toll")
+                        }
                         
-                        Image(systemName: "fuelpump.fill")
-                            .font(.title)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(.white)
-                                    .border(vm.fuelSelected ? .orange : .gray, width: 2)
-                            )
+                        VStack {
                             
-                            .onTapGesture {
-                                vm.fuelSelected.toggle()
-                            }
-                        
-                        Text("Fuel")
+                            Image(systemName: "location.north.circle.fill")
+                                .font(.title)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(.white)
+                                        .border(vm.poiSelected ? .orange : .gray)
+                                )
+                                .onTapGesture {
+                                    vm.poiSelected.toggle()
+                                }
+                            
+                            Text("POI")
+                        }
                     }
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 10).fill(.white))
+                    .padding()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .offset(y: 75)
                     
-                    VStack {
-                        
-                        Image(systemName: "building.fill")
-                            .font(.title)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(.white)
-                                    .border(vm.tollSelected ? .orange : .gray, width: 2)
-                            )
-                            .onTapGesture {
-                                vm.tollSelected.toggle()
-                            }
-                        
-                        Text("Toll")
-                        
-                    }
-                    
-                    VStack {
-                        
-                        Image(systemName: "location.north.circle.fill")
-                            .font(.title)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(.white)
-                                    .border(vm.poiSelected ? .orange : .gray, width: 2)
-                            )
-                            .onTapGesture {
-                                vm.poiSelected.toggle()
-                            }
-                        
-                        Text("POI")
-                    }
                 }
-                .padding()
-                .background(RoundedRectangle(cornerRadius: 10).fill(.white))
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                .offset(y: -75)
                 
             }
-            
-        }
+        
+        
+        
     }
 }
+
 
 #Preview {
 //    POIView()
 }
+
+
+

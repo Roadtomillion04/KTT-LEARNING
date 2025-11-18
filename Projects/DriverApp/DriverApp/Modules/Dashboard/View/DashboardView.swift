@@ -38,19 +38,12 @@ struct DashboardView: View {
         }
         .scrollIndicators(.hidden)
         
-        .onAppear {
-            vm.parseData(apiService: apiService)
+        .task {
+            await vm.onAppear(apiService: apiService)
         }
         
         .refreshable {
-            
-            do {
-                
-                try await apiService.getDriverStatus(cachePolicy: .reloadIgnoringLocalCacheData)
-                
-            } catch {
-                
-            }
+            await vm.onAppear(apiService: apiService, cachePolicy: .reloadIgnoringLocalCacheData)
         }
 
         

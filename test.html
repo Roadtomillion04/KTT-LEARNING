@@ -1,0 +1,24 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Google Maps API Key Test</title>
+        <style>
+            #map {
+                height: 400px;
+                width: 100%;
+            }
+        </style>
+        <script>
+            function initMap() {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: -34.397, lng: 150.644}, // Example coordinates
+                    zoom: 8
+                });
+            }
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDG5i1Vh_xjpLvkcorGmRWGfDm3L-NuHD8&callback=initMap"></script>
+    </head>
+    <body>
+        <div id="map"></div>
+    </body>
+    </html>

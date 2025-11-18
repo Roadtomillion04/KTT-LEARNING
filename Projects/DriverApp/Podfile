@@ -8,5 +8,6 @@ target 'DriverApp' do
   # Pods for DriverApp
   pod 'Connectivity'
   pod 'SwiftyJSON', '5.0.2'
+  pod 'GoogleMaps', '10.4.0'
 
 end
