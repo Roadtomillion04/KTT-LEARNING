@@ -13,6 +13,7 @@ struct AddTripExpensesView: View {
     
     @EnvironmentObject private var coordinator: AppCoordinator
     @EnvironmentObject private var apiService: APIService
+    @EnvironmentObject private var languageManager: LanguageManager
     
     let isEditing: Bool
     let assetId: Int
@@ -34,10 +35,31 @@ struct AddTripExpensesView: View {
                     Image(systemName: "rectangle.grid.3x1.fill")
                         .foregroundColor(.gray)
                     
-                    Text("Select Zone Type")
+                    Text(LocalizedStringResource("select_type"))
                         .foregroundStyle(Color(.systemGray))
                     
                     Spacer()
+                    
+                    
+                    if languageManager.selectedLanguage == Locale(identifier: "ta") {
+                        
+                        Picker("", selection: $vm.zoneType) {
+                            
+                            Text("None") // None option
+                                .tag(nil as String?)
+                            
+                            
+                            ForEach(vm.getTypesinTamil(), id: \.self) { types in
+                                Text(types)
+                                    .tag(types)
+                                
+                            }
+                            
+                        }
+                        .tint(.black)
+                    }
+                    
+                    else  {
                     
                     Picker("", selection: $vm.zoneType) {
                         
@@ -47,10 +69,13 @@ struct AddTripExpensesView: View {
                         ForEach(apiService.expenseTypesAttributes.results, id: \.self) { types in
                             Text(types.text ?? "")
                                 .tag(types.text)
-                            
                         }
+                        
                     }
                     .tint(.black)
+                    
+                }
+                    
                     
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -147,13 +172,13 @@ struct AddTripExpensesView: View {
                     }
                     
                     
-                    .alert("Set Image", isPresented: $vm.showImagePicker) {
+                    .alert("lbl_set_profile_photo", isPresented: $vm.showImagePicker) {
                         
-                        Button("Take a picture") {
+                        Button(LocalizedStringKey("lbl_take_camera_picture")) {
                             coordinator.push(.miscellaneous(.cameraCapture(image: $vm.selectedImage, sourceType: .camera)))
                         }
                         
-                        Button("Choose from gallery") {
+                        Button(LocalizedStringKey("lbl_choose_from_gallery")) {
                             coordinator.push(.miscellaneous(.cameraCapture(image: $vm.selectedImage, sourceType: .photoLibrary)))
                         }
                         
@@ -167,7 +192,7 @@ struct AddTripExpensesView: View {
                         Image(systemName: "camera.fill")
                             .font(.title)
                         
-                        Text("Upload")
+                        Text(LocalizedStringResource("upload"))
                             .font(Font.custom("ArialRoundedMTBold", size: 20))
                         
                     }
@@ -217,7 +242,7 @@ struct AddTripExpensesView: View {
                 }
                 
             } label: {
-                Text("Save")
+                Text(LocalizedStringResource("save"))
                     .modifier(SaveButtonModifier())
                     .padding(.horizontal)
             }
@@ -352,6 +377,61 @@ fileprivate class AddTripExpensesViewModel: ObservableObject {
         }
         
         selectedImage = UIImage()
+    }
+    
+    
+    func getTypesinTamil() -> [String] {
+        
+        let tamilExpenseTypes = [
+            "டீசல்",
+            "சுங்கச்சாவடி",
+            "அட்ப்ளூ",
+            "ஆர்டிஓ",
+            "போலிஸ்",
+            "லோடிங்",
+            "அன்லோடிங்",
+            "நிறுத்துதல்",
+            "வேய் பிரிட்ஜ் - லோடிங்",
+            "வேய் பிரிட்ஜ் - அன்லோடிங்",
+            "பார்க்கிங்",
+            "பூஜை",
+            "பழுதுபார்க்கும் செலவு w/ பில்",
+            "பழுதுபார்க்கும் செலவு w/o பில்",
+            "மிஸ்க்",
+            "கேட் என்ட்ரி",
+            "கிளீனர்",
+            "அட்ஜஸ்ட்மென்ட்",
+            "ஓட்டுநர் சம்பளம்",
+            "அலொவன்ஸ்",
+            "ஊக்கத்தொகை",
+            "டிரைவர் பட்டா",
+            "பழுதுபார்க்கும் பணிகள்",
+            "ஆர்டிஓ செலவுகள்",
+            "கிரீசிங்",
+            "வாட்டர் சர்வீஸ்",
+            "பஞ்சர்",
+            "மோர்த் - ஓடிசி பர்மிஷன்",
+            "உணவு",
+            "பாதை வழிகாட்டி",
+            "பண்டில் சார்ஜஸ்",
+            "அதர்ஸ்",
+            "டிடக்‌ஷன் ரீயம்பர்ஸ்மெண்ட்",
+            "டயர் ரொட்டேஷன் / பவுடர்",
+            "பிளாப்",
+            "நியூ டயர்",
+            "அலைனஂமெண்ட்",
+            "சர்வீஸ்",
+            "ஆயில் சர்வீஸ்",
+            "அதர்ஸ் சர்வீஸ்",
+            "பிரேக்டௌன்",
+            "கிரீசிங் / ஆட்டோ",
+            "எலக்ட்ரிகல்",
+            "அசிஸ்சொரிஸ்",
+            "அதிக சுமை"
+        ]
+
+        return tamilExpenseTypes
+       
     }
     
 }

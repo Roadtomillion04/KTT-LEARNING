@@ -17,13 +17,23 @@ final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObje
     override init() {
         super.init()
         manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyBest
     }
-    
+
     
     func requestLocation() {
         manager.requestWhenInUseAuthorization()
         manager.requestLocation()
     }
+    
+    func startTracking() {
+        manager.startUpdatingLocation()
+    }
+    
+    func stopTracking() {
+        manager.stopUpdatingLocation()
+    }
+    
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
            location = locations.first?.coordinate
@@ -33,3 +43,4 @@ final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObje
            print("Location error: \(error.localizedDescription)")
        }
 }
+

@@ -31,21 +31,21 @@ struct LeaveRequestView: View {
             }
             
             // 30 days from today only as per app
-            DatePicker("From Date", selection: $vm.fromDate, in: Date()...Date().addingTimeInterval(60*60*24*30), displayedComponents: .date)
+            DatePicker(LocalizedStringKey("from_date"), selection: $vm.fromDate, in: Date()...Date().addingTimeInterval(60*60*24*30), displayedComponents: .date)
                 
                 .onChange(of: vm.fromDate) { old, new in
                     vm.updateButtonText(new, vm.toDate)
                 }
             
             
-            DatePicker("To Date", selection: $vm.toDate, in: Date()...Date().addingTimeInterval(60*60*24*30),  displayedComponents: .date)
+            DatePicker(LocalizedStringKey("to_date"), selection: $vm.toDate, in: Date()...Date().addingTimeInterval(60*60*24*30), displayedComponents: .date)
             
                 .onChange(of: vm.toDate) { old, new in
                     vm.updateButtonText(vm.fromDate, new)
                 }
             
             
-            TextField("Comments", text: $vm.comment, axis: .vertical)
+            TextField(LocalizedStringKey("comments"), text: $vm.comment, axis: .vertical)
                 .font(Font.custom("Monaco", size: 16))
                             
         }

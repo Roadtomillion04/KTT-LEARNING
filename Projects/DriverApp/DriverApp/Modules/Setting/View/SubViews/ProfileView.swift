@@ -21,55 +21,77 @@ struct ProfileView: View {
             
             HStack(alignment: .center) {
                 
-                AsyncImage(url: URL(string: apiService.driverStatusAttributes.driver.photoURL ?? "")) { image in
+                ImagePreview(uiImage: vm.profilePic)
+                    .clipShape(.circle)
                     
-                    image
-                        .profileImage()
+                    .overlay {
                         
-                        .onTapGesture {
-                            coordinator.push(.miscellaneous(.imageViewer(image: image)))
-                        }
-                    
-                        .overlay {
+                        Image(systemName: "pencil.circle.fill")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(.white)
                             
-                            Image(systemName: "pencil.circle.fill")
-                                .resizable()
-                                .frame(width: 28, height: 28)
-                                .foregroundColor(.white)
-                                
-                            // offset relative position move
-                                .offset(x: 35, y: 35)
-                            
-                                .onTapGesture {
-                                    vm.showImagePicker = true
-                                }
-                               
-                        }
-                    
-                    
-                } placeholder: {
-                    Image(systemName: "person.fill")
-                        .profileImage()
-
-                }
-                .frame(width: 100, height: 100)
+                        // offset relative position move
+                            .offset(x: 35, y: 35)
+                        
+                            .onTapGesture {
+                                vm.showProfileImagePicker = true
+                            }
+                           
+                    }
                 
             }
             .frame(maxWidth: .infinity)
             .frame(height: 200)
             .background(.green)
             
+            .alert("lbl_set_profile_photo", isPresented: $vm.showProfileImagePicker) {
+                
+                Button(LocalizedStringKey("lbl_take_camera_picture")) {
+                    coordinator.push(.miscellaneous(.cameraCapture(image: $vm.newProfilePic, sourceType: .camera)))
+                }
+                
+                Button(LocalizedStringKey("lbl_choose_from_gallery")) {
+                    coordinator.push(.miscellaneous(.cameraCapture(image: $vm.newProfilePic, sourceType: .photoLibrary)))
+                }
+                
+            }
+            
+            .alert("lbl_set_profile_photo", isPresented: $vm.showdlFrontImagePicker) {
+                
+                Button(LocalizedStringKey("lbl_take_camera_picture")) {
+                    coordinator.push(.miscellaneous(.cameraCapture(image: $vm.newDlFrontPic, sourceType: .camera)))
+                }
+                
+                Button(LocalizedStringKey("lbl_choose_from_gallery")) {
+                    coordinator.push(.miscellaneous(.cameraCapture(image: $vm.newDlFrontPic, sourceType: .photoLibrary)))
+                }
+                
+            }
+            
+            .alert("lbl_set_profile_photo", isPresented: $vm.showdlBackImagePicker) {
+                
+                Button(LocalizedStringKey("lbl_take_camera_picture")) {
+                    coordinator.push(.miscellaneous(.cameraCapture(image: $vm.newDlBackPic, sourceType: .camera)))
+                }
+                
+                Button(LocalizedStringKey("lbl_choose_from_gallery")) {
+                    coordinator.push(.miscellaneous(.cameraCapture(image: $vm.newDlBackPic, sourceType: .photoLibrary)))
+                }
+                
+            }
             
             HStack {
                 
                 VStack(alignment: .center, spacing: 5) {
                     Text("\(String(apiService.profileSummaryAttributes.totalKms ?? 0))")
+                        .font(Font.custom("ArialRoundedMTBold", size: 14))
                     
                     HStack(spacing: 2.5) {
                         
                         Image(systemName: "steeringwheel")
                         
-                        Text("KM Driven")
+                        Text(LocalizedStringResource("driven"))
                             
                     }
                     .font(Font.custom("ArialRoundedMTBold", size: 12))
@@ -78,12 +100,13 @@ struct ProfileView: View {
                     
                 VStack(alignment: .center, spacing: 5) {
                     Text("\(apiService.profileSummaryAttributes.onTimeTrips ?? 0) Trips")
+                        .font(Font.custom("ArialRoundedMTBold", size: 14))
                     
                     HStack(spacing: 2.5) {
                         
                         Image(systemName: "truck.box.fill")
                         
-                        Text("On Time")
+                        Text(LocalizedStringResource("time"))
                             
                     }
                     .font(Font.custom("ArialRoundedMTBold", size: 12))
@@ -92,12 +115,13 @@ struct ProfileView: View {
                 
                 VStack(alignment: .center, spacing: 5) {
                     Text("\(apiService.profileSummaryAttributes.totalTrips ?? 0) Trips")
+                        .font(Font.custom("ArialRoundedMTBold", size: 14))
                     
                     HStack(spacing: 2.5) {
                         
                         Image(systemName: "truck.box.fill")
                         
-                        Text("In Total")
+                        Text(LocalizedStringResource("total"))
                             
                     }
                     .font(Font.custom("ArialRoundedMTBold", size: 12))
@@ -106,12 +130,13 @@ struct ProfileView: View {
                 
                 VStack(alignment: .center, spacing: 5) {
                     Text("\(apiService.profileSummaryAttributes.presentInMonth ?? 0)/\(apiService.profileSummaryAttributes.daysInMonth ?? 0)")
+                        .font(Font.custom("ArialRoundedMTBold", size: 14))
                     
                     HStack(spacing: 2.5) {
                         
                         Image(systemName: "calendar")
                         
-                        Text("Attendance")
+                        Text(LocalizedStringResource("attendance"))
                             
                     }
                     .font(Font.custom("ArialRoundedMTBold", size: 12))
@@ -134,11 +159,11 @@ struct ProfileView: View {
                         
                         Image(systemName: "person.text.rectangle")
                         
-                        Text("Driving License")
+                        Text(LocalizedStringResource("license"))
                         
                         Spacer()
                         
-                        Text(vm.viewMoreToggle ? "View Less" : "View More")
+                        Text(vm.viewMoreToggle ? LocalizedStringResource("viewless") : LocalizedStringResource("viewmore"))
                             .foregroundStyle(.green)
                             .onTapGesture {
                                 vm.viewMoreToggle.toggle()
@@ -148,9 +173,9 @@ struct ProfileView: View {
                     
                     
                     HStack {
-                        Text("No.")
+                        Text(LocalizedStringResource("number"))
                         Spacer()
-                        Text("Expiry Date")
+                        Text(LocalizedStringResource("edate"))
                     }
                     
                     
@@ -167,7 +192,7 @@ struct ProfileView: View {
                     
                     VStack {
                         
-                        Text("Date of Birth")
+                        Text(LocalizedStringResource("dob"))
                         
                         Text(apiService.driverStatusAttributes.driver.dateOfBirth?.dateFormatting(format: "dd/MM/yyyy") ?? "")
                         
@@ -176,20 +201,38 @@ struct ProfileView: View {
                     
                     VStack {
                         
-                        Text("Driving Liscense")
+                        Text(LocalizedStringResource("license"))
                         
                         HStack {
                             
-                            ImagePreview()
+                            Image(uiImage: vm.dlFrontPic)
+                                .resizable()
+                                .frame(width: 200, height: 150)
                             
-                            ImagePreview()
+                                .onTapGesture {
+                                    vm.showdlFrontImagePicker = true
+                                }
                             
+                            Image(uiImage: vm.dlBackPic)
+                                .resizable()
+                                .frame(width: 200, height: 150)
+                            
+                                .onTapGesture {
+                                    vm.showdlBackImagePicker = true
+                                }
                         }
                     }
                     
                 }
             }
             
+        }
+        .task {
+            await vm.onAppear(apiService)
+        }
+        
+        .onAppear {
+            vm.checkImageCaptured(apiService)
         }
         
     }
@@ -200,8 +243,82 @@ fileprivate class ProfileViewModel: ObservableObject {
     
     @Published var viewMoreToggle: Bool = false
     
-    @Published var showImagePicker: Bool = false
-    @Published var image = UIImage()
+    @Published var showProfileImagePicker: Bool = false
+    @Published var showdlFrontImagePicker: Bool = false
+    @Published var showdlBackImagePicker: Bool = false
+    
+    
+    @Published var profilePic: UIImage = .init()
+    @Published var dlFrontPic: UIImage = .init()
+    @Published var dlBackPic: UIImage = .init()
+    
+    // captured images
+    @Published var newProfilePic: UIImage = .init()
+    @Published var newDlFrontPic: UIImage = .init()
+    @Published var newDlBackPic: UIImage = .init()
+    
+    @Published var success: Bool = false
+    
+    @MainActor
+    func onAppear(_ apiService: APIService) async {
+       
+        do {
+            if profilePic.size.width == 0 && profilePic.size.height == 0 {
+                
+                profilePic = try await apiService.downloadImage(urlString: apiService.driverStatusAttributes.driver.photoURL ?? "")
+                
+                dlFrontPic = try await apiService.downloadImage(urlString: apiService.driverStatusAttributes.driver.dlPhotoURL.front ?? "")
+                
+                dlBackPic = try await apiService.downloadImage(urlString: apiService.driverStatusAttributes.driver.dlPhotoURL.back ?? "")
+                
+            }
+        } catch {
+            
+        }
+       
+    }
+
+    
+    @MainActor
+    func checkImageCaptured(_ apiService: APIService) {
+        
+        if newProfilePic.size.width != 0 || newProfilePic.size.height != 0 {
+           
+            updateDrivingLicensePhoto(apiService: apiService, pic: newProfilePic, filename: "")
+            
+            newProfilePic = .init()
+            
+        }
+        
+        if newDlFrontPic.size.width != 0 || newDlFrontPic.size.height != 0 {
+            updateDrivingLicensePhoto(apiService: apiService, pic: newDlFrontPic, filename: "dlProofFront")
+            
+            newDlFrontPic = .init()
+        }
+        
+        if newDlBackPic.size.width != 0 || newDlBackPic.size.height != 0 {
+            updateDrivingLicensePhoto(apiService: apiService, pic: newDlBackPic, filename: "dlProofBack")
+            
+            newDlBackPic = .init()
+        }
+        
+    }
+    
+    @MainActor
+    func updateDrivingLicensePhoto(apiService: APIService, pic: UIImage, filename: String) {
+        Task {
+            do {
+                // no imageData deletes the photo
+                
+                success = try await apiService.updateDriverphoto(image: pic, filename: filename)
+                
+                print(success)
+            } catch {
+                
+            }
+        }
+    }
+    
     
 }
 

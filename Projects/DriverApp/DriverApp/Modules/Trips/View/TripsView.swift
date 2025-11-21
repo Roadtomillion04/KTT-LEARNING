@@ -23,7 +23,7 @@ struct TripsView: View {
             HStack {
                 
                 VStack(alignment: .leading) {
-                    Text("From")
+                    Text(LocalizedStringResource("from_date"))
                     
                     DatePicker("From", selection: $vm.startDate, displayedComponents: .date)
                         .labelsHidden()
@@ -47,9 +47,10 @@ struct TripsView: View {
                 Spacer()
                 
                 VStack(alignment: .trailing) {
-                    Text("To")
+                    Text(LocalizedStringResource("to_date"))
                     
-                    DatePicker("To", selection: $vm.endDate, displayedComponents: .date)
+                    // 1 year from start date 
+                    DatePicker("To", selection: $vm.endDate, in: vm.startDate...Date().addingTimeInterval(60*60*24*30*12),  displayedComponents: .date)
                         .labelsHidden()
                     
                         .onChange(of: vm.endDate) { old, new in
@@ -74,7 +75,7 @@ struct TripsView: View {
                 
                 VStack {
                     
-                    Text("Total Advances")
+                    Text(LocalizedStringResource("total_advances"))
                         .foregroundStyle(Color(.systemGray))
                     
                     Text("₹\(apiService.tripsDataAttributes.totalAdvances?.round() ?? "")")
@@ -85,7 +86,7 @@ struct TripsView: View {
                 
                 VStack {
                     
-                    Text("Total Expenses")
+                    Text(LocalizedStringResource("total_expenses"))
                         .foregroundStyle(Color(.systemGray))
                     
                     Text("₹\(apiService.tripsDataAttributes.totalExpenses?.round() ?? "")")
@@ -139,7 +140,7 @@ struct TripsView: View {
                 HStack {
                     
                     VStack(spacing: 5) {
-                        Text("Start ODO")
+                        Text(LocalizedStringResource("start_odo"))
                             .font(Font.custom("AriSanPro-Medium", size: 15))
                             .foregroundStyle(Color(.systemGray))
                         
@@ -149,7 +150,7 @@ struct TripsView: View {
                     Spacer()
                     
                     VStack(spacing: 5)  {
-                        Text("End ODO")
+                        Text(LocalizedStringResource("end_odo"))
                             .font(Font.custom("AriSanPro-Medium", size: 15))
                             .foregroundStyle(Color(.systemGray))
 
@@ -159,7 +160,7 @@ struct TripsView: View {
                     Spacer()
                     
                     VStack(spacing: 5)  {
-                        Text("Distance")
+                        Text(LocalizedStringResource("distance"))
                             .font(Font.custom("AriSanPro-Medium", size: 15))
                             .foregroundStyle(Color(.systemGray))
 
@@ -200,10 +201,10 @@ struct TripsView: View {
                 
             LazyVGrid(columns: vm.columns, alignment: .leading, spacing: 10) {
                 
-                Text("Loading - In & Out")
+                Text(LocalizedStringResource("loading_in_amp_out"))
                     .foregroundStyle(Color(.systemGray))
                 
-                Text("Unloading - In & Out")
+                Text(LocalizedStringResource("unloading_in_amp_out"))
                     .foregroundStyle(Color(.systemGray))
                 
                 HStack {
@@ -245,7 +246,7 @@ struct TripsView: View {
             HStack {
                 
                 VStack(spacing: 5) {
-                    Text("Advances")
+                    Text(LocalizedStringResource("madvances"))
                         .foregroundStyle(Color(.systemGray))
                     
                     Text("₹\(vm.calculateAdvance(tripAdvances))")
@@ -261,7 +262,7 @@ struct TripsView: View {
                 
                 VStack(spacing: 5) {
                     
-                    Text("Trip Status")
+                    Text(LocalizedStringResource("trip_status"))
                         .foregroundStyle(Color(.systemGray))
                     
                     Text(TripStatusHandler.statusText(status))
@@ -274,7 +275,7 @@ struct TripsView: View {
                 Spacer()
                 
                 VStack(spacing: 5) {
-                    Text("Account Status")
+                    Text(LocalizedStringResource("account_status"))
                         .foregroundStyle(Color(.systemGray))
                     
                     Text(TripStatusHandler.statusAccountText(statusAccounts))
@@ -293,7 +294,7 @@ struct TripsView: View {
                 HStack {
                     
                     VStack(spacing: 5) {
-                        Text("Approved")
+                        Text(LocalizedStringResource("approved"))
                             .foregroundStyle(Color(.systemGray))
                         
                         Text("₹\(vm.approvedExpense(tripExpenses))")
@@ -305,7 +306,7 @@ struct TripsView: View {
                     Spacer()
                     
                     VStack(spacing: 5) {
-                        Text("Pending")
+                        Text(LocalizedStringResource("pending"))
                             .foregroundStyle(Color(.systemGray))
                         
                         Text("₹\(vm.pendingExpense(tripExpenses))")
@@ -317,7 +318,7 @@ struct TripsView: View {
                     Spacer()
                     
                     VStack(spacing: 5) {
-                        Text("Rejected")
+                        Text(LocalizedStringResource("rejected"))
                             .foregroundStyle(Color(.systemGray))
                         
                         Text("₹\(vm.rejectedExpense(tripExpenses))")
@@ -330,7 +331,7 @@ struct TripsView: View {
                 .font(Font.custom("Monaco", size: 15))
                 
             } header: {
-                Text("Total Expenses")
+                Text(LocalizedStringResource("total_expenses"))
                     .font(Font.custom("ArialRoundedMTBold", size: 17.5))
             }
             

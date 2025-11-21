@@ -29,18 +29,18 @@ struct ZoneInfoView: View {
         
             VStack(alignment: .leading, spacing: 16) {
                 
-                IconData(icon: "mappin", title: "Zone", value: location)
+                IconData(icon: "mappin", title: LocalizedStringResource("zone"), value: location)
                 
-                IconData(icon: "clock", title: "Date", value: inTime)
+                IconData(icon: "clock", title: LocalizedStringResource("date"), value: inTime)
                 
-                IconData(icon: "pencil.circle", title: "LR Number", value: lrNumber)
+                IconData(icon: "pencil.circle", title: LocalizedStringResource("lr_number"), value: lrNumber)
                 
                 if !loadingCharges.isEmpty {
-                    IconData(icon: "banknote.fill", title: "Loading Charge", value: loadingCharges)
+                    IconData(icon: "banknote.fill", title: LocalizedStringResource("loading_charge"), value: loadingCharges)
                 }
                 
                 if !unloadingCharges.isEmpty {
-                    IconData(icon: "banknote.fill", title: "Unloading Charge", value: unloadingCharges)
+                    IconData(icon: "banknote.fill", title: LocalizedStringResource("unloading_charge"), value: unloadingCharges)
                 }
                 
                 LazyVGrid(columns: columns, spacing: 30) {
@@ -54,7 +54,7 @@ struct ZoneInfoView: View {
                             }
                             
                         } header: {
-                            Text("Lorry Receipt (LR)")
+                            Text(LocalizedStringResource("lorry_receipt_lr"))
                                 .font(Font.custom("ArialRoundedMTBold", size: 15))
                                 .frame(maxWidth: .infinity)
                                 .padding()
@@ -73,7 +73,7 @@ struct ZoneInfoView: View {
                             }
                             
                         } header: {
-                            Text("Proof of Delivery (POD)")
+                            Text(LocalizedStringResource("proof_of_delivery_pod"))
                                 .font(Font.custom("ArialRoundedMTBold", size: 15))
                                 .frame(maxWidth: .infinity)
                                 .padding()
@@ -93,7 +93,7 @@ struct ZoneInfoView: View {
                             
                             
                         } header: {
-                            Text("Documents")
+                            Text(LocalizedStringResource("documents"))
                                 .font(Font.custom("ArialRoundedMTBold", size: 15))
                                 .frame(maxWidth: .infinity)
                                 .padding()

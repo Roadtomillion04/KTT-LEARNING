@@ -20,13 +20,13 @@ struct TripsViewHandler: View {
         case .tripExpenses(.tripExpenses(let tripId, let assetId)):
             
             TripExpensesView(tripId: tripId, assetId: assetId)
-                .navigationTitle("Trip Expenses")
+                .navigationTitle(LocalizedStringKey("trip_expenses"))
          
             
         case .tripExpenses(.addTripsExpenses(let isEditing, let expenseId, let assetId, let tripId)):
             
             AddTripExpensesView(isEditing: isEditing, assetId: assetId, tripId: tripId, expenseId: expenseId ?? -1)
-                .navigationTitle("Add Trip Expenses")
+                .navigationTitle(LocalizedStringKey("add_trip_expenses"))
                 .task {
                     do {
                         
@@ -43,7 +43,7 @@ struct TripsViewHandler: View {
             
         case .tripAdvances(let advanceData):
             TripAdvanceView(data: advanceData)
-                .navigationTitle("Trip Advances")
+                .navigationTitle(LocalizedStringKey("trip_advances"))
             
         }
         

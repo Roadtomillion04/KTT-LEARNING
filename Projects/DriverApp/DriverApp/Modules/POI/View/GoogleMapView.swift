@@ -3,141 +3,12 @@
 //  DriverApp
 //
 //  Created by Nirmal kumar on 15/11/25.
-//
-//
-//import SwiftUI
-//import GoogleMaps
-//import Observation
-//
-//struct GoogleMapView: UIViewRepresentable {
-//    
-//    private let locationManager = CLLocationManager()
-//    var mapView = GMSMapView()
-//    
-//    var fuelData: [Fuel]
-//    
-//    func makeUIView(context: Context) -> GMSMapView {
-//        mapView.isMyLocationEnabled = true
-//        mapView.delegate = context.coordinator
-//        mapView.settings.myLocationButton = true
-//        locationManager.delegate = context.coordinator // Coordinator'ı delegate olarak atıyoruz
-//        locationManager.requestWhenInUseAuthorization()
-//        locationManager.startUpdatingLocation() // canlı konum güncellemeleri
-//        
-//        
-////        for data in fuelData {
-//            
-//           
-//            
-//        let position = CLLocationCoordinate2D(latitude: fuelData.first?.lat ?? 11.0035921, longitude: fuelData.first?.lng ?? 76.9702258)
-//            let london = GMSMarker(position: position)
-//            london.title = fuelData.first?.locationName ?? "k"
-//            london.map = mapView
-//        
-//            
-////        }
-//        
-//        return mapView
-//    }
-//    
-//    func updateUIView(_ uiView: GMSMapView, context: Context) {
-//    }
-//    
-//    func makeCoordinator() -> Coordinator {
-//        return Coordinator(self, mapView: mapView) // Coordinator'a mapView'i geçiyoruz
-//    }
-//    
-//    class Coordinator: NSObject, GMSMapViewDelegate, CLLocationManagerDelegate {
-//        
-//        var parent: GoogleMapView
-//        var mapView: GMSMapView // mapView referansı
-//        
-//        init(_ parent: GoogleMapView, mapView: GMSMapView) {
-//            self.parent = parent
-//            self.mapView = mapView
-//        }
-//        
-//        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//            guard let location = locations.last else { return }
-//            let cameraUpdate = GMSCameraUpdate.setTarget(location.coordinate, zoom: 18 )
-//            mapView.animate(with: cameraUpdate) // Kamerayı yeni konuma taşıyoruz
-//        }
-//        
-//        
-//       
-//        
-////        // Tıkladığınız koordinatın enlem ve boylam bilgilerini yazdırır
-////        func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
-////            print("Tapped at coordinate: \(coordinate.latitude), \(coordinate.longitude)")
-////            let marker = GMSMarker(position: coordinate)
-////             marker.title = "New Marker"
-////             marker.snippet = "Lat: \(coordinate.latitude), Long: \(coordinate.longitude)"
-////             marker.map = mapView
-////             mapView.selectedMarker = marker
-////            
-////        }
-////        
-////        // Harita üzerindeki bir marker'a tıklanırsa, marker'ın başlığını yazdırır
-////        func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-////            // Marker başlığını kontrol ederiz; eğer başlık yoksa "No Title" olarak yazdırılır
-////            print("Tapped marker with title: \(marker.title ?? "No Title")")
-////            marker.map = nil // Markerı siler.
-////            return true  // true döndürmek, varsayılan işlevselliğin devam etmesini engeller
-////        }
-//        
-//        // Kullanıcı harita üzerinde uzun basma işlemi gerçekleştirdiğinde, tıklanan koordinatları yazdırır
-//        func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
-//            print("Long pressed at coordinate: \(coordinate.latitude), \(coordinate.longitude)")
-//        }
-//        
-////        // Kameranın (harita görüntüsünün) pozisyonu değiştiğinde, yeni konumu yazdırır
-////        func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
-////            // Kameranın hedef koordinatını (yani haritanın merkezini) yazdırır
-////            print("Camera position changed to: \(position.target.latitude), \(position.target.longitude)")
-////        }
-//        
-//        // Harita kaydırılmadan önce çağrılır. 'gesture' parametresi, bu işlemin bir dokunma hareketiyle (gesture) olup olmadığını belirler
-//        func mapView(_ mapView: GMSMapView, willMove gesture: Bool) {
-//            print("Map will move. Gesture is: \(gesture)")  // true ise hareket, false ise programatik bir hareket olabilir
-//        }
-//        
-//        // Kullanıcı bir marker'ı sürüklemeyi tamamladığında, marker'ın başlığını yazdırır
-//        func mapView(_ mapView: GMSMapView, didEndDragging marker: GMSMarker) {
-//            // Marker'ı sürükledikten sonra işlemler yapılabilir, örneğin marker'ın yeni pozisyonunu alabilirsiniz
-//            print("Ended dragging marker with title: \(marker.title ?? "No Title")")
-//        }
-//        
-//        // Kullanıcı marker'ın bilgi penceresini (info window) tıkladığında, marker'ın başlığını yazdırır
-//        func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
-//            // Info window, genellikle marker'a tıklanınca açılan küçük pencere içerir.
-//            print("Tapped info window of marker with title: \(marker.title ?? "No Title")")
-//        }
-//        
-//        // Harita türü (örneğin: Normal, Satellite, Terrain) değiştiğinde, yeni harita türünü yazdırır
-//        func mapView(_ mapView: GMSMapView, didChangeTo mapType: GMSMapViewType) {
-//            // Kullanıcı harita türünü değiştirdiğinde ne tür bir harita kullanıldığını yazdırır
-//            print("Map type changed to: \(mapType.rawValue)")  // rawValue, harita türünün sayısal değeri olabilir
-//        }
-//        
-//        // Kullanıcı 'My Location' butonuna tıkladığında çağrılır. Burada butona tıklanma bilgisi işlenebilir
-//        func mapView(_ mapView: GMSMapView, didTapMyLocationButton button: UIButton) -> Bool {
-//            // Bu buton, kullanıcının konumunu haritada merkezi hale getirir
-//            print("Tapped My Location button")
-//            return true  // true döndürmek, butonun varsayılan işlevselliğini engellemez
-//        }
-//    }
-//    
-//}
-//
-//#Preview {
-////    GoogleMapView()
-//}
 
 
-import GoogleMaps
-import UIKit
-import SwiftUI
 import Combine
+import UIKit
+import GoogleMaps
+import SwiftUI
 
 final class MarkerInfoWindowViewController: UIViewController {
     
@@ -157,21 +28,39 @@ final class MarkerInfoWindowViewController: UIViewController {
     
     private var cancellables = Set<AnyCancellable>()
     
-    private let sydneyMarker = GMSMarker(
-    position: CLLocationCoordinate2D(latitude: -33.8683, longitude: 151.2086))
-
-    private let melbourneMarker = GMSMarker(
-    position: CLLocationCoordinate2D(latitude: -37.81969, longitude: 144.966085))
-
-    private let brisbaneMarker = GMSMarker(position: CLLocationCoordinate2D(latitude: -27.4710107, longitude: 153.0234489))
+    // poi
+    var poiSelected: Bool = false {
+        didSet {
+            updateMapMarkers()
+        }
+    }
     
-    var fuelList: [Fuel] = []
-    var fuelSelected: Bool = false
+    var poiList: [POI] = [] {
+        didSet {
+            updateMapMarkers()
+        }
+    }
+    
+    
+    // fuel
+    var fuelSelected: Bool = false {
+        didSet {
+            updateMapMarkers()
+        }
+    }
+    
+    var fuelList: [Fuel] = [] {
+        didSet {
+            updateMapMarkers()
+        }
+    }
+    
+    var poiListMarker: [GMSMarker] = []
+    var fuelListMarker: [GMSMarker] = []
+    
 
     private let cameraLatitude: CLLocationDegrees = -33.868
-
     private let cameraLongitude: CLLocationDegrees = 151.2086
-
     private let cameraZoom: Float = 12
 
     lazy var mapView: GMSMapView = {
@@ -191,56 +80,112 @@ final class MarkerInfoWindowViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        
         mapView.delegate = self
         mapView.settings.compassButton = true
         mapView.settings.myLocationButton = true
         mapView.isMyLocationEnabled = true
         view = mapView
-
-        // Listen to the myLocation property of GMSMapView.
+        
         observation = mapView.observe(\.myLocation, options: [.new]) {
-        [weak self] mapView, _ in
-        self?.location = mapView.myLocation
+            [weak self] mapView, _ in
+            self?.location = mapView.myLocation
         }
         
         setupBindings()
-        
+        updateMapMarkers()
     }
 
+    
     deinit {
       observation?.invalidate()
     }
 
-    override func loadView() {
-    
-        print(vm.fuelList, "hello")
+    private func updateMapMarkers() {
         
-        if fuelSelected {
+        // hide/deinit the marker
+        for marker in poiListMarker {
+            marker.map = nil
+        }
+        
+        poiListMarker.removeAll()
+        
+        if poiSelected {
             
-            sydneyMarker.title = "Sydney"
-            sydneyMarker.snippet = "Population: 4,605,992 \n Contact (3232312312)"
-            sydneyMarker.map = mapView
-            
-            melbourneMarker.title = "Melbourne"
-            melbourneMarker.snippet = "Population: 4,169,103"
-            melbourneMarker.map = mapView
-            
-            brisbaneMarker.title = "Brisbane"
-            brisbaneMarker.snippet = "Population: 2,189,878"
-            brisbaneMarker.map = mapView
+            for poi in poiList  {
+                
+                let position = CLLocationCoordinate2D(latitude: poi.lat, longitude: poi.lng)
+                
+                let marker = GMSMarker(position: position)
+                
+                marker.title = poi.fullName
+                marker.snippet = """
+                Name: \(poi.name)
+                City: \(poi.city)
+                Phone: \(poi.phone)
+                """
+                
+                marker.icon = UIImage(systemName: "location.square.fill")?.resized(to: CGSize(width: 28, height: 28)).withColor(.red)
+                    
+                marker.map = mapView
+                
+                poiListMarker.append(marker)
+                
+            }
             
         }
         
+        for marker in fuelListMarker {
+            marker.map = nil
+        }
+        
+        fuelListMarker.removeAll()
+        
+        if fuelSelected {
+            
+            for fuel in fuelList  {
+                
+                let position = CLLocationCoordinate2D(latitude: fuel.lat, longitude: fuel.lng)
+                
+                let marker = GMSMarker(position: position)
+                
+                marker.title = fuel.name
+                marker.snippet = """
+                \(fuel.locationName)
+                \(fuel.contactName) (\(fuel.contactPhone))
+                """
+                
+                marker.icon = UIImage(systemName: "fuelpump.fill")?.resized(to: CGSize(width: 28, height: 28)).withColor(fuel.color == 1 ? .orange : .blue)
+                    
+                
+                marker.map = mapView
+                
+                fuelListMarker.append(marker)
+                
+            }
+            
+        }
     }
     
     private func setupBindings() {
+        
+        vm.$poiList
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] new in
+                self?.poiList = new
+            }
+            .store(in: &cancellables)
+        
+        vm.$poiSelected
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] new in
+                self?.poiSelected = new
+            }
+            .store(in: &cancellables)
+        
         vm.$fuelList
             .receive(on: DispatchQueue.main)
             .sink { [weak self] new in
                 self?.fuelList = new
-                
             }
             .store(in: &cancellables)
         
@@ -248,19 +193,16 @@ final class MarkerInfoWindowViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] new in
                 self?.fuelSelected = new
-                
             }
             .store(in: &cancellables)
-        
-        
     }
     
 }
 
 extension MarkerInfoWindowViewController: GMSMapViewDelegate {
-
-
+    
 }
+
 
    
 struct GoogleMapViewControllerWrapper: UIViewControllerRepresentable {
@@ -273,7 +215,6 @@ struct GoogleMapViewControllerWrapper: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: MarkerInfoWindowViewController, context: Context) {
-        // Update the UIViewController if needed (e.g., when SwiftUI state changes)
-        print(vm.fuelList, "hi")
+        
     }
 }

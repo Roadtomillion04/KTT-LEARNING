@@ -81,3 +81,28 @@ extension UIImage {
         return newImage
     }
 }
+
+
+
+extension UIImage {
+     func resized(to size: CGSize) -> UIImage {
+         UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+         self.draw(in: CGRect(origin: .zero, size: size))
+         let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
+         UIGraphicsEndImageContext()
+         return resizedImage ?? self
+     }
+ }
+
+
+extension UIImage {
+    func withColor(_ color: UIColor) -> UIImage? {
+        let templateImage = self.withRenderingMode(.alwaysTemplate)
+        UIGraphicsBeginImageContextWithOptions(templateImage.size, false, templateImage.scale)
+        color.set()
+        templateImage.draw(in: CGRect(x: 0, y: 0, width: templateImage.size.width, height: templateImage.size.height))
+        let tintedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return tintedImage
+    }
+}

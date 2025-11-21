@@ -58,12 +58,11 @@ struct OperatingExpensesView: View {
                     
                     HStack {
                         
-                        
                         HStack {
                             Image(systemName: vm.selection == .yes ? "circle.fill" : "circle")
                             
                             
-                            Text("Yes")
+                            Text(LocalizedStringResource("yes"))
                         }
                         .font(.headline)
                         .onTapGesture {
@@ -75,7 +74,7 @@ struct OperatingExpensesView: View {
                         HStack {
                             Image(systemName: vm.selection == .no ? "circle.fill" : "circle")
                             
-                            Text("No")
+                            Text(LocalizedStringResource("no"))
                         }
                         .font(.headline)
                         .onTapGesture {

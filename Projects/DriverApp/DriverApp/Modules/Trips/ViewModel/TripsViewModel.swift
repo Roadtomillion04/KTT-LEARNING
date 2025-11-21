@@ -129,7 +129,7 @@ class TripsViewModel: ObservableObject {
             try await apiService.getTripsData(cachePolicy: cachePolicy)
         } catch {
             
-        }
+        } 
     }
     
     

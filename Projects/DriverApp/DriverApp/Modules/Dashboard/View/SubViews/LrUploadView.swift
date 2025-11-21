@@ -47,7 +47,7 @@ struct LrUploadView: View {
                 
                 if vm.fileDetails.count < apiService.driverStatusAttributes.driver.account.driverConfig.trip.maxImages.lr ?? 0 {
                     
-                    coordinator.push(.miscellaneous(.cameraCapture(image: $vm.lrImage, sourceType: .photoLibrary)))
+                    coordinator.push(.miscellaneous(.cameraCapture(image: $vm.lrImage, sourceType: .camera)))
                     
                     
                 } else {
@@ -89,7 +89,7 @@ struct LrUploadView: View {
                                 }
                             
                             Image(systemName: "text.document")
-                                .font(.title2)
+                                .font(.title)
                                 .foregroundStyle(.black)
                                 .offset(y: 42)
                             
@@ -112,7 +112,7 @@ struct LrUploadView: View {
                                 TextField("Text", text: $vm.fileDetails[vm.indexToEdit].notes)
                             }
                             
-                            Button("Ok") {
+                            Button(LocalizedStringKey("ok")) {
                                 
                                 
                                 if vm.showNoteEditor {
@@ -160,7 +160,7 @@ struct LrUploadView: View {
                 }
                 
             } label: {
-                Text("Save")
+                Text(LocalizedStringResource("save"))
                     .modifier(SaveButtonModifier())
             }
             

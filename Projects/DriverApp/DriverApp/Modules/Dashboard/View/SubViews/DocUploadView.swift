@@ -67,7 +67,7 @@ struct DocUploadView: View {
                                     .overlay {
                                         
                                         Image(systemName: "xmark.circle.fill")
-                                            .font(.title2)
+                                            .font(.title)
                                             .background(Circle().fill(.white))
                                             .foregroundStyle(.red)
                                             .offset(x: 42, y: -42)
@@ -118,7 +118,7 @@ struct DocUploadView: View {
                 }
                 
             } label: {
-                Text("Save")
+                Text(LocalizedStringResource("save"))
                     .modifier(SaveButtonModifier())
             }
 
@@ -162,7 +162,7 @@ struct DocUploadView: View {
         .successAlert(success: $vm.success, failed: $vm.failed, message: "Documents uploaded successfully", coordinator: coordinator)
 
     }
-    
+
     
     @ViewBuilder
     private func documentSheetContent() -> some View {
@@ -208,7 +208,7 @@ struct DocUploadView: View {
             
             HStack(alignment: .center, spacing: 50) {
                 
-                Button("cancel") {
+                Button(LocalizedStringKey("cancel")) {
                     vm.documentDetails.removeLast()
                     vm.showDocumentSheet = false
                 }
@@ -218,7 +218,7 @@ struct DocUploadView: View {
                 .foregroundStyle(.white)
             
                 
-                Button("Save") {
+                Button(LocalizedStringKey("save")) {
                     vm.showDocumentSheet = false
                     
                     // logically thinking, the last image should be captured image so

@@ -40,30 +40,30 @@ struct TripExpensesView: View {
                 
                 LazyVGrid(columns: vm.columns, alignment: .leading, spacing: 25) {
                     
-                    IconData(icon: "square.fill.text.grid.1x2", title: "Type", value: expense.type ?? "")
+                    IconData(icon: "square.fill.text.grid.1x2", title: LocalizedStringResource("type"), value: expense.type ?? "")
                     
-                    IconData(icon: "newspaper.fill", title: "Bill Number", value: expense.details.billNumber ?? "-")
+                    IconData(icon: "newspaper.fill", title: LocalizedStringResource("bill_no"), value: expense.details.billNumber ?? "-")
                     
-                    IconData(icon: "calendar", title: "Expense Date", value: expense.date?.dateFormatting() ?? "")
+                    IconData(icon: "calendar", title: LocalizedStringResource("expense_date"), value: expense.date?.dateFormatting() ?? "")
                     
-                    IconData(icon: "mappin", title: "Location", value: expense.location.name ?? "")
+                    IconData(icon: "mappin", title: LocalizedStringResource("location"), value: expense.location.name ?? "")
                     
                     // For Fuel extra fields
                     if let liters = expense.details.liters, !liters.isEmpty {
-                        IconData(icon: "fuelpump.fill", title: "Liters", value: liters)
+                        IconData(icon: "fuelpump.fill", title: LocalizedStringResource("liters"), value: liters)
                     }
                     
                     if let costPerLiter = expense.details.costPerLiter, !costPerLiter.isEmpty {
-                        IconData(icon: "banknote", title: "Cost Per Liter", value: costPerLiter)
+                        IconData(icon: "banknote", title: LocalizedStringResource("cost_per_liter"), value: costPerLiter)
                     }
                     
-                    IconData(icon: "indianrupeesign", title: "Amount", value: expense.amount ?? "")
+                    IconData(icon: "indianrupeesign", title: LocalizedStringResource("amount"), value: expense.amount ?? "")
                     
-                    IconData(icon: "creditcard.fill", title: "Payment Mode", value: expense.paymentMode ?? "")
+                    IconData(icon: "creditcard.fill", title: LocalizedStringResource("payment_mode"), value: expense.paymentMode ?? "")
                     
-                    IconData(icon: "ellipsis.message.fill", title: "Comments", value: expense.comments ?? "")
+                    IconData(icon: "ellipsis.message.fill", title: LocalizedStringResource("comments"), value: expense.comments ?? "")
                     
-                    IconData(icon: "person.crop.circle.fill", title: "Created By", value: "\(expense.userIDCreatedBy ?? "N/A")")
+                    IconData(icon: "person.crop.circle.fill", title: LocalizedStringResource("created_by"), value: "\(expense.userIDCreatedBy ?? "N/A")")
                     
                     // Image, downloaded images there, in apiService
                 
@@ -77,7 +77,7 @@ struct TripExpensesView: View {
                         
                         if expense.status == 3 {
                             
-                            Text("Rejected")
+                            Text(LocalizedStringResource("rejected"))
                                 .padding()
                                 .foregroundStyle(.white)
                                 .bold()
@@ -100,15 +100,26 @@ struct TripExpensesView: View {
                             
                             VStack {
                                 
-                                Text("Delete")
+                                Text(LocalizedStringResource("delete"))
                                     .padding()
                                     .foregroundStyle(.white)
                                     .bold()
                                     .background(RoundedRectangle(cornerRadius: 10).fill(.red))
                                 
                                     .onTapGesture {
-                                        vm.deleteExpense(apiService: apiService, coordinator: coordinator, id: expense.id ?? -1)
+                                        vm.confirmDelete = true
                                     }
+                                
+                                    .alert("delete_message", isPresented: $vm.confirmDelete) {
+                                        Button(LocalizedStringKey("yes")) {
+                                            vm.deleteExpense(apiService: apiService, coordinator: coordinator, id: expense.id ?? -1)
+                                        }
+                                        
+                                        Button(LocalizedStringKey("no"), role: .cancel) {
+                                            
+                                        }
+                                    }
+                                    
                                 
                                 Text("Pending")
                                     .padding()
@@ -123,7 +134,7 @@ struct TripExpensesView: View {
                         
                     } header: {
                         
-                        IconData(icon: "square.and.arrow.up.fill", title: "Images", value: "")
+                        IconData(icon: "square.and.arrow.up.fill", title: LocalizedStringResource("image"), value: "")
                     }
                 
     
@@ -168,6 +179,8 @@ fileprivate class TripExpensesViewModel: ObservableObject {
     @Published var success: Bool = false
     @Published var isLoading: Bool = false
     @Published var failed: Bool = false
+    
+    @Published var confirmDelete: Bool = false
     
     let columns = [
                 GridItem(.flexible(), spacing: 40),

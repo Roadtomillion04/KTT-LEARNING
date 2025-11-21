@@ -12,7 +12,7 @@ struct IconData: View {
     var icon: String?
     var image: String?
     
-    var title: String?
+    var title: LocalizedStringResource?
     var value: String
     
     var body: some View {

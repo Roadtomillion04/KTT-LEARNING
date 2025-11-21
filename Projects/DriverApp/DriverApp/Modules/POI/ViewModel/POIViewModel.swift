@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import MapKit
 
 // selection fuel, toll and poi has to retain value accross views
 
@@ -39,9 +39,16 @@ class POIViewModel: ObservableObject {
     // user location
     @Published var userLatitude: Double = 0
     @Published var userLongitude: Double = 0
+    @Published var userLocation: CLLocation = .init()
     
     @MainActor
     func onAppear(apiService: APIService, locationManager: LocationManager) async {
+        
+        userLatitude = locationManager.location?.latitude ?? 0
+        userLongitude = locationManager.location?.longitude ?? 0
+        
+        userLocation = CLLocation(latitude: userLatitude, longitude: userLongitude)
+
         
         do {
             try await apiService.getFuelList()
@@ -53,10 +60,6 @@ class POIViewModel: ObservableObject {
         
         parseFuelList(apiService: apiService)
         parsePoiList(apiService: apiService)
-        
-        userLatitude = locationManager.location?.latitude ?? 0
-        userLongitude = locationManager.location?.longitude ?? 0
-        
         
     }
     
@@ -80,15 +83,19 @@ class POIViewModel: ObservableObject {
     func parseFuelList(apiService: APIService) {
 
         for data in apiService.fuelListAttributes.result {
-            fuelList.append(Fuel(
-                name: data.roname ?? "",
-                locationName: data.lo ?? "",
-                contactName: data.cn ?? "",
-                contactPhone: data.cp ?? "",
-                lat: data.lat ?? 0,
-                lng: data.lng ?? 0,
-                color: data.co ?? 0
-            ))
+            
+            if userLocation.distance(from: CLLocation(latitude: data.lat ?? 0, longitude: data.lng ?? 0)) < 200000 {
+                
+                fuelList.append(Fuel(
+                    name: data.roname ?? "",
+                    locationName: data.lo ?? "",
+                    contactName: data.cn ?? "",
+                    contactPhone: data.cp ?? "",
+                    lat: data.lat ?? 0,
+                    lng: data.lng ?? 0,
+                    color: data.co ?? 0
+                ))
+            }
         }
     }
     

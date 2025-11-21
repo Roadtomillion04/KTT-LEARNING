@@ -14,9 +14,12 @@ struct SceneHandlerView: View {
     @EnvironmentObject var coordinator: AppCoordinator
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var apiService: APIService
+    @EnvironmentObject var languageManager: LanguageManager
     
     @State private var errorDescription: String = ""
     @State private var showAlert: Bool = false
+    
+    @State private var viewId = UUID()
     
     var body: some View {
         
@@ -30,6 +33,7 @@ struct SceneHandlerView: View {
                 coordinator.push(.home(.dashboard))
                 
                 locationManager.manager.requestLocation()
+                locationManager.startTracking()
                 
                 print(locationManager.manager.location?.coordinate.latitude ?? 0)
                 print(locationManager.manager.location?.coordinate.longitude ?? 0)
@@ -68,7 +72,7 @@ struct SceneHandlerView: View {
              
                 case .home:
                     HomeView()
-                        .navigationTitle("Driver App")
+                        .navigationTitle(LocalizedStringKey("app_name"))
                         .navigationBarBackButtonHidden()
                     
                 
@@ -87,6 +91,13 @@ struct SceneHandlerView: View {
                     
                 }
             }
+            
+            // refreshes the view
+//            .id(viewId)
+//            
+//            .onChange(of: languageManager.selectedLanguage) { old, new in
+//                viewId = UUID()
+//            }
             
 //            .onChange(of: scenePhase) { old, new in
 //                

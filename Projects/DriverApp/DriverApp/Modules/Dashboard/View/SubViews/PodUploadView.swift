@@ -65,7 +65,7 @@ struct PodUploadView: View {
                                 .overlay {
                                     
                                     Image(systemName: "xmark.circle.fill")
-                                        .font(.title2)
+                                        .font(.title)
                                         .background(Circle().fill(.white))
                                         .foregroundStyle(.red)
                                         .offset(x: 42, y: -42)
@@ -104,7 +104,7 @@ struct PodUploadView: View {
                                 TextField("Text", text: $vm.fileDetails[vm.indexToEdit].notes)
                             }
                             
-                            Button("Ok") {
+                            Button(LocalizedStringKey("ok")) {
                                 
                                 if vm.showNoteEditor {
                                     
@@ -148,7 +148,7 @@ struct PodUploadView: View {
                 }
                 
             } label: {
-                Text("Save")
+                Text(LocalizedStringResource("save"))
                     .modifier(SaveButtonModifier())
             }
             

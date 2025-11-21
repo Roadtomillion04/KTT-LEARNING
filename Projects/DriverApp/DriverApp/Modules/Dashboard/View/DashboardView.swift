@@ -82,7 +82,7 @@ struct DashboardView: View {
                     
                     VStack(alignment: .leading, spacing: 2) {
                         
-                        Text("License Expiry")
+                        Text(LocalizedStringResource("lic_exp"))
                             .font(Font.custom("Monaco", size: 15))
                         
                         Text(apiService.driverStatusAttributes.driver.dlexp?.dateFormatting(format: "dd/MM/yyyy") ?? "")
@@ -93,10 +93,10 @@ struct DashboardView: View {
                     
                     VStack(alignment: .leading, spacing: 2) {
                         
-                        Text("RTO / Home")
+                        Text(LocalizedStringResource("rto_loc"))
                             .font(Font.custom("Monaco", size: 15))
                         
-                        Text("Location")
+                        Text(LocalizedStringResource(stringLiteral: "location"))
                             .font(Font.custom("Moncao", size: 15))
                     }
                 }
@@ -155,7 +155,7 @@ struct DashboardView: View {
                 
                 VStack(spacing: 5) {
                     
-                    Text("Start ODO")
+                    Text(LocalizedStringResource("start_odo"))
                         .font(Font.custom("AriSanPro-Medium", size: 15))
                         .foregroundStyle(.secondary)
                     
@@ -168,7 +168,7 @@ struct DashboardView: View {
                 
                 VStack(spacing: 5) {
                     
-                    Text("Current ODO")
+                    Text(LocalizedStringResource("current_odo"))
                         .font(Font.custom("AriSanPro-Medium", size: 15))
                         .foregroundStyle(.secondary)
                     
@@ -180,7 +180,7 @@ struct DashboardView: View {
                 
                 VStack(spacing: 5) {
                     
-                    Text("Distance")
+                    Text(LocalizedStringResource("distance"))
                         .font(Font.custom("AriSanPro-Medium", size: 15))
                         .foregroundStyle(.secondary)
                     
@@ -237,7 +237,7 @@ struct DashboardView: View {
             @ViewBuilder content: @escaping () -> Content
         ) -> some View {
             
-            DisclosureGroup() {
+            DisclosureGroup(isExpanded: $isExpanded) {
                 
                 content()
                     .padding(.top, 10)
@@ -291,7 +291,7 @@ struct DashboardView: View {
                     // as per android app, if atleast one of 3 has images uploaded
                     if !trip.lr.images.isEmpty || !trip.pod.images.isEmpty || !trip.docs.images.isEmpty {
                      
-                        Button("View") {
+                        Button(LocalizedStringKey("view")) {
                             coordinator.push(.dashboard(.zoneInfo(location: trip.locationName, date: trip.inTime, lrNumber: trip.lr.number ?? "", loadingCharges: trip.opExpenses.loadingCharge, unloadingCharges: trip.opExpenses.unloadingCharge, lrImage: trip.lr.images, podImage: trip.pod.images, docImage: trip.docs.images)))
                         }
                         .bold()
@@ -306,7 +306,7 @@ struct DashboardView: View {
                     
                     if trip.statusCustom == "Delivery" && trip.zoneSeq != 0 {
                         
-                        Button("Cancel") {
+                        Button("cancel") {
                             vm.selectedTrip = trip
                             vm.showCancelAlert = true
                         }
@@ -368,7 +368,7 @@ struct DashboardView: View {
             .frame(width: 75, height: 75)
             .background(RoundedRectangle(cornerRadius: 5).foregroundStyle(.background).shadow(radius: 2))
             
-            Text("LR")
+            Text(LocalizedStringResource("lr"))
                 .font(Font.custom("ArialRoundedMTBold", size: 12.5))
         }
         .onTapGesture {
@@ -396,7 +396,7 @@ struct DashboardView: View {
             .frame(width: 75, height: 75)
             .background(RoundedRectangle(cornerRadius: 5).foregroundStyle(.background).shadow(radius: 2))
             
-            Text("POD")
+            Text(LocalizedStringResource("pod"))
                 .font(Font.custom("ArialRoundedMTBold", size: 12.5))
         }
         .onTapGesture {
@@ -424,7 +424,7 @@ struct DashboardView: View {
             .frame(width: 75, height: 75)
             .background(RoundedRectangle(cornerRadius: 5).foregroundStyle(.background).shadow(radius: 2))
             
-            Text("Doc")
+            Text(LocalizedStringResource("doc"))
                 .font(Font.custom("ArialRoundedMTBold", size: 12.5))
         }
         .onTapGesture {
@@ -446,7 +446,7 @@ struct DashboardView: View {
             .frame(width: 75, height: 75)
             .background(RoundedRectangle(cornerRadius: 5).foregroundStyle(.background).shadow(radius: 2))
             
-            Text("OP")
+            Text(LocalizedStringResource("operating_expenses"))
                 .font(Font.custom("ArialRoundedMTBold", size: 12.5))
         }
         .onTapGesture {
@@ -469,7 +469,7 @@ struct DashboardView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
-                Text("Target")
+                Text(LocalizedStringResource("target"))
                     .font(Font.custom("Monaco", size: 16))
                     .foregroundStyle(.secondary)
                 
@@ -494,7 +494,7 @@ struct DashboardView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
-                Text("Trip Assignment Date")
+                Text(LocalizedStringResource("trip_adate"))
                     .font(Font.custom("Monaco", size: 16))
                     .foregroundStyle(.secondary)
                 
@@ -506,7 +506,7 @@ struct DashboardView: View {
 
             VStack(alignment: .leading, spacing: 0) {
                 
-                Text("Total Advances")
+                Text(LocalizedStringResource("total_advance"))
                     .font(Font.custom("Monaco", size: 16))
                     .foregroundStyle(.secondary)
                 
@@ -528,7 +528,7 @@ struct DashboardView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
-                Text("Total Expenses")
+                Text(LocalizedStringResource("trip_expenses"))
                     .font(Font.custom("Monaco", size: 16))
                     .foregroundStyle(.secondary)
                 

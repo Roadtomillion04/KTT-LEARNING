@@ -24,7 +24,7 @@ struct ZoneCancellationView: View {
         
         VStack(alignment: .leading,  spacing: 40) {
             
-            Text("Please select the cancellation reason for this zone")
+            Text(LocalizedStringResource("please_select_the_cancellation_reason"))
                 .font(Font.custom("ArialRoundedMTBold", size: 17.5))
             
             Divider()
@@ -38,6 +38,7 @@ struct ZoneCancellationView: View {
                 ForEach(reasons, id: \.self) { reason in
                     Text(reason)
                 }
+
                 
             }
             .tint(.black)
@@ -50,11 +51,11 @@ struct ZoneCancellationView: View {
                 
                 Spacer()
                 
-                Button("CLOSE") {
+                Button(LocalizedStringKey("close")) {
                     isPresented = false
                 }
                 
-                Button("Cancel Zone") {
+                Button(LocalizedStringKey("cancel_zone")) {
                     
                     Task {
                         do {

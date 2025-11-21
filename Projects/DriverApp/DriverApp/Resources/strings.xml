@@ -1,0 +1,476 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="ExtraTranslation">Driver App</string>
+
+    <string name="dashboard">Dashboard</string>
+    <string name="expense">Expense</string>
+    <string name="poi">POI</string>
+    <string name="profile">Profile</string>
+    <string name="trips">Trips</string>
+    <string name="more">More</string>
+    <string name="viewmore">View More</string>
+    <string name="viewless">View Less</string>
+
+    <!-- Action bar menu -->
+    <string name="logout_action">Logout</string>
+    <string name="username">Mobile No.</string>
+    <string name="user_otp">OTP</string>
+    <!-- AuthenticatorActivity -->
+    <string name="message_signing_in">Signing in…</string>
+    <string name="message_loading_in">Loading…</string>
+    <string name="message_bad_credentials">Username or Password is incorrect</string>
+    <string name="message_auth_failed">Please enter a valid password</string>
+    <string name="message_auth_failed_new_account">Driver profile not found. Please contact your manager</string>
+    <string name="coming_soon">Coming Soon</string>
+    <string name="not_attendance_zone">You are not in Attendance Zone.</string>
+    <string name="signup_link">New to Driver App ? &lt;br> Call &lt;a href="tel:+917338767788">7338767788&lt;/a> to learn more.</string>
+    <string name="notifications_admin_channel_name">Driverapp</string>
+    <string name="notifications_admin_channel_description">This is a sample notification.</string>
+    <string name="GoogleStreet">GoogleStreet</string>
+    <string name="GoogleSatellite">GoogleSatellite</string>
+
+    <string name="toast_image_intent_null">Image picker option is missing!</string>
+    <string name="toast_phoneno_null">Phone number is missing!</string>
+    <string name="toast_web_null">Web Link is missing!</string>
+    <string name="lbl_set_profile_photo">Set image</string>
+    <string name="lbl_take_camera_picture">Take a picture</string>
+    <string name="lbl_choose_from_gallery">Choose from gallery</string>
+    <string name="lbl_take_camera_video">Take a Video</string>
+    <string name="dialog_permission_title">Grant Permissions</string>
+    <string name="dialog_permission_message">This app needs permission to use this feature. You can grant them in app settings.</string>
+    <string name="go_to_settings">GOTO SETTINGS</string>
+    <string name="no_zone">Not in Attendance Zone</string>
+    <string name="null_value">N/A</string>
+    <string name="curr_loc">Current Location</string>
+    <string name="curr_stat">Current Status</string>
+    <string name="rto_loc">RTO / Home Location</string>
+    <string name="lic_exp">License Expiry</string>
+    <string name="trip_ref">Trip Ref.</string>
+    <string name="trip_adate">Trip Assignment Date</string>
+    <string name="trip_sdate">Trip Scheduled Date</string>
+    <string name="target">Target</string>
+    <string name="number">No.</string>
+    <string name="signout">Logout</string>
+    <string name="dlno">Driving License</string>
+    <string name="dob">Date of Birth</string>
+    <string name="edate">Expiry Date</string>
+    <string name="license">Driving License</string>
+    <string name="attendance">Attendance</string>
+    <string name="zero">0</string>
+    <string name="total">In Total</string>
+    <string name="time">On Time</string>
+    <string name="driven">KM Driven</string>
+
+    <string name="rupees">\u20B9</string>
+    <string name="rs">\u20A8</string>
+
+    <string name="ok">OK</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
+    <string name="low_storage_error">Ocr dependencies cannot be downloaded due to low device storage</string>
+    <string name="ocr_header">Click &quot;Upload &quot; to scan text</string>
+    <string name="read_text">Upload</string>
+    <string name="auto_focus">Auto Focus</string>
+    <string name="use_flash">Use Flash</string>
+    <string name="ocr_success">Text read successfully</string>
+    <string name="ocr_failure">No text captured</string>
+    <string name="ocr_error">"Error reading text: %1$s"</string>
+    <string name="send_email_text">Send </string>
+    <string name="mail_intent_chooser_text">Send mail…</string>
+    <string name="no_email_client_error">There are no email clients installed.</string>
+    <string name="clipboard_copy_successful_message">Copied to clipboard.</string>
+
+    <string name="permission_dialog_message">The app will now request your permission to Location related services.</string>
+
+
+    <string name="manager">Manager</string>
+    <string name="mobile">Mobile</string>
+    <string name="trip_completed_entry">Trip Completed Entry</string>
+    <string name="trip_completed_date">Trip Completed date</string>
+    <string name="ref_no">Ref.No</string>
+    <string name="route_location">Route/Location</string>
+    <string name="complete_trip">Complete Trip</string>
+    <string name="select_zone">Select Zone</string>
+    <string name="present">Present</string>
+    <string name="absent">Absent</string>
+    <string name="half_day">Half Day</string>
+    <string name="get_otp">GET OTP</string>
+    <string name="login">LOGIN</string>
+    <string name="type">Type</string>
+    <string name="fuel_expenses">Fuel Expenses</string>
+    <string name="confirm_logout">Confirm logout ?</string>
+    <string name="title">Title</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="fuel">Fuel</string>
+    <string name="toll">Toll</string>
+    <string name="completed">Completed</string>
+    <string name="add_fuel">Add Fuel</string>
+
+    <string name="settings">Settings</string>
+    <string name="lockdown_epass">Lockdown E-Pass</string>
+    <string name="epass">E-Pass</string>
+    <string name="advance">Trip Advance</string>
+    <string name="settlement">Trip Settlement</string>
+    <string name="total_advance">Total Advances</string>
+    <string name="title_list_preference">Language preference</string>
+    <string name="dialog_title_list_preference">Choose one option!</string>
+    <string name="message">Message</string>
+    <string name="name">Username</string>
+    <string name="trip_advances">Trip Advances</string>
+    <string name="trip_settlement">Trip Settlement</string>
+    <string name="notifications">Notifications</string>
+    <string name="languages">Languages</string>
+    <string name="logout">Logout</string>
+    <string name="search">Search</string>
+    <string name="advance_paid">Advance</string>
+    <string name="balance_to_pay">Balance</string>
+    <string name="start">START</string>
+    <string name="end">END</string>
+
+    <string name="from">From</string>
+    <string name="to">To</string>
+
+    <string name="trip_expenses">Trip Expenses</string>
+    <string name="add_trip_expenses">Add Trip Expenses</string>
+    <string name="leave_request">Leave Request</string>
+    <string name="edit_leave_request">Edit Leave Request</string>
+    <string name="leave_approve_list">Leave Requests</string>
+    <string name="leave_history_list">Leave History</string>
+
+    <string name="trip_status">Trip Status</string>
+    <string name="status_time">Status Date &amp; Time </string>
+    <string name="date_time">Date &amp; Time </string>
+    <string name="settlemt_status">Settlement Status</string>
+    <string name="total_expenses">Total Expenses</string>
+    <string name="approved">Approved</string>
+    <string name="pending">Pending</string>
+    <string name="rejected">Rejected</string>
+    <string name="vehicle">Vehicle</string>
+    <string name="date">Date</string>
+    <string name="location">Location</string>
+    <string name="card_number">Card Number</string>
+    <string name="cost_ltr">Cost/Ltr</string>
+    <string name="bill_no">Bill No</string>
+    <string name="litres">Litres</string>
+    <string name="odo">Odo</string>
+    <string name="select_toll">Select Toll</string>
+    <string name="amount">Amount</string>
+    <string name="comments">Comments</string>
+    <string name="upload">Upload</string>
+    <string name="save">Save</string>
+    <string name="bill_number">Bill Number</string>
+    <string name="expense_date">Expense Date</string>
+    <string name="liters">Liters</string>
+    <string name="cost_per_liter">Cost Per Liter</string>
+    <string name="payment_mode">Payment Mode</string>
+    <string name="created_by">Created By</string>
+    <string name="image">Image</string>
+    <string name="mexpenses">Expenses</string>
+    <string name="madvances">Advances</string>
+    <string name="total_advances">Total Advances</string>
+    <string name="account_status">Account Status</string>
+    <string name="upload_weight_challan">Weights/Challan Upload</string>
+    <string name="arrowunicode" translatable="false">\u0020\u2794\u0020</string>
+    <string name="location_access_consent">Location Access Consent</string>
+    <string name="background_location_desc">Please turn on background location access for Driver App to periodically update your location in the system. This is also required to capture your attendance records automatically.</string>
+    <string name="turn_on">turn on</string>
+    <string name="no_thanks">No Thanks</string>
+    <string name="from_date">From Date</string>
+    <string name="to_date">To Date</string>
+    <string name="select_date">Select Date</string>
+    <string name="apply_for_0_days_leave" translatable="false">Apply for 0 days Leave</string>
+    <string name="reason">Reason</string>
+    <string name="no_of_days">No of Days</string>
+    <string name="start_odo">Start ODO</string>
+    <string name="current_odo">Current ODO</string>
+    <string name="distance">Distance</string>
+    <string name="click_to_view_location">Click to view Location</string>
+    <string name="n_a" translatable="false">N/A</string>
+    <string name="loading_weights">Loading Weights</string>
+    <string name="reached">Reached</string>
+    <string name="unloading_weights">Unloading Weights</string>
+    <string name="full_tons">Full (Tons)</string>
+    <string name="empty_tons">Empty (Tons)</string>
+    <string name="full_weights">Full weights</string>
+    <string name="empty_weights">Empty Weights</string>
+    <string name="close">Close</string>
+    <string name="update">Update</string>
+    <string name="loading_in_amp_out"><![CDATA[Loading - In & Out]]></string>
+    <string name="unloading_in_amp_out"><![CDATA[Unloading - In & Out]]></string>
+    <string name="advance_level">Advance Level</string>
+    <string name="fuel_litre">Fuel Litre</string>
+    <string name="fuel_amount">Fuel Amount</string>
+    <string name="cash">Cash</string>
+    <string name="atm">ATM</string>
+    <string name="payment_status">Payment Status</string>
+    <string name="voucher_number">Voucher Number</string>
+    <string name="leave_history">Leave History</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="register">Register</string>
+    <string name="challan">Challan</string>
+    <string name="upload_challan">Upload Challan</string>
+    <string name="select_po_load">Select PO/Load</string>
+    <string name="edit">Edit</string>
+    <string name="end_odo">End ODO</string>
+    <string name="select_type">Select Zone Type</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="are_you_sure_to_start_unloading">Are you sure to start unloading ?</string>
+    <string name="delete">Delete</string>
+    <string name="delete_message">Are you sure to delete record ?</string>
+    <string name="assign_trip">Assign Trip</string>
+    <string name="trip_shipment_number">Trip/Shipment number</string>
+    <string name="trip_already_assigned">Trip Already Assigned</string>
+    <string name="are_you_sure_to_assign_trip">Are you sure to Assign Trip?</string>
+    <string name="enter_shipment_number">Enter Trip/Shipment number</string>
+    <string name="mattendance">Attendance</string>
+    <string name="mpending_amount">Pending Amount</string>
+    <string name="mExpenses">Expenses</string>
+    <string name="madvance_paid">Advance Paid</string>
+    <string name="mdelay">Delay</string>
+    <string name="mon_time">On Time</string>
+    <string name="mtotal_km">Total KM</string>
+    <string name="mtotal_trips">Total Trips</string>
+    <string name="not_in_zone">Not in Zone</string>
+    <string name="check_in">Check In</string>
+    <string name="no_data">No Data</string>
+    <string name="week_off_paid_leave">Week Off &amp; Paid Leave</string>
+    <string name="zone_name">Zone Name</string>
+    <string name="design_tat">Design TAT</string>
+    <string name="actual_tat">Actual TAT</string>
+    <string name="status">Status</string>
+    <string name="duration">Duration</string>
+    <string name="transit">Transit</string>
+    <string name="temperature_c">Temperature (°C)</string>
+    <string name="quantity_l">Quantity (L)</string>
+    <string name="select_compartment">Select Compartment</string>
+    <string name="select_shift">Select Shift</string>
+    <string name="select_silo">Select Silo Count</string>
+    <string name="required">Required</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="notes">Notes</string>
+    <string name="enter_notes">Enter Notes</string>
+    <string name="ontime_performance">OnTime Performance</string>
+    <string name="breakdown_count">BreakDown Count</string>
+    <string name="compartment">Compartment</string>
+    <string name="documents">Documents</string>
+    <string name="communicate">Repair / Parts</string>
+
+
+    <string-array name="payment_mode">
+        <item>Cash</item>
+        <!--  <item>Card</item>-->
+        <!-- <item>Cheque</item>
+         <item>Credit</item>
+         <item>NEFT</item>-->
+    </string-array>
+    <string-array name="shifts_array">
+        <item>Morning</item>
+        <item>Evening</item>
+        <item>Evening + Morning</item>
+        <item>Morning + Evening</item>
+    </string-array>
+
+    <string-array name="silo_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string name="gross_weight">Gross Weight (Kg)</string>
+    <string name="a_new_version_of_the_application_is_available_and_is_required_to_continue_please_click_below_to_update_to_the_latest_version">A new version of the application is available and is required to continue, please click below to update to the latest version.</string>
+    <string name="new_version_available">New Version Available</string>
+    <string name="current_limit">Current Limit</string>
+    <string name="qr_code_text">Tag Number</string>
+    <string name="qr_code_validation">Please scan Or manual entry the QRCode text</string>
+    <string name="qr_code_image_validation">Please scan Or capture the QR Code image Or text</string>
+    <string name="reason_validation">Please Select the manual reason</string>
+    <string name="other_reason_validation">Please enter the valid manual reason</string>
+    <string name="take_a_photo">Take \n a Photo</string>
+    <string name="qr_code_manual_image_capture">Try Manually</string>
+    <string name="manual_lifting">Manual Lifting</string>
+    <string name="_900_lifting">900 Lifting</string>
+    <string name="tanker_seal_qr_codes">Tanker Seal QR Codes</string>
+    <string name="remarks">Remarks</string>
+    <string name="analyzer_number">Analyzer Number</string>
+    <string name="please_select_lifting_type">Please select Lifting Type</string>
+    <string name="please_select_manual_lifting_type">Please select Manual Lifting reason</string>
+    <string name="please_type_remarks_for_manual">Please type remarks for Manual Lifting</string>
+    <string name="please_select_analyzer_type_900_lifting">Please select Analyzer Type for 900 Lifting</string>
+    <string name="please_type_analyzer_number">Please type Analyzer Number</string>
+    <string name="please_select_abc_analyzer_900_lifting">Please select ABC Analyzer Type for 900 Lifting</string>
+    <string name="already_scanned_serial_number">Tag serial number already scanned in another door/valve. Please check.</string>
+    <string name="turn_flash_on_off">Turn Flash On/Off</string>
+    <string name="pdf_page_counter">%d / %d</string>
+    <string name="okay">Okay</string>
+    <string name="bulk_cooler_temperature">Bulk Cooler Temperature (°C)</string>
+    <string name="manual_temperature">Manual Temperature (°C)</string>
+    <string name="morning">Morning</string>
+    <string name="evening">Evening</string>
+    <string name="eve_mor">Eve + Mor</string>
+    <string name="mor_eve">Mor + Eve</string>
+    <string name="shift">Shift</string>
+    <string name="hyphen" translatable="false">-</string>
+    <string name="create_trip">Create Trip</string>
+    <string name="end_trip">End Trip</string>
+    <string name="media_viewer">Media Viewer</string>
+    <string name="repair">Repair</string>
+    <string name="parts">Parts</string>
+    <string name="vehicle_number">Vehicle Number</string>
+    <string name="route">Route</string>
+    <string name="carting">Carting</string>
+    <string name="warehouse_incharge">Warehouse InCharge</string>
+    <string name="selfie">Selfie</string>
+    <string name="odo_meter">ODO Meter</string>
+    <string name="start_trip">Start trip</string>
+    <string name="odo_meter_image">ODO Meter Image</string>
+    <string name="add_stop">Add Stop</string>
+    <string name="select_route">Select route</string>
+    <string name="select_vehicle">Select Vehicle</string>
+    <string name="odo_image">ODO Image</string>
+    <string name="upload_minimum_images">Upload minimum 2 images*</string>
+    <string name="clear">Clear</string>
+    <string name="trip_sheet">Trip sheet</string>
+    <string name="resend">Resend</string>
+    <string name="trip_notify_title">"You have an New Trip "</string>
+    <string name="arrived">Arrived</string>
+    <string name="departured">Departed</string>
+    <string name="loaded">Loaded</string>
+    <string name="un_loaded">UnLoaded</string>
+    <string name="preferences">Preferences</string>
+    <string name="notification_settings">Notification Settings</string>
+    <string name="delay">Delay</string>
+    <string name="early">Early</string>
+    <string name="arrival_n_scheduled_actual">Arrival \n (Scheduled /Actual)</string>
+    <string name="departure_n_scheduled_actual">Departure \n (Scheduled /Actual)</string>
+    <string name="arrival">Arrival</string>
+    <string name="scheduled_departure">Scheduled Departure</string>
+    <string name="scheduled_arrival">Scheduled Arrival</string>
+    <string name="accept_this_trip">Are you sure want to accept this trip?</string>
+    <string name="reject_this_trip">Are you sure want to reject this trip?</string>
+    <string name="arrived_status">Are you sure you want to update arrived status?</string>
+    <string name="departed_status">Are you sure you want to update departed status?</string>
+    <string name="loaded_status">Are you sure you want to update loaded status?</string>
+    <string name="unloaded_status">Are you sure you want to update unloaded status?</string>
+    <string name="alert">Alert</string>
+    <string name="trip_accepted">Trip Accepted</string>
+    <string name="time_updated">Time Updated</string>
+    <string name="cancel">Cancel</string>
+    <string name="attendance_detail">Attendance Detail</string>
+    <string name="no_internet">No internet</string>
+    <string name="no_attendance_available">No Attendance Available</string>
+    <string name="last_30_days">Last 30 days</string>
+    <string name="attendance_logs_last_30_days">Attendance Logs (Last 30 Days)</string>
+    <string name="collapse_expand" translatable="false">Collapse / Expand</string>
+    <string name="arrow_drop_down" translatable="false">Arrow drop down</string>
+    <string name="week_off">Week Off</string>
+    <string name="paid_day">Paid Days</string>
+    <string name="available_paid_leave">Available Paid Leave</string>
+    <string name="available_week_off">Available Week Off</string>
+    <string name="back_button">Back Button</string>
+    <string name="return_materials">Return materials</string>
+    <string name="pod">POD</string>
+    <string name="qty">Qty</string>
+    <string name="materials">Materials</string>
+    <string name="zone_radius">Zone Radius(in meters)</string>
+    <string name="bag_count">Bag Count</string>
+    <string name="weight">Weight</string>
+    <string name="fetching_address">Fetching address....</string>
+    <string name="get_zones">Get Zones</string>
+    <string name="customer_name">Customer Name</string>
+    <string name="material_name">Material Name</string>
+    <string name="remove_icon">remove icon</string>
+    <string name="zone_remarks">Zone Remarks</string>
+    <string name="add_image">Add Image</string>
+    <string name="delivered_address">Delivered Address</string>
+    <string name="trip_details">Trip Details</string>
+    <string name="invoice_number">Invoice number</string>
+    <string name="progress">Progress</string>
+    <string name="total_bags_format" translatable="false">%1$d (%2$s ton)</string>
+    <string name="invoice_details">Invoice Details</string>
+    <string name="vendors_detail">Vendors Detail</string>
+    <string name="unloaded_bags">Unloaded bags</string>
+    <string name="loaded_bags">Loaded bags</string>
+    <string name="title_activity_trip_navigation">TripNavigation</string>
+
+    <!--  Trip navigation  -->
+    <string name="title_activity_trip_navigation_ktt" translatable="false">TripNavigationKtt</string>
+    <string name="navigation_driver_app">Navigation - Driver App</string>
+    <string name="avoid_tolls">Avoid Tolls</string>
+    <string name="change_language">Change Language</string>
+    <string name="language_changed">Language changed</string>
+    <string name="tolls_avoided">Tolls Avoided</string>
+    <string name="tolls__may_be_in_your_way">Tolls may be in your way</string>
+    <string name="you_arrived_the_destination">You arrived at the destination!</string>
+    <string name="google_trip_navigation">Google - Navigation</string>
+    <string name="ktt_trip_navigation">KTT - Navigation</string>
+    <string name="choose_navigation">Choose Navigation</string>
+    <string name="re_center">Re-center</string>
+    <string name="wrong_way">Wrong way</string>
+    <string name="wrong_way_content">Please follow the route shown on the map. You are heading in the wrong direction.</string>
+    <string name="open_maps">Open Maps</string>
+    <string name="route_error">Route Error</string>
+    <string name="unable_to_create_route_error_message">Unable to create route. Do you want to navigate via Google Maps?</string>
+    <string name="zone_list">Zone List</string>
+    <string name="zone">Zone</string>
+    <string name="zone_city">Zone City</string>
+    <string name="trip_zone_name">Zone Name</string>
+    <string name="trip_arrival">Arrival</string>
+    <string name="trip_departure">Departure</string>
+    <string name="show_zone_log">Show Zone Log</string>
+    <string name="hide_zone_log">Hide Zone Log</string>
+    <string name="eta_approx">ETA Approx</string>
+    <string name="meters">m</string>
+    <string name="kilo_meter">km</string>
+    <string name="second">sec</string>
+    <string name="minute">min</string>
+    <string name="hour">hr</string>
+    <string name="day">day</string>
+    <string name="title_activity_media_view">Media View</string>
+    <string name="downloads">Downloads</string>
+    <string name="refresh">Refresh</string>
+    <string name="add_unload_location">Add Unload Location</string>
+    <string name="title_activity_pod_upload">PodUploadActivity</string>
+    <string name="sign">Sign</string>
+    <string name="customer_signature">Customer Signature</string>
+    <string name="card">Card</string>
+    <string name="upi">UPI</string>
+    <string name="doc">Doc</string>
+    <string name="add_another">Add another</string>
+    <string name="lorry_receipt_lr">Lorry Receipt (LR)</string>
+    <string name="proof_of_delivery_pod">Proof Of Delivery (POD)</string>
+    <string name="capture_image">Capture Image</string>
+    <string name="receipt">Receipt</string>
+    <string name="lr">LR</string>
+    <string name="tick_symbol_for_text">POD ✔</string>
+    <string name="title_activity_image_slider_view">ImageSliderViewAct</string>
+    <string name="floor_no">Floor No</string>
+    <string name="actual_weight_kg">Actual weight (Kg)</string>
+    <string name="lr_number">LR Number</string>
+    <string name="tick_symbol">✔</string>
+    <string name="floor">Floor</string>
+    <string name="floor_detials">Floor Detials</string>
+    <string name="divider">divider</string>
+    <string name="charge_type">Charge type</string>
+    <string name="choose_category">Choose Category</string>
+    <string name="loading_charge">Loading Charge</string>
+    <string name="operating_expense">Operating Expenses</string>
+    <string name="head_load_details">Head Load Details</string>
+    <string name="floor_details">Floor Details</string>
+    <string name="unloading_charge">Unloading Charge</string>
+    <string name="head_load_weight_kg">Head Load Weight (Kg)</string>
+    <string name="select_cancel_reason">Select cancel reason</string>
+    <string name="are_you_sure_want_to_cancel_this_zone">Are you sure want to cancel this zone?</string>
+    <string name="submit">Submit</string>
+    <string name="cancel_zone">Cancel Zone</string>
+    <string name="please_select_the_cancellation_reason">Please select the cancellation reason for this zone</string>
+    <string name="with_route_assistant">With Route Assistant</string>
+    <string name="without_route_assistant">Without Route Assistant</string>
+    <string name="enter_your_remarks">Enter your remarks</string>
+    <string name="count">Count</string>
+
+</resources>

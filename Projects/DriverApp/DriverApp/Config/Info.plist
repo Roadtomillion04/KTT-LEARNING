@@ -4,26 +4,26 @@
 <dict>
 	<key>APPLICATION_ID</key>
 	<string>$(APPLICATION_ID)</string>
-	<key>REST_API_KEY</key>
-	<string>$(REST_API_KEY)</string>
-	<key>SESSION_TOKEN</key>
-	<string>$(SESSION_TOKEN)</string>
-	<key>LIVE_CDN_URL</key>
-	<string>$(LIVE_CDN_URL)</string>
+	<key>DEV_API_URL</key>
+	<string>$(DEV_API_URL)</string>
 	<key>DEV_CDN_URL</key>
 	<string>$(DEV_CDN_URL)</string>
 	<key>DRIVER_ID</key>
 	<string>$(DRIVER_ID)</string>
 	<key>LIVE_API_URL</key>
 	<string>$(LIVE_API_URL)</string>
-	<key>DEV_API_URL</key>
-	<string>$(DEV_API_URL)</string>
-	<key>UIAppFonts</key>
-	<string></string>
+	<key>LIVE_CDN_URL</key>
+	<string>$(LIVE_CDN_URL)</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>REST_API_KEY</key>
+	<string>$(REST_API_KEY)</string>
+	<key>SESSION_TOKEN</key>
+	<string>$(SESSION_TOKEN)</string>
+	<key>UIAppFonts</key>
+	<string></string>
 </dict>
 </plist>

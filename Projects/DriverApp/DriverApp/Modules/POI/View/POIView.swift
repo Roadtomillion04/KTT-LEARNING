@@ -32,7 +32,7 @@ struct POIView: View {
                 Image(systemName: "square.stack.3d.up.fill")
                     .font(.headline)
                     .padding()
-                    .background(Circle().fill(.white))
+                    .background(Circle().fill(showPopover ? Color(.systemGray3) : .white))
                     .padding()
                 
                     // positioning like this finally works
@@ -41,6 +41,24 @@ struct POIView: View {
                     .onTapGesture {
                         showPopover.toggle()
                     }
+                
+                    .background(
+                          Rectangle() // clear not working, which is favourable now following android app
+                              .fill(showPopover ? .black.opacity(0.001) : .clear)
+                          
+                          // tapping/swiping outside
+                          .onTapGesture {
+                              showPopover = false
+                          }
+                      
+                          .gesture(
+                              DragGesture()
+                                  .onChanged { _ in
+                                      showPopover = false
+                                  }
+                          )
+              
+                      )
                 
                 
                 if showPopover {
@@ -53,9 +71,8 @@ struct POIView: View {
                                 .font(.title)
                                 .padding()
                                 .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(.white)
-                                        .border(vm.fuelSelected ? .orange : .gray)
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(vm.fuelSelected ? .orange : Color(.systemGray6))
                                 )
                                 
                                 .onTapGesture {
@@ -70,9 +87,8 @@ struct POIView: View {
                                 .font(.title)
                                 .padding()
                                 .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(.white)
-                                        .border(vm.tollSelected ? .orange : .gray)
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(vm.tollSelected ? .orange : Color(.systemGray6))
                                 )
                                 .onTapGesture {
                                     vm.tollSelected.toggle()
@@ -86,9 +102,8 @@ struct POIView: View {
                                 .font(.title)
                                 .padding()
                                 .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(.white)
-                                        .border(vm.poiSelected ? .orange : .gray)
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(vm.poiSelected ? .orange : Color(.systemGray6))
                                 )
                                 .onTapGesture {
                                     vm.poiSelected.toggle()
@@ -100,8 +115,7 @@ struct POIView: View {
                     .padding()
                     .background(RoundedRectangle(cornerRadius: 10).fill(.white))
                     .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                    .offset(y: 75)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     
                 }
                 

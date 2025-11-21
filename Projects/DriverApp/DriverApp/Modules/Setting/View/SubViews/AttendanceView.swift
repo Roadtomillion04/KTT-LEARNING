@@ -63,7 +63,7 @@ struct AttendanceView: View {
                         
                     Text(vm.location)
                     
-                    Button("Cancel") {
+                    Button(LocalizedStringKey("cancel")) {
                         vm.showCheckinAlert = false
                     }
                     .font(Font.custom("Monaco", size: 20))
@@ -71,7 +71,7 @@ struct AttendanceView: View {
                     .background(RoundedRectangle(cornerRadius: 10).fill(.red))
                     .foregroundStyle(.white)
                     
-                    Button("Check In") {
+                    Button(LocalizedStringKey("check_in")) {
                         vm.postCheckIn(apiService, lat: locationManager.location?.latitude ?? 0, lng: locationManager.location?.longitude ?? 0)
                     }
                     .font(Font.custom("Monaco", size: 20))
@@ -84,7 +84,7 @@ struct AttendanceView: View {
         }
         
         .alert("Success", isPresented: $vm.success) {
-            Button("Ok") {
+            Button(LocalizedStringKey("ok")) {
                 vm.showCheckinAlert = false
             }
         } message: {
@@ -133,8 +133,8 @@ struct AttendanceView: View {
                     .fill(Color(.systemGray6))
             )
             
-            Button("CHECK IN") {
-                coordinator.push(.miscellaneous(.cameraCapture(image: $vm.checkinImage, sourceType: .photoLibrary)))
+            Button("check_in") {
+                coordinator.push(.miscellaneous(.cameraCapture(image: $vm.checkinImage, sourceType: .camera)))
             }
             .font(Font.custom("ArialRoundedMTBold", size: 15))
             .padding()
@@ -283,7 +283,9 @@ struct AttendanceLogView: View {
     
     var body: some View {
         
-        Text("Attendance Log")
+        Text(LocalizedStringResource("no_attendance_available"))
+        
+        Spacer()
         
     }
 }

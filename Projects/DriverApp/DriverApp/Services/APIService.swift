@@ -970,6 +970,10 @@ extension APIService {
         
         driverStatusAttributes.driver.id = jsonData?["driver"]["id"].int
    
+        driverStatusAttributes.driver.dlPhotoURL.front = cdnUrl + (jsonData?["driver"]["dlPhotoURL"]["front"].string ?? "")
+        
+        driverStatusAttributes.driver.dlPhotoURL.back = cdnUrl + (jsonData?["driver"]["dlPhotoURL"]["back"].string ?? "")
+        
         driverStatusAttributes.driver.photoURL = cdnUrl + (jsonData?["driver"]["photoURL"].string ?? "")
         
         driverStatusAttributes.driver.asset.tripStatus = jsonData?["driver"]["Asset"]["tripStatus"].int
@@ -1444,15 +1448,60 @@ extension APIService {
             
     }
     
-    func updateDrivingLiscense(image: UIImage) {
+    func updateDriverphoto(image: UIImage, filename: String) async throws -> Bool {
         
-        let url = URL(string: apiUrl + "/drivers/uploadDrivingLicense")!
+        let url = URL(string: apiUrl + "/drivers/updatePhoto")!
         
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = headers
         request.httpMethod = "PUT"
         
+        let boundary = UUID().uuidString
+        request.setValue("multipart/form-data; boundary=\(boundary)",
+                         forHTTPHeaderField: "Content-Type")
+
+        var body = Data()
         
+        func appendFormField(name: String, value: Any) {
+            body.append("--\(boundary)\r\n")
+            
+            body.append("Content-Disposition: form-data; name=\"\(name)\"\r\n\r\n".data(using: .utf8)!)
+            
+            body.append("\(value)\r\n".data(using: .utf8)!)
+        }
+        
+        appendFormField(name: "id", value: driverId)
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else { return false }
+        
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"\(filename)\"; filename=\"\(filename).jpg\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        body.append(imageData)
+        body.append("\r\n".data(using: .utf8)!)
+
+    
+        body.append("--\(boundary)--\r\n")
+        
+        if let myString = String(data: body, encoding: .utf8) {
+            print(myString)
+        }
+        
+        
+        request.httpBody = body
+        
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw CustomErrorDescription.badResponse
+        }
+        
+        let jsonData = try? JSON(data: data)
+        
+        print(jsonData?["success"].bool ?? false)
+        
+        return jsonData?["success"].bool ?? false
         
     }
     
@@ -2229,9 +2278,11 @@ extension APIService {
     
     func downloadImage(urlString: String) async throws -> UIImage {
         
-        let url = URL(string: urlString)!
+        print(urlString, "a")
         
-        let request = URLRequest(url: url)
+        let url = URL(string: urlString)
+        
+        let request = URLRequest(url: url ?? URL(string: "")!)
     
             
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -2240,7 +2291,7 @@ extension APIService {
                 throw CustomErrorDescription.badResponse
             }
         
-        return UIImage(data: data)!
+        return UIImage(data: data) ?? UIImage(imageLiteralResourceName: "id-card")
         
     }
 

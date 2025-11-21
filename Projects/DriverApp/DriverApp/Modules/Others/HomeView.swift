@@ -24,7 +24,7 @@ struct HomeView: View {
             POIView()
                 .tabItem {
                     Image(systemName: "location")
-                    Text("POI")
+                    Text(LocalizedStringResource("poi"))
                 }
                 .tag(HomeTab.poi)
                 
@@ -32,7 +32,7 @@ struct HomeView: View {
             TripsView()
                 .tabItem {
                     Image(systemName: "square.fill.text.grid.1x2")
-                    Text("Trips")
+                    Text(LocalizedStringResource("trips"))
                 }
                 .tag(HomeTab.trips)
         
@@ -40,7 +40,7 @@ struct HomeView: View {
             DashboardView()
                 .tabItem {
                     Image(systemName: "square.grid.2x2.fill")
-                    Text("Dashboard")
+                    Text(LocalizedStringResource("dashboard"))
                 }
                 .tag(HomeTab.dashboard)
                         
@@ -48,7 +48,7 @@ struct HomeView: View {
             SettingView()
                 .tabItem {
                     Image(systemName: "gear")
-                    Text("Settings")
+                    Text(LocalizedStringResource("more"))
                 }
                 .tag(HomeTab.settings)
 

@@ -1,0 +1,1310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Loco ios export: XLIFF for Xcode
+ Project: android to ios
+ Locale: hi-IN, Hindi (India)
+ Exported by: NIRMAL KUMAR R
+ Exported at: Tue, 18 Nov 2025 13:11:14 +0530
+-->
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xml:space="preserve">
+  <file original="android to ios/hi-IN.lproj/Localizable.strings" source-language="hi-IN" datatype="plaintext" tool-id="loco">
+    <header>
+      <tool tool-id="loco" tool-name="Loco for Xcode" tool-version="1.0.29 20250919-1" tool-company="Loco"/>
+    </header>
+    <body>
+      <trans-unit id="app_name">
+        <source>ड्राइवर अप्प</source>
+      </trans-unit>
+      <trans-unit id="dashboard">
+        <source>डैशबोर्ड</source>
+      </trans-unit>
+      <trans-unit id="expense">
+        <source>खर्चा </source>
+      </trans-unit>
+      <trans-unit id="poi">
+        <source>पी ओ आइ </source>
+      </trans-unit>
+      <trans-unit id="profile">
+        <source> पार्श्वचित्र</source>
+      </trans-unit>
+      <trans-unit id="trips">
+        <source>यात्राएं</source>
+      </trans-unit>
+      <trans-unit id="viewmore">
+        <source>और देखें</source>
+      </trans-unit>
+      <trans-unit id="viewless">
+        <source>कम देखें</source>
+      </trans-unit>
+      <trans-unit id="logout_action">
+        <source>लॉग आउट</source>
+      </trans-unit>
+      <trans-unit id="username">
+        <source>मोबाइल नंबर</source>
+      </trans-unit>
+      <trans-unit id="user_otp">
+        <source>ओ टी पी </source>
+      </trans-unit>
+      <trans-unit id="message_signing_in">
+        <source>साइन इन हो रहा है…</source>
+      </trans-unit>
+      <trans-unit id="message_loading_in">
+        <source>लोड हो रहा है…</source>
+      </trans-unit>
+      <trans-unit id="message_bad_credentials">
+        <source>यूजर-नाम या पासवर्ड गलत है</source>
+      </trans-unit>
+      <trans-unit id="message_auth_failed">
+        <source>कृपया एक वैध पासवर्ड दर्ज करें</source>
+      </trans-unit>
+      <trans-unit id="message_auth_failed_new_account">
+        <source>ड्राइवर प्रोफ़ाइल उपलब्ध नहीं है ..! कृपया अपने प्रबंधक से संपर्क करें</source>
+      </trans-unit>
+      <trans-unit id="coming_soon">
+        <source>जल्द आ रहा है</source>
+      </trans-unit>
+      <trans-unit id="not_attendance_zone">
+        <source>आप उपस्थित क्षेत्र में नहीं हैं।</source>
+      </trans-unit>
+      <trans-unit id="signup_link">
+        <source>क्या आप ड्राइवर ऐप के लिए नए हो ? जानकारी के लिए संपर्क करें - tel:+919500009120</source>
+      </trans-unit>
+      <trans-unit id="notifications_admin_channel_name">
+        <source>ड्राइवर ऐप</source>
+      </trans-unit>
+      <trans-unit id="notifications_admin_channel_description">
+        <source>यह अधिसूचना का एक उदाहरण है।</source>
+      </trans-unit>
+      <trans-unit id="GoogleStreet">
+        <source>Google-स्ट्रीट</source>
+      </trans-unit>
+      <trans-unit id="GoogleSatellite">
+        <source>Google-सैटेलाइट</source>
+      </trans-unit>
+      <trans-unit id="toast_image_intent_null">
+        <source>फ़ोटो चुनाव विकल्प अनुपस्थित है!</source>
+      </trans-unit>
+      <trans-unit id="toast_phoneno_null">
+        <source>फोन नंबर दर्ज नहीं किया गया है</source>
+      </trans-unit>
+      <trans-unit id="lbl_set_profile_photo">
+        <source>फोटो सेट करें</source>
+      </trans-unit>
+      <trans-unit id="lbl_take_camera_picture">
+        <source>एक तस्वीर लें</source>
+      </trans-unit>
+      <trans-unit id="lbl_choose_from_gallery">
+        <source>गैलरी से चुनाव करो</source>
+      </trans-unit>
+      <trans-unit id="lbl_take_camera_video">
+        <source>एक वीडियो लें</source>
+      </trans-unit>
+      <trans-unit id="dialog_permission_title">
+        <source>अनुमति प्रदान करें</source>
+      </trans-unit>
+      <trans-unit id="dialog_permission_message">
+        <source>इस ऐप को इस सुविधा का उपयोग करने के लिए अनुमति की आवश्यकता है।  आप उन्हें ऐप सेटिंग में अनुमति दे सकते हैं।</source>
+      </trans-unit>
+      <trans-unit id="go_to_settings">
+        <source>सेटिंग्स में जायें  </source>
+      </trans-unit>
+      <trans-unit id="no_zone">
+        <source>उपस्थित क्षेत्र में नहीं है</source>
+      </trans-unit>
+      <trans-unit id="null_value">
+        <source>उपलब्ध नहीं है</source>
+      </trans-unit>
+      <trans-unit id="curr_loc">
+        <source>वर्तमान स्थान</source>
+      </trans-unit>
+      <trans-unit id="curr_stat">
+        <source>वर्तमान स्थिति</source>
+      </trans-unit>
+      <trans-unit id="rto_loc">
+        <source>आर टी ओ / घर का स्थान</source>
+      </trans-unit>
+      <trans-unit id="lic_exp">
+        <source>लाइसेंस समाप्ति की तारीख</source>
+      </trans-unit>
+      <trans-unit id="trip_ref">
+        <source>यात्रा पहचान संख्या</source>
+      </trans-unit>
+      <trans-unit id="trip_adate">
+        <source>ट्रिप असाइनमेंट की तारीख</source>
+      </trans-unit>
+      <trans-unit id="target">
+        <source>लक्ष्य</source>
+      </trans-unit>
+      <trans-unit id="number">
+        <source>नहीं।</source>
+      </trans-unit>
+      <trans-unit id="signout">
+        <source>बाहर जायें  </source>
+      </trans-unit>
+      <trans-unit id="dlno">
+        <source>ड्राइविंग लाइसेंस</source>
+      </trans-unit>
+      <trans-unit id="dob">
+        <source>जन्म की तारीख</source>
+      </trans-unit>
+      <trans-unit id="edate">
+        <source>समाप्ति की तारीख</source>
+      </trans-unit>
+      <trans-unit id="license">
+        <source>ड्राइविंग लाइसेंस</source>
+      </trans-unit>
+      <trans-unit id="attendance">
+        <source>उपस्थिति</source>
+      </trans-unit>
+      <trans-unit id="zero">
+        <source>0</source>
+      </trans-unit>
+      <trans-unit id="total">
+        <source>कुल मिलाकर</source>
+      </trans-unit>
+      <trans-unit id="time">
+        <source>वक़्त पर</source>
+      </trans-unit>
+      <trans-unit id="driven">
+        <source>KM - चलाया हुआ है </source>
+      </trans-unit>
+      <trans-unit id="rupees">
+        <source>₹</source>
+      </trans-unit>
+      <trans-unit id="rs">
+        <source>₨</source>
+      </trans-unit>
+      <trans-unit id="ok">
+        <source>ओके </source>
+      </trans-unit>
+      <trans-unit id="permission_camera_rationale">
+        <source>पता लगाने के लिए कैमरे का उपयोग आवश्यक है</source>
+      </trans-unit>
+      <trans-unit id="no_camera_permission">
+        <source>यह एप्लिकेशन नहीं चल सकता क्योंकि इसमें कैमरा अनुमति नहीं है। इसलिए एप्लिकेशन अब बंद हो जायेगा </source>
+      </trans-unit>
+      <trans-unit id="low_storage_error">
+        <source>डिवाइस भंडार कम होने के कारण OCR निर्भरता डाउनलोड नहीं की जा सकती</source>
+      </trans-unit>
+      <trans-unit id="read_text">
+        <source>अपलोड करें </source>
+      </trans-unit>
+      <trans-unit id="auto_focus">
+        <source>ऑटो फोकस</source>
+      </trans-unit>
+      <trans-unit id="use_flash">
+        <source>फ़्लैश का उपयोग करें</source>
+      </trans-unit>
+      <trans-unit id="ocr_success">
+        <source>टेक्स्ट सफलतापूर्वक पढ़ें </source>
+      </trans-unit>
+      <trans-unit id="ocr_failure">
+        <source>कोई टेक्स्ट कैप्चर नहीं किया गया</source>
+      </trans-unit>
+      <trans-unit id="ocr_error">
+        <source>"टेक्स्ट पढ़ने में त्रुटि: %@"</source>
+      </trans-unit>
+      <trans-unit id="send_email_text">
+        <source>भेजें</source>
+      </trans-unit>
+      <trans-unit id="mail_intent_chooser_text">
+        <source>मेल भेजें…</source>
+      </trans-unit>
+      <trans-unit id="no_email_client_error">
+        <source>कोई ईमेल क्लाइंट स्थापित नहीं हैं</source>
+      </trans-unit>
+      <trans-unit id="clipboard_copy_successful_message">
+        <source>क्लिपबोर्ड पर कॉपी किया गया है </source>
+      </trans-unit>
+      <trans-unit id="permission_dialog_message">
+        <source>ऐप अब स्थान-संबंधित सेवाओं के लिए आपकी अनुमति का अनुरोध करेंगे </source>
+      </trans-unit>
+      <trans-unit id="manager">
+        <source>मैनेजर</source>
+      </trans-unit>
+      <trans-unit id="mobile">
+        <source>मोबाइल</source>
+      </trans-unit>
+      <trans-unit id="trip_completed_entry">
+        <source>यात्रा पूरी होने की एंट्री  </source>
+      </trans-unit>
+      <trans-unit id="trip_completed_date">
+        <source>यात्रा पूरी होने की तारीख</source>
+      </trans-unit>
+      <trans-unit id="ref_no">
+        <source>पहचान संख्या</source>
+      </trans-unit>
+      <trans-unit id="route_location">
+        <source>मार्ग / स्थान</source>
+      </trans-unit>
+      <trans-unit id="complete_trip">
+        <source>यात्रा पूरा करें</source>
+      </trans-unit>
+      <trans-unit id="select_zone">
+        <source>क्षेत्र का चुनाव करें</source>
+      </trans-unit>
+      <trans-unit id="present">
+        <source>उपस्थित</source>
+      </trans-unit>
+      <trans-unit id="absent">
+        <source>अनुपस्थित</source>
+      </trans-unit>
+      <trans-unit id="get_otp">
+        <source>ओ टी पी प्राप्त करें</source>
+      </trans-unit>
+      <trans-unit id="login">
+        <source>लॉग इन करें</source>
+      </trans-unit>
+      <trans-unit id="type">
+        <source>लिखें </source>
+      </trans-unit>
+      <trans-unit id="fuel_expenses">
+        <source>ईंधन खर्च</source>
+      </trans-unit>
+      <trans-unit id="confirm_logout">
+        <source>क्या आप लॉगआउट करना चाहेंगे?</source>
+      </trans-unit>
+      <trans-unit id="title">
+        <source>शीर्षक</source>
+      </trans-unit>
+      <trans-unit id="yes">
+        <source>हाँ</source>
+      </trans-unit>
+      <trans-unit id="no">
+        <source>नहीं</source>
+      </trans-unit>
+      <trans-unit id="fuel">
+        <source>ईंधन</source>
+      </trans-unit>
+      <trans-unit id="toll">
+        <source>टोल</source>
+      </trans-unit>
+      <trans-unit id="completed">
+        <source>पूरा कर लिया है</source>
+      </trans-unit>
+      <trans-unit id="add_fuel">
+        <source>ईंधन जोड़ें</source>
+      </trans-unit>
+      <trans-unit id="settings">
+        <source>समायोजन</source>
+      </trans-unit>
+      <trans-unit id="title_list_preference">
+        <source>भाषा वरीयता</source>
+      </trans-unit>
+      <trans-unit id="dialog_title_list_preference">
+        <source>एक विकल्प चुनें!</source>
+      </trans-unit>
+      <trans-unit id="ocr_header">
+        <source> टेक्स्ट स्कैन करने के लिए अपलोड पर क्लिक करें</source>
+      </trans-unit>
+      <trans-unit id="message">
+        <source>संदेश</source>
+      </trans-unit>
+      <trans-unit id="more">
+        <source>अधिक</source>
+      </trans-unit>
+      <trans-unit id="name">
+        <source>उपयोगकर्ता नाम</source>
+      </trans-unit>
+      <trans-unit id="trip_advances">
+        <source>ट्रिप एडवांस </source>
+      </trans-unit>
+      <trans-unit id="notifications">
+        <source>सूचनाएं</source>
+      </trans-unit>
+      <trans-unit id="languages">
+        <source>बोली</source>
+      </trans-unit>
+      <trans-unit id="logout">
+        <source>लॉग आउट</source>
+      </trans-unit>
+      <trans-unit id="advance">
+        <source>ट्रिप एडवांस </source>
+      </trans-unit>
+      <trans-unit id="settlement">
+        <source>ट्रिप सेटलमेंट</source>
+      </trans-unit>
+      <trans-unit id="total_advance">
+        <source>कुल अग्रिम </source>
+      </trans-unit>
+      <trans-unit id="search">
+        <source>Search</source>
+      </trans-unit>
+      <trans-unit id="trip_settlement">
+        <source>ट्रिप सेटलमेंट </source>
+      </trans-unit>
+      <trans-unit id="advance_paid">
+        <source>अग्रिम</source>
+      </trans-unit>
+      <trans-unit id="balance_to_pay">
+        <source>संतुलन</source>
+      </trans-unit>
+      <trans-unit id="trip_expenses">
+        <source>यात्रा व्यय </source>
+      </trans-unit>
+      <trans-unit id="approved">
+        <source>मंजूर की </source>
+      </trans-unit>
+      <trans-unit id="pending">
+        <source>विचाराधीन</source>
+      </trans-unit>
+      <trans-unit id="rejected">
+        <source>अस्वीकृत</source>
+      </trans-unit>
+      <trans-unit id="status_time">
+        <source>स्टेटस डेट &amp; टाइम</source>
+      </trans-unit>
+      <trans-unit id="date_time">
+        <source> डेट &amp; टाइम</source>
+      </trans-unit>
+      <trans-unit id="settlemt_status">
+        <source>सेटलमेंट स्टेटस</source>
+      </trans-unit>
+      <trans-unit id="total_expenses">
+        <source>कुल खर्च </source>
+      </trans-unit>
+      <trans-unit id="vehicle">
+        <source>व्हीकल</source>
+      </trans-unit>
+      <trans-unit id="date">
+        <source>डेट</source>
+      </trans-unit>
+      <trans-unit id="location">
+        <source>लोकेशन</source>
+      </trans-unit>
+      <trans-unit id="card_number">
+        <source>कार्ड नंबर</source>
+      </trans-unit>
+      <trans-unit id="cost_ltr">
+        <source>कॉस्ट/लतर</source>
+      </trans-unit>
+      <trans-unit id="bill_no">
+        <source>बिल नो</source>
+      </trans-unit>
+      <trans-unit id="litres">
+        <source>लिट्रेस</source>
+      </trans-unit>
+      <trans-unit id="odo">
+        <source>ोडो</source>
+      </trans-unit>
+      <trans-unit id="select_toll">
+        <source>सेलेक्ट टोल</source>
+      </trans-unit>
+      <trans-unit id="amount">
+        <source>अमाउंट</source>
+      </trans-unit>
+      <trans-unit id="comments">
+        <source>कमैंट्स</source>
+      </trans-unit>
+      <trans-unit id="upload">
+        <source>अपलोड</source>
+      </trans-unit>
+      <trans-unit id="save">
+        <source>सेव</source>
+      </trans-unit>
+      <trans-unit id="bill_number">
+        <source>बिल नंबर</source>
+      </trans-unit>
+      <trans-unit id="expense_date">
+        <source>एक्सपेंस डेट</source>
+      </trans-unit>
+      <trans-unit id="liters">
+        <source>लिटर्स</source>
+      </trans-unit>
+      <trans-unit id="cost_per_liter">
+        <source>कॉस्ट पैर लीटर</source>
+      </trans-unit>
+      <trans-unit id="payment_mode">
+        <source>पेमेंट मोड</source>
+      </trans-unit>
+      <trans-unit id="created_by">
+        <source>क्रिएटेड बी</source>
+      </trans-unit>
+      <trans-unit id="image">
+        <source>इमेज</source>
+      </trans-unit>
+      <trans-unit id="mexpenses">
+        <source> खर्च</source>
+      </trans-unit>
+      <trans-unit id="madvances">
+        <source> अग्रिम</source>
+      </trans-unit>
+      <trans-unit id="total_advances">
+        <source> कुल अग्रिम</source>
+      </trans-unit>
+      <trans-unit id="account_status">
+        <source> खाते की स्थिति</source>
+      </trans-unit>
+      <trans-unit id="edit_leave_request">
+        <source>एडिट रिक्वेस्ट</source>
+      </trans-unit>
+      <trans-unit id="leave_approve_list">
+        <source>लीव रिक्वेस्ट</source>
+      </trans-unit>
+      <trans-unit id="leave_history_list">
+        <source>लीव हिस्ट्री</source>
+      </trans-unit>
+      <trans-unit id="trip_status">
+        <source>ट्रिप की स्थिति </source>
+      </trans-unit>
+      <trans-unit id="to">
+        <source>अंतिम तिथि </source>
+      </trans-unit>
+      <trans-unit id="end">
+        <source>अंतिम तिथि </source>
+      </trans-unit>
+      <trans-unit id="start">
+        <source>आरंभ करने की तिथि </source>
+      </trans-unit>
+      <trans-unit id="from">
+        <source>आरंभ करने की तिथि </source>
+      </trans-unit>
+      <trans-unit id="toast_web_null">
+        <source>वेब लिंक गायब है! </source>
+      </trans-unit>
+      <trans-unit id="lockdown_epass">
+        <source>लॉकडाउन ई-पास </source>
+      </trans-unit>
+      <trans-unit id="epass">
+        <source>ई-पास </source>
+      </trans-unit>
+      <trans-unit id="add_trip_expenses">
+        <source>यात्रा व्यय जोड़ें </source>
+      </trans-unit>
+      <trans-unit id="edit_profile">
+        <source>एडिट प्रोफाइल</source>
+      </trans-unit>
+      <trans-unit id="change_password">
+        <source>चेंज पासवर्ड </source>
+      </trans-unit>
+      <trans-unit id="privacy_policy">
+        <source>प्राइवेसी पालिसी</source>
+      </trans-unit>
+      <trans-unit id="dark_mode">
+        <source>डार्क मोड</source>
+      </trans-unit>
+      <trans-unit id="register">
+        <source>रजिस्टर</source>
+      </trans-unit>
+      <trans-unit id="challan">
+        <source>चलन</source>
+      </trans-unit>
+      <trans-unit id="upload_challan">
+        <source>अपलोड चलन</source>
+      </trans-unit>
+      <trans-unit id="select_po_load">
+        <source>सेलेक्ट पो/लोड</source>
+      </trans-unit>
+      <trans-unit id="edit">
+        <source>एडिट</source>
+      </trans-unit>
+      <trans-unit id="end_odo">
+        <source>एन्ड ोडो </source>
+      </trans-unit>
+      <trans-unit id="select_type">
+        <source>सेलेक्ट टाइप </source>
+      </trans-unit>
+      <trans-unit id="confirmation">
+        <source>कन्फर्मेशन</source>
+      </trans-unit>
+      <trans-unit id="are_you_sure_to_start_unloading">
+        <source>अरे यू सूरे तो स्टार्ट अनलोडिंग ? </source>
+      </trans-unit>
+      <trans-unit id="delete">
+        <source>डिलीट</source>
+      </trans-unit>
+      <trans-unit id="delete_message">
+        <source>अरे यू सूरे तो डिलीट रिकॉर्ड ? </source>
+      </trans-unit>
+      <trans-unit id="assign_trip">
+        <source>असाइन ट्रिप</source>
+      </trans-unit>
+      <trans-unit id="trip_shipment_number">
+        <source>यात्रा / निर्यात संख्या</source>
+      </trans-unit>
+      <trans-unit id="trip_already_assigned">
+        <source>यात्रा पहले ही सौंपी जा चुकी है</source>
+      </trans-unit>
+      <trans-unit id="are_you_sure_to_assign_trip">
+        <source>क्या आप निश्चित रूप से ट्रिप असाइन करना चाहते हैं?</source>
+      </trans-unit>
+      <trans-unit id="enter_shipment_number">
+        <source>यात्रा / निर्यात संख्या दर्ज करें</source>
+      </trans-unit>
+      <trans-unit id="mattendance">
+        <source>उपस्थिति</source>
+      </trans-unit>
+      <trans-unit id="mpending_amount">
+        <source>बकाया राशि</source>
+      </trans-unit>
+      <trans-unit id="mExpenses">
+        <source>खर्च</source>
+      </trans-unit>
+      <trans-unit id="mtotal_trips">
+        <source>कुल यात्राएं</source>
+      </trans-unit>
+      <trans-unit id="madvance_paid">
+        <source>अग्रिम भुगतान</source>
+      </trans-unit>
+      <trans-unit id="mdelay">
+        <source>विलंब यात्रा</source>
+      </trans-unit>
+      <trans-unit id="mon_time">
+        <source>समय पर यात्रा</source>
+      </trans-unit>
+      <trans-unit id="mtotal_km">
+        <source>कुल किमी</source>
+      </trans-unit>
+      <trans-unit id="not_in_zone">
+        <source>जोन में नहीं</source>
+      </trans-unit>
+      <trans-unit id="check_in">
+        <source>चेक इन</source>
+      </trans-unit>
+      <trans-unit id="no_data">
+        <source>कोई सूचना नहीं है</source>
+      </trans-unit>
+      <trans-unit id="week_off_paid_leave">
+        <source>वीक ऑफ या पेड लीव</source>
+      </trans-unit>
+      <trans-unit id="zone_name">
+        <source>क्षेत्र का नाम</source>
+      </trans-unit>
+      <trans-unit id="design_tat">
+        <source>Design TAT</source>
+      </trans-unit>
+      <trans-unit id="actual_tat">
+        <source>Actual TAT</source>
+      </trans-unit>
+      <trans-unit id="status">
+        <source>स्थिति</source>
+      </trans-unit>
+      <trans-unit id="duration">
+        <source>अवधि</source>
+      </trans-unit>
+      <trans-unit id="transit">
+        <source>पारगमन</source>
+      </trans-unit>
+      <trans-unit id="leave_request">
+        <source>छुट्टी का अनुरोध</source>
+      </trans-unit>
+      <trans-unit id="reason">
+        <source>रीज़न</source>
+      </trans-unit>
+      <trans-unit id="no_of_days">
+        <source>नो ऑफ़ डेज</source>
+      </trans-unit>
+      <trans-unit id="start_odo">
+        <source>स्टार्ट ोडो</source>
+      </trans-unit>
+      <trans-unit id="current_odo">
+        <source>करंट ोडो </source>
+      </trans-unit>
+      <trans-unit id="distance">
+        <source>डिस्टेंस</source>
+      </trans-unit>
+      <trans-unit id="click_to_view_location">
+        <source>क्लिक तो व्यू लोकेशन</source>
+      </trans-unit>
+      <trans-unit id="loading_weights">
+        <source>लोडिंग वेइट्स</source>
+      </trans-unit>
+      <trans-unit id="reached">
+        <source>रीछेड</source>
+      </trans-unit>
+      <trans-unit id="unloading_weights">
+        <source>अनलोडिंग वेइट्स</source>
+      </trans-unit>
+      <trans-unit id="full_tons">
+        <source>फुल (टोंस)</source>
+      </trans-unit>
+      <trans-unit id="empty_tons">
+        <source>एम्प्टी (टोंस)</source>
+      </trans-unit>
+      <trans-unit id="full_weights">
+        <source>फुल वेइट्स</source>
+      </trans-unit>
+      <trans-unit id="empty_weights">
+        <source>एम्प्टी वेइट्स</source>
+      </trans-unit>
+      <trans-unit id="close">
+        <source>क्लोज</source>
+      </trans-unit>
+      <trans-unit id="update">
+        <source>अपडेट</source>
+      </trans-unit>
+      <trans-unit id="unloading_in_amp_out">
+        <source>उतराई - इन और बाहर</source>
+      </trans-unit>
+      <trans-unit id="advance_level">
+        <source>एडवांस लेवल</source>
+      </trans-unit>
+      <trans-unit id="fuel_litre">
+        <source>फ्यूल लीटर </source>
+      </trans-unit>
+      <trans-unit id="fuel_amount">
+        <source>फ्यूल अमाउंट</source>
+      </trans-unit>
+      <trans-unit id="cash">
+        <source>कॅश</source>
+      </trans-unit>
+      <trans-unit id="atm">
+        <source>एटीएम</source>
+      </trans-unit>
+      <trans-unit id="payment_status">
+        <source>पेमेंट स्टेटस</source>
+      </trans-unit>
+      <trans-unit id="voucher_number">
+        <source>वाउचर नंबर</source>
+      </trans-unit>
+      <trans-unit id="leave_history">
+        <source>लीव हिस्ट्री</source>
+      </trans-unit>
+      <trans-unit id="temperature_c">
+        <source>तापमान (°C)</source>
+      </trans-unit>
+      <trans-unit id="quantity_l">
+        <source>मात्रा (L)</source>
+      </trans-unit>
+      <trans-unit id="select_compartment">
+        <source>कम्पार्टमेंट का चयन करें</source>
+      </trans-unit>
+      <trans-unit id="required">
+        <source>आवश्यक</source>
+      </trans-unit>
+      <trans-unit id="select_shift">
+        <source>सेलेक्ट शिफ्ट</source>
+      </trans-unit>
+      <trans-unit id="select_silo">
+        <source>साइलो काउंट चुनें</source>
+      </trans-unit>
+      <trans-unit id="trip_sdate">
+        <source>यात्रा निर्धारित तिथि</source>
+      </trans-unit>
+      <trans-unit id="accept">
+        <source>स्वीकार करना</source>
+      </trans-unit>
+      <trans-unit id="reject">
+        <source>अस्वीकार</source>
+      </trans-unit>
+      <trans-unit id="notes">
+        <source>टिप्पणियाँ</source>
+      </trans-unit>
+      <trans-unit id="enter_notes">
+        <source>नोट्स दर्ज करें</source>
+      </trans-unit>
+      <trans-unit id="ontime_performance">
+        <source>समय पर प्रदर्शन</source>
+      </trans-unit>
+      <trans-unit id="breakdown_count">
+        <source>ब्रेकडाउन काउंट</source>
+      </trans-unit>
+      <trans-unit id="compartment">
+        <source>कम्पार्टमेंट</source>
+      </trans-unit>
+      <trans-unit id="upload_weight_challan">
+        <source>वेइट्स/चलन अपलोड</source>
+      </trans-unit>
+      <trans-unit id="location_access_consent">
+        <source>लोकेशन</source>
+      </trans-unit>
+      <trans-unit id="background_location_desc">
+        <source>प्लीज टर्न ों बैकग्राउंड लोकेशन एक्सेस फॉर ड्राइवर अप्प तो पेरिऑडिकालय अपडेट योर लोकेशन इन थे सिस्टम. थिस इस आल्सो रिक्वायर्ड तो कैप्चर योर अटेंडेंस रिकार्ड्स ऑटोमेटिकली.</source>
+      </trans-unit>
+      <trans-unit id="turn_on">
+        <source>टर्न ों </source>
+      </trans-unit>
+      <trans-unit id="no_thanks">
+        <source>नो थैंक्स</source>
+      </trans-unit>
+      <trans-unit id="from_date">
+        <source>फ्रॉम डेट</source>
+      </trans-unit>
+      <trans-unit id="to_date">
+        <source>तो डेट</source>
+      </trans-unit>
+      <trans-unit id="select_date">
+        <source>तारीख़ चुनें</source>
+      </trans-unit>
+      <trans-unit id="documents">
+        <source>दस्तावेज़</source>
+      </trans-unit>
+      <trans-unit id="communicate">
+        <source>मरम्मत के पार्ट्स</source>
+      </trans-unit>
+      <trans-unit id="gross_weight">
+        <source>कुल वजन (Kg)</source>
+      </trans-unit>
+      <trans-unit id="a_new_version_of_the_application_is_available_and_is_required_to_continue_please_click_below_to_update_to_the_latest_version">
+        <source>A new version of the application is available and is required to continue, please click below to update to the latest version.</source>
+      </trans-unit>
+      <trans-unit id="new_version_available">
+        <source>नई वर्शन अवेलेबल </source>
+      </trans-unit>
+      <trans-unit id="odo_image">
+        <source>ोडो इमेज</source>
+      </trans-unit>
+      <trans-unit id="upload_minimum_images">
+        <source>न्यूनतम 2 छवियाँ अपलोड करें*</source>
+      </trans-unit>
+      <trans-unit id="vehicle_number">
+        <source>गाडी नंबर</source>
+      </trans-unit>
+      <trans-unit id="route">
+        <source>मार्ग</source>
+      </trans-unit>
+      <trans-unit id="carting">
+        <source>कार्टिंग</source>
+      </trans-unit>
+      <trans-unit id="warehouse_incharge">
+        <source>गोदाम प्रभारी</source>
+      </trans-unit>
+      <trans-unit id="selfie">
+        <source>सेल्फी</source>
+      </trans-unit>
+      <trans-unit id="odo_meter">
+        <source>ोडो मीटर</source>
+      </trans-unit>
+      <trans-unit id="start_trip">
+        <source>स्टार्ट ट्रिप</source>
+      </trans-unit>
+      <trans-unit id="odo_meter_image">
+        <source>ओडीओ मीटर छवि</source>
+      </trans-unit>
+      <trans-unit id="add_stop">
+        <source>स्टॉप जोड़ें</source>
+      </trans-unit>
+      <trans-unit id="select_route">
+        <source>मार्ग चुनें</source>
+      </trans-unit>
+      <trans-unit id="select_vehicle">
+        <source>वाहन चुनें</source>
+      </trans-unit>
+      <trans-unit id="current_limit">
+        <source>करंट लिमिट</source>
+      </trans-unit>
+      <trans-unit id="qr_code_text">
+        <source>टैग नंबर</source>
+      </trans-unit>
+      <trans-unit id="take_a_photo">
+        <source>एक तस्वीर लें</source>
+      </trans-unit>
+      <trans-unit id="qr_code_manual_image_capture">
+        <source>तरय मैन्युअली</source>
+      </trans-unit>
+      <trans-unit id="manual_lifting">
+        <source>मैन्युअल लिफ्टिंग</source>
+      </trans-unit>
+      <trans-unit id="_900_lifting">
+        <source>900 लिफ्टिंग</source>
+      </trans-unit>
+      <trans-unit id="tanker_seal_qr_codes">
+        <source>टैंकर सील कर कोड्स</source>
+      </trans-unit>
+      <trans-unit id="remarks">
+        <source>रिमार्क्स</source>
+      </trans-unit>
+      <trans-unit id="analyzer_number">
+        <source>एनालाइजर नंबर</source>
+      </trans-unit>
+      <trans-unit id="okay">
+        <source>ोकय</source>
+      </trans-unit>
+      <trans-unit id="bulk_cooler_temperature">
+        <source>बल्क कूलर टेम्परेचर (°C)</source>
+      </trans-unit>
+      <trans-unit id="manual_temperature">
+        <source>मैन्युअल टेम्परेचर (°C)</source>
+      </trans-unit>
+      <trans-unit id="morning">
+        <source>मॉर्निंग</source>
+      </trans-unit>
+      <trans-unit id="evening">
+        <source>इवनिंग</source>
+      </trans-unit>
+      <trans-unit id="eve_mor">
+        <source>ईव + मोर</source>
+      </trans-unit>
+      <trans-unit id="mor_eve">
+        <source>मोर + ईव</source>
+      </trans-unit>
+      <trans-unit id="shift">
+        <source>शिफ्ट</source>
+      </trans-unit>
+      <trans-unit id="create_trip">
+        <source>क्रिएट ट्रिप</source>
+      </trans-unit>
+      <trans-unit id="end_trip">
+        <source>एन्ड ट्रिप</source>
+      </trans-unit>
+      <trans-unit id="media_viewer">
+        <source>मीडिया दर्शक</source>
+      </trans-unit>
+      <trans-unit id="repair">
+        <source>मरम्मत</source>
+      </trans-unit>
+      <trans-unit id="parts">
+        <source>पार्ट्स</source>
+      </trans-unit>
+      <trans-unit id="clear">
+        <source>क्लियर</source>
+      </trans-unit>
+      <trans-unit id="trip_sheet">
+        <source>ट्रिप शीट</source>
+      </trans-unit>
+      <trans-unit id="resend">
+        <source>रेसेंड</source>
+      </trans-unit>
+      <trans-unit id="trip_notify_title">
+        <source>यू हैवे ान नई ट्रिप</source>
+      </trans-unit>
+      <trans-unit id="arrived">
+        <source>अर्रिवेद</source>
+      </trans-unit>
+      <trans-unit id="departured">
+        <source>डिपार्टेड</source>
+      </trans-unit>
+      <trans-unit id="loaded">
+        <source>लोडेड</source>
+      </trans-unit>
+      <trans-unit id="un_loaded">
+        <source>उनलोडेड</source>
+      </trans-unit>
+      <trans-unit id="preferences">
+        <source>प्रैफरेंसेज</source>
+      </trans-unit>
+      <trans-unit id="notification_settings">
+        <source>नोटिफिकेशन सेटिंग्स</source>
+      </trans-unit>
+      <trans-unit id="delay">
+        <source>डिले</source>
+      </trans-unit>
+      <trans-unit id="early">
+        <source>अर्ली</source>
+      </trans-unit>
+      <trans-unit id="title_activity_settings">
+        <source>सेटिंग्स</source>
+      </trans-unit>
+      <trans-unit id="arrival_n_scheduled_actual">
+        <source>अर्रिवाल 
+ (सचेंडुलेड/एक्चुअल)</source>
+      </trans-unit>
+      <trans-unit id="departure_n_scheduled_actual">
+        <source>डिपार्चर 
+ (सचेंडुलेड/एक्चुअल)</source>
+      </trans-unit>
+      <trans-unit id="pref_header_notifications">
+        <source>नोटिफिकेशन्स</source>
+      </trans-unit>
+      <trans-unit id="pref_title_load_enabled">
+        <source>लोड इनेबल </source>
+      </trans-unit>
+      <trans-unit id="pref_title_new_message_notifications">
+        <source>नई मैसेज नोटिफिकेशन्स</source>
+      </trans-unit>
+      <trans-unit id="pref_title_ringtone">
+        <source>रिंगटोन</source>
+      </trans-unit>
+      <trans-unit id="pref_ringtone_silent">
+        <source>साइलेंट</source>
+      </trans-unit>
+      <trans-unit id="pref_title_vibrate">
+        <source>विबरते</source>
+      </trans-unit>
+      <trans-unit id="pref_notification_type_title">
+        <source>नोटिफिकेशन्स टाइप </source>
+      </trans-unit>
+      <trans-unit id="arrival">
+        <source>अर्रिवाल</source>
+      </trans-unit>
+      <trans-unit id="scheduled_departure">
+        <source>सचेंडुलेड डिपार्चर</source>
+      </trans-unit>
+      <trans-unit id="scheduled_arrival">
+        <source>सचेंडुलेड अर्रिवाल</source>
+      </trans-unit>
+      <trans-unit id="accept_this_trip">
+        <source>अरे यू सूरे वांट तो एक्सेप्ट थिस ट्रिप?</source>
+      </trans-unit>
+      <trans-unit id="reject_this_trip">
+        <source>अरे यू सूरे वांट तो रिजेक्ट थिस ट्रिप?</source>
+      </trans-unit>
+      <trans-unit id="arrived_status">
+        <source>अरे यू सूरे यू वांट तो अपडेट अर्रिवेद स्टेटस?</source>
+      </trans-unit>
+      <trans-unit id="departed_status">
+        <source>अरे यू सूरे यू वांट तो अपडेट डिपार्टेड स्टेटस?</source>
+      </trans-unit>
+      <trans-unit id="loaded_status">
+        <source>अरे यू सूरे यू वांट तो अपडेट लोडेड  स्टेटस?</source>
+      </trans-unit>
+      <trans-unit id="unloaded_status">
+        <source>अरे यू सूरे यू वांट तो अपडेट उनलोडेड स्टेटस?</source>
+      </trans-unit>
+      <trans-unit id="alert">
+        <source>अलर्ट</source>
+      </trans-unit>
+      <trans-unit id="trip_accepted">
+        <source>ट्रिप एक्सेप्टेड </source>
+      </trans-unit>
+      <trans-unit id="time_updated">
+        <source>टाइम अपडेटेड </source>
+      </trans-unit>
+      <trans-unit id="cancel">
+        <source>कैंसिल</source>
+      </trans-unit>
+      <trans-unit id="half_day">
+        <source>हाफ डे </source>
+      </trans-unit>
+      <trans-unit id="attendance_detail">
+        <source>अटेंडेंस डिटेल </source>
+      </trans-unit>
+      <trans-unit id="no_internet">
+        <source>नो इंटरनेट </source>
+      </trans-unit>
+      <trans-unit id="no_attendance_available">
+        <source>नो अटेंडेंस अवेलेबल </source>
+      </trans-unit>
+      <trans-unit id="last_30_days">
+        <source>लास्ट ३० डेज </source>
+      </trans-unit>
+      <trans-unit id="attendance_logs_last_30_days">
+        <source>अटेंडेंस लॉग्स (लास्ट ३० डेज) </source>
+      </trans-unit>
+      <trans-unit id="navigation_driver_app">
+        <source>नेविगेशन - ड्राइवर अप्प</source>
+        <note>Trip Navigation</note>
+      </trans-unit>
+      <trans-unit id="avoid_tolls">
+        <source>पथकर को टालना</source>
+      </trans-unit>
+      <trans-unit id="change_language">
+        <source>भाषा बदलें</source>
+      </trans-unit>
+      <trans-unit id="language_changed">
+        <source>भाषा बदल गई</source>
+      </trans-unit>
+      <trans-unit id="tolls_avoided">
+        <source>टोल बचना</source>
+      </trans-unit>
+      <trans-unit id="tolls__may_be_in_your_way">
+        <source>टोल आपके रास्ते में हो सकता है</source>
+      </trans-unit>
+      <trans-unit id="you_arrived_the_destination">
+        <source>आप गंतव्य पर पहुंच गए!</source>
+      </trans-unit>
+      <trans-unit id="google_trip_navigation">
+        <source>गूगल - नेविगेशन</source>
+      </trans-unit>
+      <trans-unit id="ktt_trip_navigation">
+        <source>KTT - नेविगेशन</source>
+      </trans-unit>
+      <trans-unit id="choose_navigation">
+        <source>नेविगेशन चुनें</source>
+      </trans-unit>
+      <trans-unit id="re_center">
+        <source>पुन: केंद्र</source>
+      </trans-unit>
+      <trans-unit id="wrong_way">
+        <source>गलत तरीका</source>
+      </trans-unit>
+      <trans-unit id="wrong_way_content">
+        <source>कृपया मानचित्र पर दिखाए गए मार्ग का अनुसरण करें। आप गलत दिशा में जा रहे हैं</source>
+      </trans-unit>
+      <trans-unit id="open_maps">
+        <source>गूगल मानचित्र खोलें</source>
+      </trans-unit>
+      <trans-unit id="route_error">
+        <source>रूट त्रुटि</source>
+      </trans-unit>
+      <trans-unit id="unable_to_create_route_error_message">
+        <source>मार्ग बनाने में असमर्थ। क्या आप गूगल मानचित्र के माध्यम से नेविगेट करना चाहते हैं?</source>
+      </trans-unit>
+      <trans-unit id="zone_list">
+        <source>जोन सूची</source>
+      </trans-unit>
+      <trans-unit id="zone">
+        <source>जोन</source>
+      </trans-unit>
+      <trans-unit id="zone_city">
+        <source>जोन शहर</source>
+      </trans-unit>
+      <trans-unit id="trip_zone_name">
+        <source>जोन का नाम</source>
+      </trans-unit>
+      <trans-unit id="trip_arrival">
+        <source>आगमन</source>
+      </trans-unit>
+      <trans-unit id="trip_departure">
+        <source>प्रस्थान</source>
+      </trans-unit>
+      <trans-unit id="show_zone_log">
+        <source>ज़ोन लॉग दिखाएँ</source>
+      </trans-unit>
+      <trans-unit id="hide_zone_log">
+        <source>ज़ोन लॉग छिपाएँ</source>
+      </trans-unit>
+      <trans-unit id="eta_approx">
+        <source>ETA लगभग</source>
+      </trans-unit>
+      <trans-unit id="meters">
+        <source>एम</source>
+      </trans-unit>
+      <trans-unit id="kilo_meter">
+        <source>किमी</source>
+      </trans-unit>
+      <trans-unit id="second">
+        <source>सेकंड</source>
+      </trans-unit>
+      <trans-unit id="minute">
+        <source>मिन</source>
+      </trans-unit>
+      <trans-unit id="hour">
+        <source>मानव संसाधन</source>
+      </trans-unit>
+      <trans-unit id="day">
+        <source>दिन</source>
+      </trans-unit>
+      <trans-unit id="loading_in_amp_out">
+        <source>लोडिंग - इन और आउट</source>
+      </trans-unit>
+      <trans-unit id="qr_code_validation">
+        <source>कृपया QRCode टेक्स्ट को स्कैन करें या मैन्युअल रूप से प्रविष्ट करें</source>
+      </trans-unit>
+      <trans-unit id="qr_code_image_validation">
+        <source>कृपया QR कोड छवि या पाठ को स्कैन या कैप्चर करें</source>
+      </trans-unit>
+      <trans-unit id="reason_validation">
+        <source>कृपया मैन्युअल कारण चुनें</source>
+      </trans-unit>
+      <trans-unit id="other_reason_validation">
+        <source>कृपया वैध मैन्युअल कारण दर्ज करें</source>
+      </trans-unit>
+      <trans-unit id="title_activity_media_view">
+        <source>मीडिया दृश्य</source>
+      </trans-unit>
+      <trans-unit id="downloads">
+        <source>डाउनलोड्स</source>
+      </trans-unit>
+      <trans-unit id="refresh">
+        <source>रीफ्रेश</source>
+      </trans-unit>
+      <trans-unit id="invoice_details">
+        <source>चालान विवरण</source>
+      </trans-unit>
+      <trans-unit id="vendors_detail">
+        <source>विक्रेताओं का विवरण</source>
+      </trans-unit>
+      <trans-unit id="unloaded_bags">
+        <source>अनलोडेड बैग</source>
+      </trans-unit>
+      <trans-unit id="loaded_bags">
+        <source>भरे हुए बैग</source>
+      </trans-unit>
+      <trans-unit id="title_activity_trip_navigation">
+        <source>यात्रा नेविगेशन</source>
+      </trans-unit>
+      <trans-unit id="add_image">
+        <source>छवि जोड़ें</source>
+      </trans-unit>
+      <trans-unit id="delivered_address">
+        <source>प्रेक्षित पता</source>
+      </trans-unit>
+      <trans-unit id="trip_details">
+        <source>यात्रा विवरण</source>
+      </trans-unit>
+      <trans-unit id="invoice_number">
+        <source>चालान संख्या</source>
+      </trans-unit>
+      <trans-unit id="progress">
+        <source>प्रगति</source>
+      </trans-unit>
+      <trans-unit id="week_off">
+        <source>साप्ताहिक अवकाश</source>
+      </trans-unit>
+      <trans-unit id="paid_day">
+        <source>वेतन दिवस</source>
+      </trans-unit>
+      <trans-unit id="available_paid_leave">
+        <source>उपलब्ध वेतन अवकाश</source>
+      </trans-unit>
+      <trans-unit id="available_week_off">
+        <source>उपलब्ध साप्ताहिक अवकाश</source>
+      </trans-unit>
+      <trans-unit id="back_button">
+        <source>वापस बटन</source>
+      </trans-unit>
+      <trans-unit id="return_materials">
+        <source>वापसी सामग्री</source>
+      </trans-unit>
+      <trans-unit id="pod">
+        <source>प्रूफ ऑफ डिलीवरी (POD)</source>
+      </trans-unit>
+      <trans-unit id="qty">
+        <source>मात्रा</source>
+      </trans-unit>
+      <trans-unit id="materials">
+        <source>सामग्री</source>
+      </trans-unit>
+      <trans-unit id="zone_radius">
+        <source>क्षेत्र त्रिज्या (मीटर में)</source>
+      </trans-unit>
+      <trans-unit id="bag_count">
+        <source>बैग की संख्या</source>
+      </trans-unit>
+      <trans-unit id="weight">
+        <source>वजन</source>
+      </trans-unit>
+      <trans-unit id="fetching_address">
+        <source>पता ला रहा है....</source>
+      </trans-unit>
+      <trans-unit id="get_zones">
+        <source>क्षेत्र प्राप्त करें</source>
+      </trans-unit>
+      <trans-unit id="customer_name">
+        <source>ग्राहक का नाम</source>
+      </trans-unit>
+      <trans-unit id="material_name">
+        <source>सामग्री का नाम</source>
+      </trans-unit>
+      <trans-unit id="remove_icon">
+        <source>आइकन हटाएं</source>
+      </trans-unit>
+      <trans-unit id="zone_remarks">
+        <source>क्षेत्र टिप्पणियाँ</source>
+      </trans-unit>
+      <trans-unit id="please_select_lifting_type">
+        <source>कृपया लिफ्टिंग प्रकार चुनें</source>
+      </trans-unit>
+      <trans-unit id="please_select_manual_lifting_type">
+        <source>कृपया मैन्युअल लिफ्टिंग का कारण चुनें</source>
+      </trans-unit>
+      <trans-unit id="please_type_remarks_for_manual">
+        <source>कृपया मैन्युअल लिफ्टिंग के लिए टिप्पणी लिखें</source>
+      </trans-unit>
+      <trans-unit id="please_select_analyzer_type_900_lifting">
+        <source>900 लिफ्टिंग के लिए विश्लेषक प्रकार चुनें</source>
+      </trans-unit>
+      <trans-unit id="please_type_analyzer_number">
+        <source>कृपया विश्लेषक नंबर दर्ज करें</source>
+      </trans-unit>
+      <trans-unit id="please_select_abc_analyzer_900_lifting">
+        <source>900 लिफ्टिंग के लिए ABC विश्लेषक प्रकार चुनें</source>
+      </trans-unit>
+      <trans-unit id="already_scanned_serial_number">
+        <source>टैग सीरियल नंबर पहले ही किसी अन्य डोर/वाल्व में स्कैन किया गया है। कृपया जांचें।</source>
+      </trans-unit>
+      <trans-unit id="turn_flash_on_off">
+        <source>फ्लैश चालू/बंद करें</source>
+      </trans-unit>
+      <trans-unit id="pdf_page_counter">
+        <source>%d / %d</source>
+      </trans-unit>
+      <trans-unit id="add_unload_location">
+        <source>अनलोड स्थान जोड़ें</source>
+      </trans-unit>
+      <trans-unit id="title_activity_pod_upload">
+        <source>पॉड अपलोड गतिविधि</source>
+      </trans-unit>
+      <trans-unit id="sign">
+        <source>हस्ताक्षर</source>
+      </trans-unit>
+      <trans-unit id="customer_signature">
+        <source>ग्राहक हस्ताक्षर</source>
+      </trans-unit>
+      <trans-unit id="card">
+        <source>कार्ड</source>
+      </trans-unit>
+      <trans-unit id="upi">
+        <source>यूपीआई</source>
+      </trans-unit>
+      <trans-unit id="doc">
+        <source>दस्तावेज़</source>
+      </trans-unit>
+      <trans-unit id="add_another">
+        <source>एक और जोड़ें</source>
+      </trans-unit>
+      <trans-unit id="lorry_receipt_lr">
+        <source>लारी रसीद (एलआर)</source>
+      </trans-unit>
+      <trans-unit id="proof_of_delivery_pod">
+        <source>डिलीवरी का प्रमाण (पीओडी)</source>
+      </trans-unit>
+      <trans-unit id="capture_image">
+        <source>छवि कैप्चर करें</source>
+      </trans-unit>
+      <trans-unit id="receipt">
+        <source>रसीद</source>
+      </trans-unit>
+      <trans-unit id="lr">
+        <source>एलआर</source>
+      </trans-unit>
+      <trans-unit id="tick_symbol_for_text">
+        <source>पीओडी ✔</source>
+      </trans-unit>
+      <trans-unit id="title_activity_image_slider_view">
+        <source>इमेज स्लाइडर व्यू एक्ट</source>
+      </trans-unit>
+      <trans-unit id="floor_no">
+        <source>मंज़िल संख्या</source>
+      </trans-unit>
+      <trans-unit id="actual_weight_kg">
+        <source>वास्तविक वजन (किलोग्राम)</source>
+      </trans-unit>
+      <trans-unit id="lr_number">
+        <source>एलआर नंबर</source>
+      </trans-unit>
+      <trans-unit id="tick_symbol">
+        <source>✔</source>
+      </trans-unit>
+      <trans-unit id="floor">
+        <source>मंज़िल</source>
+      </trans-unit>
+      <trans-unit id="floor_detials">
+        <source>मंज़िल विवरण</source>
+      </trans-unit>
+      <trans-unit id="divider">
+        <source>विभाजक</source>
+      </trans-unit>
+      <trans-unit id="charge_type">
+        <source>शुल्क प्रकार</source>
+      </trans-unit>
+      <trans-unit id="choose_category">
+        <source>श्रेणी चुनें</source>
+      </trans-unit>
+      <trans-unit id="loading_charge">
+        <source>लोडिंग शुल्क</source>
+      </trans-unit>
+      <trans-unit id="operating_expense">
+        <source>परिचालन खर्च</source>
+      </trans-unit>
+      <trans-unit id="head_load_details">
+        <source>सिर पर भार विवरण</source>
+      </trans-unit>
+      <trans-unit id="floor_details">
+        <source>मंज़िल विवरण</source>
+      </trans-unit>
+      <trans-unit id="unloading_charge">
+        <source>अनलोडिंग शुल्क</source>
+      </trans-unit>
+      <trans-unit id="head_load_weight_kg">
+        <source>सिर पर भार वजन (किलोग्राम)</source>
+      </trans-unit>
+      <trans-unit id="select_cancel_reason">
+        <source>रद्द करने का कारण चुनें</source>
+      </trans-unit>
+      <trans-unit id="are_you_sure_want_to_cancel_this_zone">
+        <source>क्या आप वाकई इस ज़ोन को रद्द करना चाहते हैं?</source>
+      </trans-unit>
+      <trans-unit id="submit">
+        <source>जमा करें</source>
+      </trans-unit>
+      <trans-unit id="cancel_zone">
+        <source>ज़ोन रद्द करें</source>
+      </trans-unit>
+      <trans-unit id="please_select_the_cancellation_reason">
+        <source>कृपया इस ज़ोन को रद्द करने का कारण चुनें</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

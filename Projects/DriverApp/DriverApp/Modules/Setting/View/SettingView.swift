@@ -68,7 +68,7 @@ struct SettingView: View {
                 Button {
                     coordinator.push(.setting(.leaveRequest))
                 } label: {
-                    buttonContent(systemName: "pencil.and.list.clipboard", text: "Leave Request")
+                    buttonContent(systemName: "pencil.and.list.clipboard", text: LocalizedStringResource("leave_request"))
                         
                 }
                 .listRowSeparator(.hidden)
@@ -78,7 +78,7 @@ struct SettingView: View {
                 Button {
                     coordinator.push(.setting(.leaveHistory))
                 } label: {
-                    buttonContent(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90", text: "Leave History")
+                    buttonContent(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90", text: LocalizedStringResource("leave_history_list"))
                         
                 }
                 .padding(.vertical, 10)
@@ -88,7 +88,7 @@ struct SettingView: View {
                 Button {
                     coordinator.push(.setting(.tripSettlement))
                 } label: {
-                    buttonContent(systemName: "dollarsign.circle.fill", text: "Trip Settlement")
+                    buttonContent(systemName: "dollarsign.circle.fill", text: LocalizedStringResource("trip_settlement"))
                         
                 }
                 .padding(.vertical, 10)
@@ -98,7 +98,7 @@ struct SettingView: View {
                 Button {
                     coordinator.push(.setting(.documents))
                 } label: {
-                    buttonContent(systemName: "folder", text: "Documents")
+                    buttonContent(systemName: "folder", text: LocalizedStringResource("documents"))
                         
                 }
                 .padding(.vertical, 10)
@@ -108,7 +108,7 @@ struct SettingView: View {
                 Button {
                     coordinator.push(.setting(.attendance(.attendance)))
                 } label: {
-                    buttonContent(systemName: "person.crop.circle.badge.checkmark.fill", text: "Attendance")
+                    buttonContent(systemName: "person.crop.circle.badge.checkmark.fill", text: LocalizedStringResource("mattendance"))
                 }
                 .padding(.vertical, 10)
                 .listRowSeparator(.hidden)
@@ -119,13 +119,13 @@ struct SettingView: View {
                     Button {
                         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
                     } label: {
-                        buttonContent(systemName: "bell.fill", text: "Notifications")
+                        buttonContent(systemName: "bell.fill", text: LocalizedStringResource("notifications"))
                     }
                     .padding(.vertical, 10)
                     
                     
                 } header: {
-                    Text("Notfications")
+                    Text(LocalizedStringResource("notifications"))
                         .font(Font.custom("ArialRoundedMTBold", size: 15))
                 }
                 
@@ -135,7 +135,7 @@ struct SettingView: View {
                     Button {
                         coordinator.push(.setting(.languages))
                     } label: {
-                        buttonContent(systemName: "globe", text: "Languages")
+                        buttonContent(systemName: "globe", text: LocalizedStringResource("languages"))
                     }
                     .padding(.vertical, 10)
                     .listRowSeparator(.hidden)
@@ -144,7 +144,7 @@ struct SettingView: View {
                         openURL(URL(string: "https://www.apple.com/privacy/")!)
                         
                     } label: {
-                        buttonContent(systemName: "shield", text: "Privacy Policy")
+                        buttonContent(systemName: "shield", text: LocalizedStringResource("privacy_policy"))
                     }
                     .padding(.vertical, 10)
                     .listRowSeparator(.hidden)
@@ -153,13 +153,13 @@ struct SettingView: View {
                     Button {
                         coordinator.reset()
                     } label: {
-                        buttonContent(systemName: "rectangle.portrait.and.arrow.right", text: "Logout")
+                        buttonContent(systemName: "rectangle.portrait.and.arrow.right", text: LocalizedStringResource("logout"))
                     }
                     .padding(.vertical, 10)
                     
                     
                 } header: {
-                    Text("Settings")
+                    Text(LocalizedStringResource("settings"))
                         .font(Font.custom("ArialRoundedMTBold", size: 15))
                 } footer: {
                     Text("App Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
@@ -177,9 +177,9 @@ struct SettingView: View {
     }
     
     @ViewBuilder
-    private func buttonContent(systemName: String, text: String) -> some View {
+    private func buttonContent(systemName: String, text: LocalizedStringResource) -> some View {
             
-        if text == "Logout" {
+        if text == LocalizedStringResource("logout") {
             
             HStack(spacing: 15) {
                 
