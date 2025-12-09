@@ -16,34 +16,32 @@ struct OperatingExpensesView: View {
     
     let zoneId: String
     let opExpenses: Trip.OpExpenses
-    
+
     
     var body: some View {
         
         VStack(spacing: 10) {
         
             if opExpenses.floor {
-                CustomTextField(icon: "numbers.rectangle.fill", title: "Floor No.", text: $vm.floorNo)
-                    .formatDouble($vm.floorNo)
-                    
+                CustomTextField(icon: "numbers.rectangle.fill", title: "Floor No.", text: $vm.floorNo, keyboardType: .numberPad)
             }
             
             if opExpenses.floor || opExpenses.headLoadingCharges {
                 
-                CustomTextField(icon: "scalemass.fill", title: "Actual weight (Kg)", text: $vm.actualWeight)
+                CustomTextField(icon: "scalemass.fill", title: "Actual weight (Kg)", text: $vm.actualWeight, keyboardType: .decimalPad)
                     .formatDouble($vm.actualWeight)
             }
             
             if opExpenses.loadingCharges {
                 
-                CustomTextField(icon: "banknote.fill", title: "Loading Charge", text: $vm.loadingCharges)
+                CustomTextField(icon: "banknote.fill", title: "Loading Charge", text: $vm.loadingCharges, keyboardType: .decimalPad)
                     .formatDouble($vm.loadingCharges)
                 
             }
             
             if opExpenses.unloadingCharges {
                 
-                CustomTextField(icon: "banknote.fill", title: "Unloading Charge", text: $vm.unloadingCharges)
+                CustomTextField(icon: "banknote.fill", title: "Unloading Charge", text: $vm.unloadingCharges, keyboardType: .decimalPad)
                     .formatDouble($vm.unloadingCharges)
             }
             
@@ -100,12 +98,8 @@ struct OperatingExpensesView: View {
                         vm.success = try await apiService.uploadDocuments(docType: .op(floorNo: vm.floorNo, unloadingCharge: vm.unloadingCharges, loadingCharge: vm.loadingCharges, headChargeAvailable: vm.selection.rawValue, actualWeight: vm.actualWeight), zoneId: zoneId)
                         vm.isLoading = false
                         
-                        try await apiService.getDriverStatus(cachePolicy: .reloadIgnoringCacheData)
-                        try await apiService.getTripsData(cachePolicy: .reloadIgnoringCacheData)
-                        
                     } catch {
                         vm.isLoading = false
-                        vm.failed = true
                     }
                 }
                 
@@ -127,7 +121,7 @@ struct OperatingExpensesView: View {
             
         }
 
-        .successAlert(success: $vm.success, failed: $vm.failed, message: "POD uploaded successfully", coordinator: coordinator)
+        .successAlert(success: $vm.success, message: "POD uploaded successfully", coordinator: coordinator)
 
     }
     
@@ -153,7 +147,6 @@ fileprivate class OperatingExpensesViewModel: ObservableObject {
     
     @Published var success: Bool = false
     @Published var isLoading: Bool = false
-    @Published var failed: Bool = false
     
 }
 

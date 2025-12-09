@@ -10,31 +10,14 @@ import MapKit
 
 // selection fuel, toll and poi has to retain value accross views
 
-
-struct POI: Hashable {
-    let name: String
-    let lat, lng: Double
-    let fullName, city, phone: String
-}
-
-
-struct Fuel: Hashable, Identifiable {
-    let id = UUID()
-    let name, locationName, contactName, contactPhone: String
-    let lat, lng: Double
-    let color: Int
-}
-
 class POIViewModel: ObservableObject {
     
     @Published var fuelSelected: Bool = false
     @Published var tollSelected: Bool = false
     @Published var poiSelected: Bool = false
     
-    @Published var poiList: [POI] = []
-    @Published var fuelList: [Fuel] = []
-    
-    @Published var selectedSnippet: Fuel?
+    @Published var poiList: [APIService.PoiListModel.Result] = []
+    @Published var fuelList: [APIService.FuelListModel.Results] = []
     
     // user location
     @Published var userLatitude: Double = 0
@@ -51,52 +34,19 @@ class POIViewModel: ObservableObject {
 
         
         do {
-            try await apiService.getFuelList()
-            try await apiService.getPoiZones()
-            try await apiService.getTollList()
+            poiList = try await apiService.getPoiZones()
+            fuelList = try await apiService.getFuelList()
         } catch {
             
         }
         
-        parseFuelList(apiService: apiService)
-        parsePoiList(apiService: apiService)
+        filterFuelList()
         
     }
     
-    @MainActor
-    func parsePoiList(apiService: APIService) {
-
-        for data in apiService.poiListAttributes.result {
-            poiList.append(POI(
-                name: data.name ?? "",
-                lat: data.geojson.point[0].lat ?? 0,
-                lng: data.geojson.point[0].lng ?? 0,
-                fullName: data.fullName ?? "",
-                city: data.city ?? "",
-                phone: data.phone ?? ""
-            ))
-        }
+    func filterFuelList() {
         
-    }
-    
-    @MainActor
-    func parseFuelList(apiService: APIService) {
-
-        for data in apiService.fuelListAttributes.result {
-            
-            if userLocation.distance(from: CLLocation(latitude: data.lat ?? 0, longitude: data.lng ?? 0)) < 200000 {
-                
-                fuelList.append(Fuel(
-                    name: data.roname ?? "",
-                    locationName: data.lo ?? "",
-                    contactName: data.cn ?? "",
-                    contactPhone: data.cp ?? "",
-                    lat: data.lat ?? 0,
-                    lng: data.lng ?? 0,
-                    color: data.co ?? 0
-                ))
-            }
-        }
+        fuelList = fuelList.filter( { userLocation.distance(from: CLLocation(latitude: $0.lat ?? 0, longitude: $0.lng ?? 0)) < 200000 } )
     }
     
 }

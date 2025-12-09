@@ -27,13 +27,15 @@ enum HomeTab: Hashable, CaseIterable {
 
 enum TripRoute: Hashable {
     case tripExpenses(TripExpensesRoute)
-    case tripAdvances(advanceData: [APIService.TripsDataAttributes.TripAdvance])
+    case tripAdvances(advanceData: [APIService.TripsDataModel.TripAdvance])
 }
 
+// start and end date for keeping track
 enum TripExpensesRoute: Hashable {
-    case tripExpenses(tripId: Int, assetId: Int)
-    case addTripsExpenses(isEditing: Bool, expenseId: Int? = nil, assetId: Int, tripId: Int)
+    case tripExpenses(tripId: Int, assetId: Int, startDate: String, endDate: String)
+    case addTripsExpenses(isEditing: Bool, expenseId: Int? = nil, tripId: Int, assetId: Int, startDate: String, endDate: String)
 }
+
 
 enum DashboardRoute: Hashable {
     static func == (lhs: DashboardRoute, rhs: DashboardRoute) -> Bool {
@@ -41,11 +43,11 @@ enum DashboardRoute: Hashable {
     }
     
     // replacing bottom sheet
-    case zoneInfo(location: String, date: String, lrNumber: String, loadingCharges: String, unloadingCharges: String, lrImage: [APIService.DriverStatusAttributes.ImageShare], podImage: [APIService.DriverStatusAttributes.ImageShare], docImage: [APIService.DriverStatusAttributes.ImageShare])
+    case zoneInfo(location: String, date: String, lrNumber: String, loadingCharges: String, unloadingCharges: String, lrImage: [APIService.DriverStatusModel.ImageShare], podImage: [APIService.DriverStatusModel.ImageShare], docImage: [APIService.DriverStatusModel.ImageShare])
     
-    case lrUpload(id: String, lr: APIService.DriverStatusAttributes.ShareImages)
-    case podUpload(id: String, pod: APIService.DriverStatusAttributes.ShareImages)
-    case docUpload(id: String, doc: APIService.DriverStatusAttributes.ShareImages)
+    case lrUpload(id: String, lr: APIService.DriverStatusModel.ShareImages)
+    case podUpload(id: String, pod: APIService.DriverStatusModel.ShareImages)
+    case docUpload(id: String, doc: [APIService.DriverStatusModel.ImageShare])
     case operationgExpenses(id: String, opExpenses: Trip.OpExpenses)
 }
 
@@ -65,7 +67,7 @@ enum SettingRoute: Hashable {
 enum AttendanceRoute: Hashable {
     case attendance
     case attendanceLogs
-    case attendanceDetail(data: APIService.DriverCheckIn.Results)
+    case attendanceDetail(data: APIService.DriverCheckInModel.Results)
 }
 
 enum MiscellaneousRoute: Hashable, Equatable {

@@ -1323,9 +1323,6 @@
     "Cash" : {
 
     },
-    "Certificate of Registration" : {
-
-    },
     "challan" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1716,6 +1713,9 @@
           }
         }
       }
+    },
+    "confirm" : {
+
     },
     "confirm_logout" : {
       "extractionState" : "manual",
@@ -2534,6 +2534,9 @@
     "Documents (Doc)" : {
 
     },
+    "done" : {
+
+    },
     "downloads" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2793,9 +2796,6 @@
         }
       }
     },
-    "END" : {
-
-    },
     "end_odo" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3049,9 +3049,6 @@
         }
       }
     },
-    "Failed" : {
-
-    },
     "fetching_address" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3074,9 +3071,6 @@
           }
         }
       }
-    },
-    "Fitness Certificate" : {
-
     },
     "floor" : {
       "extractionState" : "manual",
@@ -3673,9 +3667,6 @@
           }
         }
       }
-    },
-    "Insurance" : {
-
     },
     "Invalid Mobile Number" : {
 
@@ -4289,9 +4280,6 @@
           }
         }
       }
-    },
-    "Location" : {
-
     },
     "location_access_consent" : {
       "extractionState" : "manual",
@@ -5274,6 +5262,9 @@
         }
       }
     },
+    "No Data" : {
+
+    },
     "no_attendance_available" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -6228,9 +6219,6 @@
 
     },
     "Please Enter valid Mobile Number" : {
-
-    },
-    "Please try again!" : {
 
     },
     "please_select_abc_analyzer_900_lifting" : {
@@ -7369,6 +7357,9 @@
         }
       }
     },
+    "Routes" : {
+
+    },
     "rs" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7557,9 +7548,6 @@
       }
     },
     "Select Document Type" : {
-
-    },
-    "Select Doument Type" : {
 
     },
     "Select Reason" : {
@@ -8277,9 +8265,6 @@
           }
         }
       }
-    },
-    "START" : {
-
     },
     "start_odo" : {
       "extractionState" : "manual",

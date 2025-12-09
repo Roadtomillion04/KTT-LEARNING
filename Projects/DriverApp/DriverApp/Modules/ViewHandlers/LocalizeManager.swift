@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 class LanguageManager: ObservableObject {
+    
     @Published var selectedLanguage: Locale = Locale.current {
         didSet {
             UserDefaults.standard.set([selectedLanguage.identifier], forKey: "AppleLanguages")

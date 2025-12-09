@@ -10,7 +10,7 @@ import SwiftUI
 import MapKit
 
 
-struct Trip: Identifiable, Equatable {
+struct Trip: Identifiable, Equatable, Hashable {
     
     static func == (lhs: Trip, rhs: Trip) -> Bool {
         return true
@@ -48,9 +48,9 @@ struct Trip: Identifiable, Equatable {
     
     let opExpenses: OpExpenses
     
-    let lr: APIService.DriverStatusAttributes.ShareImages
-    let pod: APIService.DriverStatusAttributes.ShareImages
-    let docs: APIService.DriverStatusAttributes.ShareImages
+    let lr: APIService.DriverStatusModel.ShareImages
+    let pod: APIService.DriverStatusModel.ShareImages
+    let docs: [APIService.DriverStatusModel.ImageShare]
     
 }
 
@@ -97,63 +97,82 @@ final class DashboardViewModel: ObservableObject {
     @Published var collapsed: Bool = true
     @Published var cancelReason: String?
     @Published var showCancelAlert: Bool = false
-    
     @Published var selectedTrip: Trip?
     
+    @Published var tripCancelReason: APIService.DeliveryCancelReasonsModel = .init()
+    
+    @Published var sceneEntered: Bool = false
+    @Published var isLoading: Bool = false
+    
     @MainActor
-    func onAppear(apiService: APIService, cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad) async {
+    func onAppear(apiService: APIService) async {
+        isLoading = true
         
         do {
-            try await apiService.getDriverStatus(cachePolicy: cachePolicy)
-            try await apiService.getDeliveryCancellationReasons()
+            try await apiService.getDriverStatus()
+            tripCancelReason = try await apiService.getDeliveryCancellationReasons()
+        } catch {
+            
+        }
+        
+        isLoading = false
+        parseData(apiService: apiService)
+    }
+    
+    @MainActor
+    func onReload(apiService: APIService) async {
+        
+        do {
+            try await apiService.getDriverStatus()
         } catch {
             
         }
         
         parseData(apiService: apiService)
-        
     }
     
     @MainActor
     func parseData(apiService: APIService) {
         
-        if trips.isEmpty {
+//        if trips.isEmpty {
+        
+            trips.removeAll()
             
-            for data in apiService.driverStatusAttributes.trip.routeData.route.allZones {
+            for data in apiService.driverStatusModel.trip?.routeData?.route.allZones ?? [] {
                 
                 trips.append(
                     Trip(
                         id: data.id ?? "",
                         locationName: data.name ?? "",
-                        statusCustom: apiService.driverStatusAttributes.trip.statusCustom ?? "",
+                        statusCustom: apiService.driverStatusModel.trip?.statusCustom ?? "",
                         zoneSeq: data.zoneSeq ?? -1,
                         inTime: data.inTime ?? "",
                         outTime: data.outTime ?? "",
                         
                         // only the first point is enough
-                        lat: data.geojson.point[0].lat ?? 0,
-                        lon: data.geojson.point[0].lng ?? 0,
+                        lat: data.geojson?.point.first?.lat ?? 0,
+                        lon: data.geojson?.point.first?.lng ?? 0,
                         
-                        lrShow: data.documentFlags.lr ?? false,
-                        podShow: data.documentFlags.pod ?? false,
-                        docShow: data.documentFlags.docs ?? false,
+                        lrShow: data.documentFlags?.lr ?? false,
+                        podShow: data.documentFlags?.pod ?? false,
+                        docShow: data.documentFlags?.docs ?? false,
                         
                         opExpenses: Trip.OpExpenses(
-                            floor: data.documentFlags.floor ?? false,
-                            headLoadingCharges: data.documentFlags.headLoadCharges ?? false,
-                            loadingCharges: data.documentFlags.loadingCharges ?? false,
-                            unloadingCharges: data.documentFlags.unloadingCharges ?? false,
-                            loadingCharge: data.opDetails.loadingCharge ?? "",
-                            unloadingCharge: data.opDetails.unloadingCharge ?? "",
-                            headChargeAvailable: data.opDetails.headChargeAvailable ?? ""
+                            floor: data.documentFlags?.floor ?? false,
+                            headLoadingCharges: data.documentFlags?.headLoadCharges ?? false,
+                            loadingCharges: data.documentFlags?.loadingCharges ?? false,
+                            unloadingCharges: data.documentFlags?.unloadingCharges ?? false,
+                            loadingCharge: data.opDetails?.loadingCharge ?? "",
+                            unloadingCharge: data.opDetails?.unloadingCharge ?? "",
+                            headChargeAvailable: data.opDetails?.headChargeAvailable ?? ""
                         ),
                         
-                        lr: data.details.lr,
-                        pod: data.details.pod,
-                        docs: data.details.doc
+                        lr: data.details?.lr ?? APIService.DriverStatusModel.ShareImages(),
+                        pod: data.details?.pod ?? APIService.DriverStatusModel.ShareImages(),
+                        docs: data.details?.docs ?? []
                     ))
             }
-        }
+//        }
     }
     
     
@@ -196,7 +215,7 @@ final class DashboardViewModel: ObservableObject {
         
     }
  
-    func totalAdvances(_ tripAdvances: [APIService.TripsDataAttributes.TripAdvance]) -> String {
+    func totalAdvances(_ tripAdvances: [APIService.TripsDataModel.TripAdvance]) -> String {
     
             var total: Double = 0
     
@@ -207,7 +226,7 @@ final class DashboardViewModel: ObservableObject {
     
         }
     
-    func totalExpenses(_ tripExpenses: [APIService.TripsDataAttributes.TripExpense]) -> String {
+    func totalExpenses(_ tripExpenses: [APIService.TripsDataModel.TripExpense]) -> String {
 
         var total: Double = 0
         
@@ -218,3 +237,4 @@ final class DashboardViewModel: ObservableObject {
     }
     
 }
+

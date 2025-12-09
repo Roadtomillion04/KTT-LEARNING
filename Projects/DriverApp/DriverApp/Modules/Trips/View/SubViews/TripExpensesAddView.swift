@@ -16,9 +16,11 @@ struct AddTripExpensesView: View {
     @EnvironmentObject private var languageManager: LanguageManager
     
     let isEditing: Bool
-    let assetId: Int
     let tripId: Int
+    let assetId: Int
     let expenseId: Int
+    let startDate: String
+    let endDate: String
     
     var body: some View {
         
@@ -26,7 +28,8 @@ struct AddTripExpensesView: View {
             
             ScrollView {
                 
-                Label(apiService.driverStatusAttributes.trip.lplate ?? "", systemImage: "truck.box.fill")
+                Label(apiService.driverStatusModel.trip?.lplate ?? "", systemImage: "truck.box.fill")
+                    .font(Font.custom("Monaco", size: 14))
                     .padding()
                     .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray6)))
                 
@@ -36,6 +39,7 @@ struct AddTripExpensesView: View {
                         .foregroundColor(.gray)
                     
                     Text(LocalizedStringResource("select_type"))
+                        .font(Font.custom("Monaco", size: 13))
                         .foregroundStyle(Color(.systemGray))
                     
                     Spacer()
@@ -51,6 +55,7 @@ struct AddTripExpensesView: View {
                             
                             ForEach(vm.getTypesinTamil(), id: \.self) { types in
                                 Text(types)
+                                    .font(Font.custom("Monaco", size: 12.5))
                                     .tag(types)
                                 
                             }
@@ -63,12 +68,10 @@ struct AddTripExpensesView: View {
                     
                     Picker("", selection: $vm.zoneType) {
                         
-                        Text("None") // None option
-                            .tag(nil as String?)
-                        
-                        ForEach(apiService.expenseTypesAttributes.results, id: \.self) { types in
+                        ForEach(vm.expenseZoneTypes, id: \.self) { types in
                             Text(types.text ?? "")
-                                .tag(types.text)
+                                .font(Font.custom("Monaco", size: 12.5))
+                                .tag(types.text ?? "")
                         }
                         
                     }
@@ -90,25 +93,43 @@ struct AddTripExpensesView: View {
                     DatePicker("Date", selection: $vm.date, displayedComponents: [.date, .hourAndMinute])
                         .labelsHidden()
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        
                 }
                 .padding()
                 .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray6)))
                 
                 CustomTextField(icon: "building.2", title: "Location", text: $vm.location)
                 
-                CustomTextField(icon: "indianrupeesign.circle", title: "Cost/Ltr", text: $vm.costPerLiter, show: vm.zoneType == "Fuel" ? true : false)
+                CustomTextField(icon: "indianrupeesign.circle", title: "Cost/Ltr", text: $vm.costPerLiter, show: vm.zoneType == "Fuel" ? true : false, keyboardType: .decimalPad)
+                    .formatDouble($vm.costPerLiter)
+                
+                    .onChange(of: vm.costPerLiter) { old, new in
+                        if vm.liters != "" {
+                            vm.amount = String((Double(new) ?? 0) * (Double(vm.liters) ?? 0))
+                        }
+                    }
                 
                 CustomTextField(icon: "receipt", title: "Bill No", text: $vm.billNo, show: vm.zoneType == "Fuel" ? true : false)
                 
-                CustomTextField(icon: "fuelpump", title: "Litres", text: $vm.liters, show: vm.zoneType == "Fuel" || vm.zoneType == "Adblue" ? true : false)
+                CustomTextField(icon: "fuelpump", title: "Litres", text: $vm.liters, show: vm.zoneType == "Fuel" || vm.zoneType == "Adblue" ? true : false, keyboardType: .decimalPad)
+                    .formatDouble($vm.liters)
                 
-                CustomTextField(icon: "gauge", title: "Odo", text: $vm.odo, show: vm.zoneType == "Fuel" || vm.zoneType == "Adblue" ? true : false)
+                    .onChange(of: vm.liters) { old, new in
+                        if vm.costPerLiter != "" {
+                            vm.amount = String((Double(new) ?? 0) * (Double(vm.costPerLiter) ?? 0))
+                        }
+                    }
+                
+                CustomTextField(icon: "gauge", title: "Odo", text: $vm.odo, show: vm.zoneType == "Fuel" || vm.zoneType == "Adblue" ? true : false, keyboardType: .decimalPad)
+                    .formatDouble($vm.odo)
                 
                 
                 CustomTextField(icon: "car.rear.waves.up.fill", title: "Select Toll", text: $vm.toll, show: vm.zoneType == "Toll" ? true : false)
                 
                 
-                CustomTextField(icon: "banknote", title: "Amount", text: $vm.amount)
+                CustomTextField(icon: "banknote", title: "Amount", text: $vm.amount, keyboardType: .decimalPad)
+                    .formatDouble($vm.amount)
+                
                 
                 // payment mode Picker
                 HStack(alignment: .center, spacing: 10) {
@@ -118,6 +139,7 @@ struct AddTripExpensesView: View {
                         .font(.subheadline)
                     
                     Text("Payment Mode")
+                        .font(Font.custom("Monaco", size: 12.5))
                         .foregroundStyle(Color(.systemGray))
                     
                     Spacer()
@@ -126,6 +148,7 @@ struct AddTripExpensesView: View {
                         
                         ForEach(AddTripExpensesViewModel.PaymentMode.allCases) { type in
                             Text("\(type.rawValue)")
+                                .font(Font.custom("Monaco", size: 12.5))
                                 .tag(type)
                             
                         }
@@ -153,11 +176,10 @@ struct AddTripExpensesView: View {
                                     .overlay {
                                         
                                         Image(systemName: "xmark.circle.fill")
-                                            .resizable()
-                                            .frame(width: 32, height: 32)
+                                            .font(.headline)
                                             .background(Circle().fill(.white))
                                             .foregroundStyle(.red)
-                                            .offset(x: 42, y: -42)
+                                            .offset(x: 35, y: -35)
                                         
                                             .onTapGesture {
                                                 
@@ -190,10 +212,10 @@ struct AddTripExpensesView: View {
                     HStack {
                         
                         Image(systemName: "camera.fill")
-                            .font(.title)
+                            .font(.headline)
                         
                         Text(LocalizedStringResource("upload"))
-                            .font(Font.custom("ArialRoundedMTBold", size: 20))
+                            .font(Font.custom("ArialRoundedMTBold", size: 15))
                         
                     }
                     .frame(maxWidth: .infinity)
@@ -216,29 +238,34 @@ struct AddTripExpensesView: View {
             .onAppear {
                 vm.checkCapturedImage()
                 
-                vm.assetId = "\(assetId)"
+                vm.expenseId = "\(expenseId)"
                 
                 vm.tripId = "\(tripId)"
                 
-                vm.expenseId = "\(expenseId)"
-            }
-            
-            // onAppear calls before tripExpenseAttributes set up, onChange works
-            .onChange(of: apiService.tripExpenseAttributes.result) { old, new in
-                vm.getData(new)
+                vm.assetId = "\(assetId)"
+                
+                vm.isEditing = isEditing
+                
+                vm.startDate = startDate
+                vm.endDate = endDate
+                
+                print("add view appeared")
+                print(expenseId, tripId, assetId, isEditing)
                 
             }
-            
+           
+            .task {
+                if !vm.sceneEntered {
+                    await vm.onAppear(apiService)
+                    vm.sceneEntered = true // only ffresets on pop/back
+                }
+            }
             
             Button {
                 
-                if isEditing {
+                Task {
                     
-                    vm.putData(apiService)
-                    
-                } else {
-                    
-                    vm.postData(apiService)
+                    await vm.saveAction(apiService)
                 }
                 
             } label: {
@@ -252,7 +279,20 @@ struct AddTripExpensesView: View {
         
         .loadingScreen(isLoading: vm.isLoading)
         
-        .successAlert(success: $vm.success, failed: $vm.failed, message: "Expense saved successfully", coordinator: coordinator)
+        .successAlert(success: $vm.success, message: "Expense saved successfully", coordinator: coordinator)
+        
+        .toast(message: $vm.toastMessage)
+        
+        .toolbar {
+            
+            ToolbarItem(placement: .keyboard) {
+                    
+                Button("done") {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
+            }
+        }
+
     }
     
 }
@@ -261,7 +301,7 @@ struct AddTripExpensesView: View {
 fileprivate class AddTripExpensesViewModel: ObservableObject {
     
     @Published var vehicleNumber = ""
-    @Published var zoneType: String?
+    @Published var zoneType: String = ""
     @Published var date = Date()
     @Published var location = ""
     @Published var costPerLiter = ""
@@ -278,11 +318,15 @@ fileprivate class AddTripExpensesViewModel: ObservableObject {
     
     @Published var isLoading: Bool = false
     @Published var success: Bool = false
-    @Published var failed: Bool = false
     
     var assetId: String = ""
     var tripId: String = ""
     var expenseId: String = ""
+    var isEditing: Bool = false
+    var startDate: String = ""
+    var endDate: String = ""
+    
+    @Published var expenseZoneTypes: [APIService.ExpenseZoneTypesModel.Results] = []
     
     enum PaymentMode: String, CaseIterable, Identifiable {
         case cash = "Cash"
@@ -292,80 +336,140 @@ fileprivate class AddTripExpensesViewModel: ObservableObject {
     
     @Published var paymentMode: String = "Cash"
     
-    func getData(_ expenseData: APIService.TripExpense.Result) {
-        
-        zoneType = expenseData.type ?? ""
-        costPerLiter = expenseData.details.costPerLiter ?? ""
-        billNo = expenseData.details.billNumber ?? ""
-        odo = expenseData.details.odo ?? ""
-        liters = expenseData.details.liters ?? ""
-        
-        location = expenseData.location.name ?? ""
-        amount = expenseData.amount ?? ""
-        comments = expenseData.comments ?? ""
-        
-        imageArray = expenseData.images
-        
+    @Published var sceneEntered: Bool = false
+    
+    enum FieldValidation: String {
+        case location = "Location Mandatory"
+        case amount = "Amount Mandatory"
     }
+    
+    @Published var toastMessage: String?
+    
+    
+    func onAppear(_ apiService: APIService) async {
         
-    func postData(_ apiService: APIService) {
+        var expenseData: APIService.TripExpenseEditModel.Result?
         
-        Task {
-            
-            do {
-                isLoading = true
+        do {
+            if isEditing {
+                expenseData = try await apiService.getTripExpense(expenseId)
                 
-                try await apiService.postTripExpense(
-                    assetId: assetId,
-                    tripId: tripId,
-                    paymentMode: paymentMode,
-                    date: date.toString(format: "dd-MM-yyyy HH:mm:a"),
-                    type: zoneType ?? "",
-                    location: location,
-                    details: #"{ "billNumber": "\#(billNo)", "costPerLiter": "\#(costPerLiter)", "liters": "\#(liters)", "odo": "\#(odo)" }"#,
-                    amount: amount,
-                    comments: comments,
-                    images: imageArray
-                )
-                
-                try await apiService.getTripsData(cachePolicy: .reloadIgnoringLocalCacheData)
-                
-                isLoading = false
-                success = true
-                
-            } catch {
-                isLoading = false
-                failed = true
+                await parseData(expenseData!, apiService)
             }
+            
+            expenseZoneTypes = try await apiService.getTripExpenseZoneTypes()
+            
+            // expenseType api has to finish first
+            if !isEditing {
+                zoneType = expenseZoneTypes.first?.text ?? ""
+            }
+            
+        } catch {
             
         }
         
     }
     
-    func putData(_ apiService: APIService) {
+    func parseData(_ expenseData: APIService.TripExpenseEditModel.Result, _ apiService: APIService) async {
         
-        Task {
+        zoneType = expenseData.type ?? ""
+        costPerLiter = expenseData.details?.costPerLiter ?? ""
+        billNo = expenseData.details?.billNumber ?? ""
+        odo = expenseData.details?.odo ?? ""
+        liters = expenseData.details?.liters ?? ""
+        
+        location = expenseData.location?.name ?? ""
+        amount = expenseData.amount ?? ""
+        comments = expenseData.comments ?? ""
+        
+        
+        for imageUrl in expenseData.images {
+            imageArray.append( await apiService.downloadImage(urlString: imageUrl) )
+        }
+    }
+    
+    func saveAction(_ apiService: APIService) async {
+        
+        if location.isEmpty {
+            toastMessage = FieldValidation.location.rawValue
+            return
+        }
+        
+        if amount.isEmpty {
+            toastMessage = FieldValidation.amount.rawValue
+            return
+        }
+        
+        if isEditing {
+        
+            await putData(apiService)
             
-            do {
-                                
-                try await apiService.putTripExpense(
-                    assetId: assetId,
-                    tripId: tripId,
-                    expenseId: expenseId,
-                    paymentMode: paymentMode,
-                    date: date.toString(format: "dd-MM-yyyy HH:mm:a"),
-                    type: zoneType ?? "",
-                    location: #"{ "lat": "0.0", lon: "0.0", name: "\#(location)" }"#,
-                    details: #"{ "billNumber": "\#(billNo)", "costPerLiter": "\#(costPerLiter)", "liters": "\#(liters)", "odo": "\#(odo)" }"#,
-                    amount: amount,
-                    comments: comments,
-                    images: imageArray
-                )
-                
-            } catch {
-                print("catched \(error)")
-            }
+        } else {
             
+            await postData(apiService)
+            
+        }
+    }
+        
+    func postData(_ apiService: APIService) async {
+
+        do {
+            isLoading = true
+            
+            print(tripId, assetId, "POST")
+            
+            success = try await apiService.postTripExpense(
+                assetId: assetId,
+                tripId: tripId,
+                paymentMode: paymentMode,
+                date: date.toString(format: "dd-MM-yyyy HH:mm:a"),
+                type: zoneType,
+                location: location,
+                details: #"{ "billNumber": "\#(billNo)", "costPerLiter": "\#(costPerLiter)", "liters": "\#(liters)", "odo": "\#(odo)" }"#,
+                amount: amount,
+                comments: comments,
+                images: imageArray
+            )
+            
+            try await apiService.getTripsData(startDate: startDate, endDate: endDate)
+            
+            isLoading = false
+            
+        } catch {
+            isLoading = false
+        }
+        
+        
+    }
+    
+    func putData(_ apiService: APIService) async {
+    
+        do {
+                       
+            isLoading = true
+            
+            print(tripId, assetId, "PUT")
+            
+            success = try await apiService.putTripExpense(
+                assetId: assetId,
+                tripId: tripId,
+                expenseId: expenseId,
+                paymentMode: paymentMode,
+                date: date.toString(format: "dd-MM-yyyy HH:mm:a"),
+                type: zoneType,
+                location: location,
+                details: #"{ "billNumber": "\#(billNo)", "costPerLiter": "\#(costPerLiter)", "liters": "\#(liters)", "odo": "\#(odo)" }"#,
+                amount: amount,
+                comments: comments,
+                images: imageArray
+            )
+            
+            try await apiService.getTripsData(startDate: startDate, endDate: endDate)
+            
+            isLoading = false
+            
+        } catch {
+            isLoading = false
         }
         
     }
@@ -436,7 +540,108 @@ fileprivate class AddTripExpensesViewModel: ObservableObject {
     
 }
 
+// Model
+extension APIService {
+    
+    // for editing data in addTripExpense
+    struct TripExpenseEditModel: Decodable {
+        var success: Bool?
+        var result: Result?
+        var error: String?
+        
+        enum CodingKeys: String, CodingKey {
+            case success
+            case result = "TripExpense"
+            case error
+        }
+        
+        struct Result: Hashable, Decodable {
+            var id: Int?
+            var date, type: String?
+            var location: Location?
+            var details: Details?
+            var amount, paymentMode: String?
+            var comments: String?
+            var images: [String] = []
+            
+            enum CodingKeys: String, CodingKey {
+                case id
+                case date
+                case type
+                case location
+                case details
+                case amount
+                case paymentMode
+                case comments
+                case images
+            }
+            
+            init(from decoder: any Decoder) throws {
+                let container: KeyedDecodingContainer<APIService.TripExpenseEditModel.Result.CodingKeys> = try decoder.container(keyedBy: APIService.TripExpenseEditModel.Result.CodingKeys.self)
+                
+                self.id = try container.decodeIfPresent(Int.self, forKey: APIService.TripExpenseEditModel.Result.CodingKeys.id)
+                
+                self.date = try container.decodeIfPresent(String.self, forKey: APIService.TripExpenseEditModel.Result.CodingKeys.date)
+                
+                self.type = try container.decodeIfPresent(String.self, forKey: APIService.TripExpenseEditModel.Result.CodingKeys.type)
+                
+                self.location = try container.decodeIfPresent(APIService.TripExpenseEditModel.Location.self, forKey: APIService.TripExpenseEditModel.Result.CodingKeys.location)
+                
+                self.details = try container.decodeIfPresent(APIService.TripExpenseEditModel.Details.self, forKey: APIService.TripExpenseEditModel.Result.CodingKeys.details)
+                
+                self.amount = try container.decodeIfPresent(String.self, forKey: APIService.TripExpenseEditModel.Result.CodingKeys.amount)
+                
+                self.paymentMode = try container.decodeIfPresent(String.self, forKey: APIService.TripExpenseEditModel.Result.CodingKeys.paymentMode)
+                
+                self.comments = try container.decodeIfPresent(String.self, forKey: APIService.TripExpenseEditModel.Result.CodingKeys.comments)
+                
+                let imageUrls = try container.decodeIfPresent([String].self, forKey: APIService.TripExpenseEditModel.Result.CodingKeys.images) ?? []
+                
+                self.images = imageUrls.map( { "https://dev.ktt.io/api/upload/file" + $0 } )
+                
+            }
+        }
+        
+        struct Details: Hashable, Decodable {
+            var billNumber: String?
+            var costPerLiter: String?
+            var liters: String?
+            var odo: String?
+        }
+        
+        struct Location: Hashable , Decodable {
+            var name: String?
+        }
+
+    }
+    
+    struct ExpenseZoneTypesModel: Hashable, Decodable {
+        var success: Bool?
+        var results: [Results] = []
+        var error: String?
+        
+        enum CodingKeys: CodingKey {
+            case success
+            case results
+            case error
+        }
+        
+        init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            success = try container.decodeIfPresent(Bool.self, forKey: .success)
+            results = try container.decodeIfPresent([Results].self, forKey: .results) ?? []
+            error = try container.decodeIfPresent(String.self, forKey: .error)
+        }
+        
+        struct Results: Hashable, Decodable {
+            var text: String?
+        }
+        
+    }
+    
+}
 
 #Preview {
 //    TripExpensesAddView()
 }
+

@@ -15,6 +15,8 @@ struct SceneHandlerView: View {
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var apiService: APIService
     @EnvironmentObject var languageManager: LanguageManager
+    @EnvironmentObject var customAlertPresenter: CustomAlertPresenter
+    @EnvironmentObject var toastPresenter: ToastPresenter
     
     @State private var errorDescription: String = ""
     @State private var showAlert: Bool = false
@@ -32,34 +34,53 @@ struct SceneHandlerView: View {
             .onAppear {
                 coordinator.push(.home(.dashboard))
                 
-                locationManager.manager.requestLocation()
+                locationManager.requestLocation()
                 locationManager.startTracking()
                 
-                print(locationManager.manager.location?.coordinate.latitude ?? 0)
-                print(locationManager.manager.location?.coordinate.longitude ?? 0)
-                
-                // for simulator
-                URLCache.shared.removeAllCachedResponses()
-                
             }
-             
+            
+            
+            .onChange(of: customAlertPresenter.error) { old, new in
+                errorDescription = new
+                showAlert = !new.isEmpty
+            }
+
+            // alert not working, however
+            .customAlert(isPresented: $showAlert) {
+                
+                VStack(spacing: 15) {
+                    Text(errorDescription)
+                        .font(Font.custom("ArialRoundedMTBold", size: 15))
+                    
+                    Button {
+                        showAlert = false
+                        customAlertPresenter.error = ""
+                    } label: {
+                        Text(LocalizedStringKey("ok"))
+                            .modifier(SaveButtonModifier())
+                            .frame(width: 100)
+                    }
+                }
+                .padding()
+            }
+            
+            // toast
+//            .toast(message: $toastPresenter.message)
+
             .task {
                 
                 // as per se android app, few api on launch
                     
-                do {
-                    // isSessionValid api should come here
-                    
-                } catch {
-                    errorDescription = error.localizedDescription
-                    showAlert = true
-                }
+//                do {
+//                    // isSessionValid api should come here
+//                    
+//                } catch {
+//                    errorDescription = error.localizedDescription
+//                    showAlert = true
+//                }
                 
             }
             
-            .alert(errorDescription, isPresented: $showAlert) {
-                
-            }
             
             .navigationDestination(for: Route.self) { route in
                 
@@ -68,14 +89,14 @@ struct SceneHandlerView: View {
                 case .login:
                     LoginView()
                         .navigationBarBackButtonHidden()
-
-             
+                    
+                    
                 case .home:
                     HomeView()
                         .navigationTitle(LocalizedStringKey("app_name"))
                         .navigationBarBackButtonHidden()
                     
-                
+                    
                 case .trips(let route):
                     TripsViewHandler(tripPath: route)
                     
@@ -91,28 +112,7 @@ struct SceneHandlerView: View {
                     
                 }
             }
-            
-            // refreshes the view
-//            .id(viewId)
-//            
-//            .onChange(of: languageManager.selectedLanguage) { old, new in
-//                viewId = UUID()
-//            }
-            
-//            .onChange(of: scenePhase) { old, new in
-//                
-//                switch new {
-//                    
-//                case .background:
-//                    URLCache.shared.removeAllCachedResponses()
-//                    
-//                default:
-//                    break
-//                    
-//                }
-//                
-//            }
-            
+
         }
         
     }
@@ -122,3 +122,4 @@ struct SceneHandlerView: View {
 #Preview {
 //    SceneHandlerView()
 }
+

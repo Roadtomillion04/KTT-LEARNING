@@ -52,7 +52,7 @@ struct ProfileView: View {
                 }
                 
                 Button(LocalizedStringKey("lbl_choose_from_gallery")) {
-                    coordinator.push(.miscellaneous(.cameraCapture(image: $vm.newProfilePic, sourceType: .photoLibrary)))
+                    coordinator.push(.miscellaneous(.cameraCapture(image: $vm.newProfilePic, sourceType: .camera)))
                 }
                 
             }
@@ -76,7 +76,7 @@ struct ProfileView: View {
                 }
                 
                 Button(LocalizedStringKey("lbl_choose_from_gallery")) {
-                    coordinator.push(.miscellaneous(.cameraCapture(image: $vm.newDlBackPic, sourceType: .photoLibrary)))
+                    coordinator.push(.miscellaneous(.cameraCapture(image: $vm.newDlBackPic, sourceType: .camera)))
                 }
                 
             }
@@ -84,8 +84,8 @@ struct ProfileView: View {
             HStack {
                 
                 VStack(alignment: .center, spacing: 5) {
-                    Text("\(String(apiService.profileSummaryAttributes.totalKms ?? 0))")
-                        .font(Font.custom("ArialRoundedMTBold", size: 14))
+                    Text("\(String(vm.profileData.totalKms ?? 0))")
+                        .font(Font.custom("ArialRoundedMTBold", size: 13))
                     
                     HStack(spacing: 2.5) {
                         
@@ -94,13 +94,13 @@ struct ProfileView: View {
                         Text(LocalizedStringResource("driven"))
                             
                     }
-                    .font(Font.custom("ArialRoundedMTBold", size: 12))
+                    .font(Font.custom("ArialRoundedMTBold", size: 12.5))
                     .foregroundStyle(.secondary)
                 }
                     
                 VStack(alignment: .center, spacing: 5) {
-                    Text("\(apiService.profileSummaryAttributes.onTimeTrips ?? 0) Trips")
-                        .font(Font.custom("ArialRoundedMTBold", size: 14))
+                    Text("\(vm.profileData.onTimeTrips ?? 0) Trips")
+                        .font(Font.custom("ArialRoundedMTBold", size: 13))
                     
                     HStack(spacing: 2.5) {
                         
@@ -109,13 +109,13 @@ struct ProfileView: View {
                         Text(LocalizedStringResource("time"))
                             
                     }
-                    .font(Font.custom("ArialRoundedMTBold", size: 12))
+                    .font(Font.custom("ArialRoundedMTBold", size: 12.5))
                     .foregroundStyle(.secondary)
                 }
                 
                 VStack(alignment: .center, spacing: 5) {
-                    Text("\(apiService.profileSummaryAttributes.totalTrips ?? 0) Trips")
-                        .font(Font.custom("ArialRoundedMTBold", size: 14))
+                    Text("\(vm.profileData.totalTrips ?? 0) Trips")
+                        .font(Font.custom("ArialRoundedMTBold", size: 13))
                     
                     HStack(spacing: 2.5) {
                         
@@ -124,13 +124,13 @@ struct ProfileView: View {
                         Text(LocalizedStringResource("total"))
                             
                     }
-                    .font(Font.custom("ArialRoundedMTBold", size: 12))
+                    .font(Font.custom("ArialRoundedMTBold", size: 12.4))
                     .foregroundStyle(.secondary)
                 }
                 
                 VStack(alignment: .center, spacing: 5) {
-                    Text("\(apiService.profileSummaryAttributes.presentInMonth ?? 0)/\(apiService.profileSummaryAttributes.daysInMonth ?? 0)")
-                        .font(Font.custom("ArialRoundedMTBold", size: 14))
+                    Text("\(vm.profileData.presentInMonth ?? 0)/\(vm.profileData.daysInMonth ?? 0)")
+                        .font(Font.custom("ArialRoundedMTBold", size: 13))
                     
                     HStack(spacing: 2.5) {
                         
@@ -139,7 +139,7 @@ struct ProfileView: View {
                         Text(LocalizedStringResource("attendance"))
                             
                     }
-                    .font(Font.custom("ArialRoundedMTBold", size: 12))
+                    .font(Font.custom("ArialRoundedMTBold", size: 12.5))
                     .foregroundStyle(.secondary)
                 }
                 
@@ -153,17 +153,19 @@ struct ProfileView: View {
             
             List {
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 10) {
                     
                     HStack {
                         
                         Image(systemName: "person.text.rectangle")
                         
                         Text(LocalizedStringResource("license"))
+                            .font(Font.custom("Monaco", size: 12.5))
                         
                         Spacer()
                         
                         Text(vm.viewMoreToggle ? LocalizedStringResource("viewless") : LocalizedStringResource("viewmore"))
+                            .font(Font.custom("Monaco", size: 12.5))
                             .foregroundStyle(.green)
                             .onTapGesture {
                                 vm.viewMoreToggle.toggle()
@@ -174,15 +176,23 @@ struct ProfileView: View {
                     
                     HStack {
                         Text(LocalizedStringResource("number"))
+                            .font(Font.custom("Monaco", size: 12.5))
+                        
                         Spacer()
+                        
                         Text(LocalizedStringResource("edate"))
+                            .font(Font.custom("Monaco", size: 12.5))
                     }
                     
                     
                     HStack {
-                        Text(apiService.driverStatusAttributes.driver.dlno ?? "")
+                        Text(apiService.driverStatusModel.driver?.dlno ?? "")
+                            .font(Font.custom("Monaco", size: 12.5))
+                        
                         Spacer()
-                        Text(apiService.driverStatusAttributes.driver.dlexp?.dateFormatting(format: "dd/MM/yyyy") ?? "")
+                        
+                        Text(apiService.driverStatusModel.driver?.dlexp?.dateFormatting(format: "dd/MM/yyyy") ?? "")
+                            .font(Font.custom("Monaco", size: 12.5))
                     }
                     
                 }
@@ -190,11 +200,13 @@ struct ProfileView: View {
                 
                 if vm.viewMoreToggle == true {
                     
-                    VStack {
+                    VStack(spacing: 2.5) {
                         
                         Text(LocalizedStringResource("dob"))
+                            .font(Font.custom("ArialRoundedMTBold", size: 13))
                         
-                        Text(apiService.driverStatusAttributes.driver.dateOfBirth?.dateFormatting(format: "dd/MM/yyyy") ?? "")
+                        Text(apiService.driverStatusModel.driver?.dateOfBirth?.dateFormatting(format: "dd/MM/yyyy") ?? "")
+                            .font(Font.custom("Monaco", size: 12.5))
                         
                     }
                     
@@ -202,6 +214,7 @@ struct ProfileView: View {
                     VStack {
                         
                         Text(LocalizedStringResource("license"))
+                            .font(Font.custom("ArialRoundedMTBold", size: 13))
                         
                         HStack {
                             
@@ -229,16 +242,16 @@ struct ProfileView: View {
         }
         .task {
             await vm.onAppear(apiService)
+            await vm.checkImageCaptured(apiService)
         }
         
-        .onAppear {
-            vm.checkImageCaptured(apiService)
-        }
+        .successAlert(success: $vm.success, message: "Photo updated successfully", coordinator: coordinator)
         
     }
         
 }
 
+@MainActor
 fileprivate class ProfileViewModel: ObservableObject {
     
     @Published var viewMoreToggle: Bool = false
@@ -257,71 +270,89 @@ fileprivate class ProfileViewModel: ObservableObject {
     @Published var newDlFrontPic: UIImage = .init()
     @Published var newDlBackPic: UIImage = .init()
     
+    @Published var profileData: APIService.DriverProfileModel = .init()
+    
     @Published var success: Bool = false
     
-    @MainActor
+    
     func onAppear(_ apiService: APIService) async {
        
         do {
+            
+            profileData = try await apiService.getDriverProfile()
+            
             if profilePic.size.width == 0 && profilePic.size.height == 0 {
                 
-                profilePic = try await apiService.downloadImage(urlString: apiService.driverStatusAttributes.driver.photoURL ?? "")
+                profilePic = await apiService.downloadImage(urlString: apiService.driverStatusModel.driver?.photoURL ?? "")
                 
-                dlFrontPic = try await apiService.downloadImage(urlString: apiService.driverStatusAttributes.driver.dlPhotoURL.front ?? "")
+                dlFrontPic = await apiService.downloadImage(urlString: apiService.driverStatusModel.driver?.dlPhotoURL?.front ?? "")
                 
-                dlBackPic = try await apiService.downloadImage(urlString: apiService.driverStatusAttributes.driver.dlPhotoURL.back ?? "")
+                dlBackPic = await apiService.downloadImage(urlString: apiService.driverStatusModel.driver?.dlPhotoURL?.back ?? "")
                 
             }
+            
         } catch {
             
         }
        
     }
-
     
-    @MainActor
-    func checkImageCaptured(_ apiService: APIService) {
+
+    func checkImageCaptured(_ apiService: APIService) async {
         
         if newProfilePic.size.width != 0 || newProfilePic.size.height != 0 {
            
-            updateDrivingLicensePhoto(apiService: apiService, pic: newProfilePic, filename: "")
+            await updateDrivingLicensePhoto(apiService: apiService, pic: newProfilePic, filename: "")
             
             newProfilePic = .init()
             
         }
         
         if newDlFrontPic.size.width != 0 || newDlFrontPic.size.height != 0 {
-            updateDrivingLicensePhoto(apiService: apiService, pic: newDlFrontPic, filename: "dlProofFront")
+            await updateDrivingLicensePhoto(apiService: apiService, pic: newDlFrontPic, filename: "dlProofFront")
             
             newDlFrontPic = .init()
         }
         
         if newDlBackPic.size.width != 0 || newDlBackPic.size.height != 0 {
-            updateDrivingLicensePhoto(apiService: apiService, pic: newDlBackPic, filename: "dlProofBack")
+            await updateDrivingLicensePhoto(apiService: apiService, pic: newDlBackPic, filename: "dlProofBack")
             
             newDlBackPic = .init()
         }
         
     }
     
-    @MainActor
-    func updateDrivingLicensePhoto(apiService: APIService, pic: UIImage, filename: String) {
-        Task {
-            do {
-                // no imageData deletes the photo
-                
-                success = try await apiService.updateDriverphoto(image: pic, filename: filename)
-                
-                print(success)
-            } catch {
-                
-            }
+    
+    func updateDrivingLicensePhoto(apiService: APIService, pic: UIImage, filename: String) async {
+        
+        do {
+            // no imageData deletes the photo
+            
+            success = try await apiService.updateDriverphoto(image: pic, filename: filename)
+            
+        } catch {
+            
         }
     }
     
+}
+
+// Model
+extension APIService {
+    
+    struct DriverProfileModel: Decodable {
+        var success: Bool?
+        var totalTrips: Int?
+        var onTimeTrips: Int?
+        var totalKms: Int?
+        var daysInMonth: Int?
+        var presentInMonth: Int?
+        var error: String?
+    }
     
 }
 
 #Preview {
 //    ProfileView()
 }
+

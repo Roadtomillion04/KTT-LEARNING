@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TripAdvanceView: View {
     
-    let data: [APIService.TripsDataAttributes.TripAdvance]
+    let data: [APIService.TripsDataModel.TripAdvance]
     
     let columns = [
                 GridItem(.flexible(), spacing: 40),
@@ -27,15 +27,15 @@ struct TripAdvanceView: View {
  
                     IconData(icon: "square.stack", title: "Advance Level", value: "\(advance.advLevel ?? 0)")
                     
-                    IconData(icon: "fuelpump.fill", title: "Fuel Liter", value: "\(advance.breakup.fuelLiters ?? 0)")
+                    IconData(icon: "fuelpump.fill", title: "Fuel Liter", value: "\(advance.breakup?.fuelLiters ?? 0)")
                     
-                    IconData(icon: "fuelpump.exclamationmark.fill", title: "Fuel Amount", value: "\(advance.breakup.fuel ?? 0)")
+                    IconData(icon: "fuelpump.exclamationmark.fill", title: "Fuel Amount", value: "\(advance.breakup?.fuel ?? 0)")
                     
-                    IconData(icon: "fuelpump", title: "Toll", value: "\(advance.breakup.toll ?? 0)")
+                    IconData(icon: "fuelpump", title: "Toll", value: "\(advance.breakup?.toll ?? 0)")
                     
-                    IconData(icon: "indianrupeesign", title: "Cash", value: "\(advance.breakup.cash ?? 0)")
+                    IconData(icon: "indianrupeesign", title: "Cash", value: "\(advance.breakup?.cash ?? 0)")
                     
-                    IconData(icon: "creditcard.fill", title: "ATM", value: "\(advance.breakup.atm ?? 0)")
+                    IconData(icon: "creditcard.fill", title: "ATM", value: "\(advance.breakup?.atm ?? 0)")
                     
                     IconData(icon: "pencil.and.list.clipboard", title: "Payment Status", value: TripStatusHandler.paymentStatusText(advance.status ?? 0))
                     

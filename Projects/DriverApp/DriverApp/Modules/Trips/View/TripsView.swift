@@ -14,58 +14,51 @@ struct TripsView: View {
     
     @EnvironmentObject private var coordinator: AppCoordinator
     @EnvironmentObject private var apiService: APIService
-    
 
+    
     var body: some View {
         
-        VStack {
+        VStack(spacing: 20) {
             
             HStack {
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .center, spacing: 3) {
+                    
                     Text(LocalizedStringResource("from_date"))
+                        .font(Font.custom("ArialRoundedMTBold", size: 15))
                     
-                    DatePicker("From", selection: $vm.startDate, displayedComponents: .date)
-                        .labelsHidden()
-                    
-                        .onChange(of: vm.startDate) { old, new in
-                            
-                            Task {
-                                
-                                do {
-                                    
-                                    try await apiService.getTripsData(startDate: new.toString(), endDate: vm.endDate.toString())
-                                    
-                                } catch {
-                                    
-                                }
-                            }
-                        }
+                    Label(vm.startDate.toString(format: "dd MMM yyyy"), systemImage: "calendar")
+                        .font(Font.custom("Monaco", size: 14))
                     
                 }
+                .padding()
+                .background(RoundedRectangle(cornerRadius: 10).fill(.ultraThinMaterial))
+
                 
                 Spacer()
                 
-                VStack(alignment: .trailing) {
+                VStack(alignment: .center, spacing: 3) {
+                    
                     Text(LocalizedStringResource("to_date"))
-                    
-                    // 1 year from start date 
-                    DatePicker("To", selection: $vm.endDate, in: vm.startDate...Date().addingTimeInterval(60*60*24*30*12),  displayedComponents: .date)
-                        .labelsHidden()
-                    
-                        .onChange(of: vm.endDate) { old, new in
-                            
-                            Task {
-                                do {
-                                    try await apiService.getTripsData(startDate: vm.startDate.toString(), endDate: new.toString())
-                                } catch {
-                                    
-                                }
-                            }
-                            
-                        }
+                        .font(Font.custom("ArialRoundedMTBold", size: 15))
+
+                    Label(vm.endDate.toString(format: "dd MMM yyyy"), systemImage: "calendar")
+                        .font(Font.custom("Monaco", size: 14))
                     
                 }
+                .padding()
+                .background(RoundedRectangle(cornerRadius: 10).fill(.ultraThinMaterial))
+
+            }
+            
+            .onTapGesture {
+                vm.showDatePicker = true
+            }
+            
+            .customAlert(isPresented: $vm.showDatePicker) {
+                
+                DatePickerView(vm: vm)
+                
             }
             
             
@@ -73,24 +66,26 @@ struct TripsView: View {
                 
                 Spacer()
                 
-                VStack {
+                VStack(spacing: 3) {
                     
                     Text(LocalizedStringResource("total_advances"))
                         .foregroundStyle(Color(.systemGray))
+                        .font(Font.custom("AriSanPro-Medium", size: 15))
                     
-                    Text("₹\(apiService.tripsDataAttributes.totalAdvances?.round() ?? "")")
-                        .bold()
+                    Text("₹\(vm.totalAdvances(apiService.tripsDataModel.results))")
+                        .font(Font.custom("ArialRoundedMTBold", size: 14))
                 }
                 
                 Spacer()
                 
-                VStack {
+                VStack(spacing: 3) {
                     
                     Text(LocalizedStringResource("total_expenses"))
                         .foregroundStyle(Color(.systemGray))
+                        .font(Font.custom("AriSanPro-Medium", size: 15))
                     
-                    Text("₹\(apiService.tripsDataAttributes.totalExpenses?.round() ?? "")")
-                        .bold()
+                    Text("₹\(vm.totalExpenses(apiService.tripsDataModel.results))")
+                        .font(Font.custom("ArialRoundedMTBold", size: 14))
                 }
                 
                 Spacer()
@@ -98,10 +93,10 @@ struct TripsView: View {
             
             ScrollView {
                 
-                ForEach(apiService.tripsDataAttributes.results.sorted(by: { $0.id ?? 0 > $1.id ?? 0 }), id: \.id) { data in
+                ForEach(apiService.tripsDataModel.results.sorted(by: { $0.id ?? 0 > $1.id ?? 0 }), id: \.id) { data in
                     tripsListContent(
-                        id: data.id ?? -1,
-                        assetId: data.assetID ?? -1,
+                        id: data.id ?? 0,
+                        assetId: data.assetId ?? 0,
                         vehicleNumber: data.vehicle ?? "",
                         startOdo: data.odo ?? "0", route: data.route ?? "",
                         loadingIn: data.loadIn?.dateFormatting() ?? "-",
@@ -120,18 +115,23 @@ struct TripsView: View {
         .padding(.horizontal)
         
         .task {
-            await vm.onAppear(apiService: apiService)
+//            if !vm.sceneEntered {
+                await vm.onAppear(apiService: apiService)
+//                vm.sceneEntered = true
+//            }
         }
         
         .refreshable {
-            await vm.onAppear(apiService: apiService, cachePolicy: .reloadIgnoringLocalCacheData)
+            await vm.onReload(apiService: apiService)
         }
+        
+        .loadingScreen(isLoading: vm.isLoading)
         
     }
     
     
     @ViewBuilder
-    private func tripsListContent(id: Int, assetId: Int, vehicleNumber: String, startOdo: String, route: String, loadingIn: String, loadingOut: String, unloadingIn: String, unloadingOut: String, status: Int, statusAccounts: Int, tripAdvances: [APIService.TripsDataAttributes.TripAdvance], tripExpenses: [APIService.TripsDataAttributes.TripExpense]) -> some View {
+    private func tripsListContent(id: Int, assetId: Int, vehicleNumber: String, startOdo: String, route: String, loadingIn: String, loadingOut: String, unloadingIn: String, unloadingOut: String, status: Int, statusAccounts: Int, tripAdvances: [APIService.TripsDataModel.TripAdvance], tripExpenses: [APIService.TripsDataModel.TripExpense]) -> some View {
         
         VStack(alignment: .leading, spacing: 20) {
             
@@ -141,41 +141,45 @@ struct TripsView: View {
                     
                     VStack(spacing: 5) {
                         Text(LocalizedStringResource("start_odo"))
-                            .font(Font.custom("AriSanPro-Medium", size: 15))
+                            .font(Font.custom("AriSanPro-Medium", size: 13))
                             .foregroundStyle(Color(.systemGray))
                         
                         Text(startOdo)
+                            .font(Font.custom("Monaco", size: 12.5))
                     }
                     
                     Spacer()
                     
                     VStack(spacing: 5)  {
                         Text(LocalizedStringResource("end_odo"))
-                            .font(Font.custom("AriSanPro-Medium", size: 15))
+                            .font(Font.custom("AriSanPro-Medium", size: 13))
                             .foregroundStyle(Color(.systemGray))
 
                         Text("0")
+                            .font(Font.custom("Monaco", size: 12.5))
                     }
                     
                     Spacer()
                     
                     VStack(spacing: 5)  {
                         Text(LocalizedStringResource("distance"))
-                            .font(Font.custom("AriSanPro-Medium", size: 15))
+                            .font(Font.custom("AriSanPro-Medium", size: 13))
                             .foregroundStyle(Color(.systemGray))
 
                         Text("0")
+                            .font(Font.custom("Monaco", size: 12.5))
                     }
                     
                 }
             } header: {
-                HStack(spacing: 15) {
+                HStack(spacing: 10) {
                     Image(systemName: "truck.box.fill")
-                        .font(.title2)
+                        .font(.headline)
                         .foregroundStyle(.blue)
                         
                     
                     Text(vehicleNumber)
+                        .font(Font.custom("Monaco", size: 13))
             
                 }
             }
@@ -188,23 +192,25 @@ struct TripsView: View {
                     .foregroundStyle(.blue)
                 
                 Text("Ref No:-")
+                    .font(Font.custom("GillSans", size: 13))
             }
             
             HStack {
-                Image(systemName: "location.north.fill")
-                    .foregroundStyle(.blue)
+                Image(systemName: "location.north.fill")                    .foregroundStyle(.blue)
                 
                 Text(route)
-                    .font(Font.custom("Monaco", size: 16))
+                    .font(Font.custom("Monaco", size: 13))
             }
     
                 
             LazyVGrid(columns: vm.columns, alignment: .leading, spacing: 10) {
                 
                 Text(LocalizedStringResource("loading_in_amp_out"))
+                    .font(Font.custom("AriSanPro-Medium", size: 14))
                     .foregroundStyle(Color(.systemGray))
                 
                 Text(LocalizedStringResource("unloading_in_amp_out"))
+                    .font(Font.custom("AriSanPro-Medium", size: 14))
                     .foregroundStyle(Color(.systemGray))
                 
                 HStack {
@@ -247,9 +253,11 @@ struct TripsView: View {
                 
                 VStack(spacing: 5) {
                     Text(LocalizedStringResource("madvances"))
+                        .font(Font.custom("AriSanPro-Medium", size: 13))
                         .foregroundStyle(Color(.systemGray))
                     
                     Text("₹\(vm.calculateAdvance(tripAdvances))")
+                        .font(Font.custom("Monaco", size: 12.5))
                         .padding(.horizontal)
                         .padding(.vertical, 4)
                         .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray5)))
@@ -263,9 +271,11 @@ struct TripsView: View {
                 VStack(spacing: 5) {
                     
                     Text(LocalizedStringResource("trip_status"))
+                        .font(Font.custom("AriSanPro-Medium", size: 13))
                         .foregroundStyle(Color(.systemGray))
                     
                     Text(TripStatusHandler.statusText(status))
+                        .font(Font.custom("Monaco", size: 12.5))
                         .padding(.horizontal)
                         .padding(.vertical, 4)
                         .background(RoundedRectangle(cornerRadius: 10).fill(.teal.opacity(0.75)))
@@ -276,9 +286,11 @@ struct TripsView: View {
                 
                 VStack(spacing: 5) {
                     Text(LocalizedStringResource("account_status"))
+                        .font(Font.custom("AriSanPro-Medium", size: 13))
                         .foregroundStyle(Color(.systemGray))
                     
                     Text(TripStatusHandler.statusAccountText(statusAccounts))
+                        .font(Font.custom("Monaco", size: 12.5))
                         .padding(.horizontal)
                         .padding(.vertical, 4)
                         .background(RoundedRectangle(cornerRadius: 10).fill(.blue.opacity(0.5)))
@@ -286,7 +298,6 @@ struct TripsView: View {
                 }
                 
             }
-            .font(Font.custom("Monaco", size: 15))
             
             
             Section {
@@ -295,9 +306,11 @@ struct TripsView: View {
                     
                     VStack(spacing: 5) {
                         Text(LocalizedStringResource("approved"))
+                            .font(Font.custom("AriSanPro-Medium", size: 13))
                             .foregroundStyle(Color(.systemGray))
                         
                         Text("₹\(vm.approvedExpense(tripExpenses))")
+                            .font(Font.custom("Monaco", size: 12.5))
                             .padding(.horizontal)
                             .padding(.vertical, 4)
                             .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray5)))
@@ -307,9 +320,11 @@ struct TripsView: View {
                     
                     VStack(spacing: 5) {
                         Text(LocalizedStringResource("pending"))
+                            .font(Font.custom("AriSanPro-Medium", size: 13))
                             .foregroundStyle(Color(.systemGray))
                         
                         Text("₹\(vm.pendingExpense(tripExpenses))")
+                            .font(Font.custom("Monaco", size: 12.5))
                             .padding(.horizontal)
                             .padding(.vertical, 4)
                             .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray5)))
@@ -319,24 +334,26 @@ struct TripsView: View {
                     
                     VStack(spacing: 5) {
                         Text(LocalizedStringResource("rejected"))
+                            .font(Font.custom("AriSanPro-Medium", size: 13))
                             .foregroundStyle(Color(.systemGray))
                         
                         Text("₹\(vm.rejectedExpense(tripExpenses))")
+                            .font(Font.custom("Monaco", size: 12.5))
                             .padding(.horizontal)
                             .padding(.vertical, 4)
                             .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray5)))
                     }
                     
                 }
-                .font(Font.custom("Monaco", size: 15))
                 
             } header: {
                 Text(LocalizedStringResource("total_expenses"))
-                    .font(Font.custom("ArialRoundedMTBold", size: 17.5))
+                    .font(Font.custom("ArialRoundedMTBold", size: 15))
             }
             
             .onTapGesture {
-                coordinator.push(.trips(.tripExpenses(.tripExpenses(tripId: id, assetId: assetId))))
+                print(id, assetId, "in Trips View")
+                coordinator.push(.trips(.tripExpenses(.tripExpenses(tripId: id, assetId: assetId, startDate: vm.startDate.toString(), endDate: vm.endDate.toString()))))
             }
             
         }

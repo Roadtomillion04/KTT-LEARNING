@@ -20,6 +20,7 @@ struct ChevronUpDownDisclosureGroupStyle: DisclosureGroupStyle {
                     configuration.label
                     Spacer()
                     Image(systemName: configuration.isExpanded ? "chevron.up" : "chevron.down")
+                        .font(.headline)
                         .animation(nil, value: configuration.isExpanded)
                 }
                 .contentShape(Rectangle())

@@ -35,7 +35,7 @@ final class MarkerInfoWindowViewController: UIViewController {
         }
     }
     
-    var poiList: [POI] = [] {
+    var poiList: [APIService.PoiListModel.Result] = [] {
         didSet {
             updateMapMarkers()
         }
@@ -49,7 +49,7 @@ final class MarkerInfoWindowViewController: UIViewController {
         }
     }
     
-    var fuelList: [Fuel] = [] {
+    var fuelList: [APIService.FuelListModel.Results] = [] {
         didSet {
             updateMapMarkers()
         }
@@ -113,15 +113,15 @@ final class MarkerInfoWindowViewController: UIViewController {
             
             for poi in poiList  {
                 
-                let position = CLLocationCoordinate2D(latitude: poi.lat, longitude: poi.lng)
+                let position = CLLocationCoordinate2D(latitude: poi.geojson?.point.first?.lat ?? 0, longitude: poi.geojson?.point.first?.lng ?? 0)
                 
                 let marker = GMSMarker(position: position)
                 
                 marker.title = poi.fullName
                 marker.snippet = """
-                Name: \(poi.name)
-                City: \(poi.city)
-                Phone: \(poi.phone)
+                Name: \(poi.name ?? "")
+                City: \(poi.city ?? "")
+                Phone: \(poi.phone ?? "")
                 """
                 
                 marker.icon = UIImage(systemName: "location.square.fill")?.resized(to: CGSize(width: 28, height: 28)).withColor(.red)
@@ -144,17 +144,17 @@ final class MarkerInfoWindowViewController: UIViewController {
             
             for fuel in fuelList  {
                 
-                let position = CLLocationCoordinate2D(latitude: fuel.lat, longitude: fuel.lng)
+                let position = CLLocationCoordinate2D(latitude: fuel.lat ?? 0, longitude: fuel.lng ?? 0)
                 
                 let marker = GMSMarker(position: position)
                 
-                marker.title = fuel.name
+                marker.title = fuel.roname ?? ""
                 marker.snippet = """
-                \(fuel.locationName)
-                \(fuel.contactName) (\(fuel.contactPhone))
+                \(fuel.lo ?? "")
+                \(fuel.cn ?? "") (\(fuel.cp ?? ""))
                 """
                 
-                marker.icon = UIImage(systemName: "fuelpump.fill")?.resized(to: CGSize(width: 28, height: 28)).withColor(fuel.color == 1 ? .orange : .blue)
+                marker.icon = UIImage(systemName: "fuelpump.fill")?.resized(to: CGSize(width: 28, height: 28)).withColor(fuel.co == 1 ? .orange : .blue)
                     
                 
                 marker.map = mapView

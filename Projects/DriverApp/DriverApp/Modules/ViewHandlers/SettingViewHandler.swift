@@ -22,22 +22,12 @@ struct SettingViewHandler: View {
             
             ProfileView()
                 .navigationTitle(LocalizedStringKey("profile"))
-                .task {
-                    do {
-                        try await apiService.getProfileSummary()
-                    } catch {
-                        
-                    }
-                }
-            
+                            
         case .leaveRequest:
             
             LeaveRequestView()
                 .navigationTitle(LocalizedStringKey("leave_request"))
-                .task {
-                    apiService.getDriverLeaveReasons()
-                }
-            
+                            
         case .leaveHistory:
             
             LeaveHistoryView()
@@ -52,27 +42,12 @@ struct SettingViewHandler: View {
             
             DocumentsView()
                 .navigationTitle(LocalizedStringKey("documents"))
-                .task {
-                    
-                    do {
-                        try await apiService.getDriverDocuments()
-                    } catch {
-                        
-                    }
-                    
-                }
+
             
         case .attendance(.attendance):
             
             AttendanceView()
                 .navigationTitle(LocalizedStringKey("mattendance"))
-                .task {
-                    do {
-                        try await apiService.getDriverCheckIn()
-                    } catch {
-                        
-                    }
-                }
             
         case .attendance(.attendanceLogs):
             

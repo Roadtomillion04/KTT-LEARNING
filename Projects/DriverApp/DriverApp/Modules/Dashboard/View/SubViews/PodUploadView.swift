@@ -16,7 +16,7 @@ struct PodUploadView: View {
     @EnvironmentObject private var apiService: APIService
     
     let zoneId: String
-    let podDetails: APIService.DriverStatusAttributes.ShareImages
+    let podDetails: APIService.DriverStatusModel.ShareImages
     
     
     var body: some View {
@@ -30,10 +30,12 @@ struct PodUploadView: View {
                     .frame(width: 40, height: 32)
                 
                 Text("Capture Image to Upload")
-                    .bold()
+                    .font(Font.custom("ArialRoundedMTBold", size: 15))
                 
                 Text("Tap to Capture the proof of delivary (POD) images")
+                    .font(Font.custom("Monaco", size: 14))
                     .foregroundStyle(.secondary)
+                
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 40)
@@ -41,7 +43,7 @@ struct PodUploadView: View {
             
             .onTapGesture {
                 
-                if vm.fileDetails.count < apiService.driverStatusAttributes.driver.account.driverConfig.trip.maxImages.pod ?? 0 {
+                if vm.fileDetails.count < apiService.driverStatusModel.driver?.account?.driverConfig?.trip?.maxImages?.pod ?? 0 {
                     coordinator.push(.miscellaneous(.cameraCapture(image: $vm.podImage, sourceType: .camera)))
         
                 } else {
@@ -65,10 +67,10 @@ struct PodUploadView: View {
                                 .overlay {
                                     
                                     Image(systemName: "xmark.circle.fill")
-                                        .font(.title)
+                                        .font(.headline)
                                         .background(Circle().fill(.white))
                                         .foregroundStyle(.red)
-                                        .offset(x: 42, y: -42)
+                                        .offset(x: 35, y: -35)
                                     
                                         .onTapGesture {
                                             
@@ -81,15 +83,16 @@ struct PodUploadView: View {
                                 }
                             
                             Image(systemName: "text.document")
-                                .font(.title2)
+                                .font(.headline)
                                 .foregroundStyle(.black)
-                                .offset(y: 42)
+                                .offset(y: 35)
                                 
                                 .onTapGesture {
                                     vm.showNoteAlert = true
                                     vm.notes = detail.notes
                                     
                                     if detail.editable {
+                                        
                                         vm.showNoteEditor = true
                                         if let index = vm.fileDetails.firstIndex(of: detail) {
                                             vm.indexToEdit = index
@@ -98,6 +101,7 @@ struct PodUploadView: View {
                                 }
                             
                         }
+                        
                         .alert("Notes", isPresented: $vm.showNoteAlert) {
                             
                             if vm.showNoteEditor {
@@ -106,12 +110,12 @@ struct PodUploadView: View {
                             
                             Button(LocalizedStringKey("ok")) {
                                 
+                                
                                 if vm.showNoteEditor {
                                     
                                     vm.showNoteEditor = false
                                     
                                 }
-            
                                 
                             }
                             
@@ -129,24 +133,9 @@ struct PodUploadView: View {
             
 
             Button {
-                
                 Task {
-                    
-                    do {
-                        vm.isLoading = true
-                        vm.success = try await apiService.uploadDocuments(docType: .pod(removedFiles: vm.removedFiles, fileDetails: vm.fileDetails), zoneId: zoneId)
-                        vm.isLoading = false
-                        
-                        try await apiService.getDriverStatus(cachePolicy: .reloadIgnoringCacheData)
-                        try await apiService.getTripsData(cachePolicy: .reloadIgnoringCacheData)
-                        
-                    } catch {
-                        vm.isLoading = false
-                        vm.failed = true
-                    }
-                    
+                    await vm.postData(apiService, zoneId: zoneId)
                 }
-                
             } label: {
                 Text(LocalizedStringResource("save"))
                     .modifier(SaveButtonModifier())
@@ -164,7 +153,7 @@ struct PodUploadView: View {
                     do {
                         vm.isLoading = true
                         for (url, notes) in zip(podDetails.images.map( { $0.url ?? "" } ), podDetails.images.map( { $0.notes ?? "" } ))  {
-                            try await vm.downloadImage(urlString: url, notes: notes)
+                            try await vm.downloadImage(apiService, urlString: url, notes: notes)
                         }
                         vm.isLoading = false
                     } catch {
@@ -182,7 +171,7 @@ struct PodUploadView: View {
         
         .loadingScreen(isLoading: vm.isLoading)
         
-        .successAlert(success: $vm.success, failed: $vm.failed, message: "POD uploaded successfully", coordinator: coordinator)
+        .successAlert(success: $vm.success, message: "POD uploaded successfully", coordinator: coordinator)
 
         
     }
@@ -212,14 +201,14 @@ fileprivate class PodUploadViewModel: ObservableObject {
     @Published var removedFiles: [String] = []
     
     @Published var success: Bool = false
-    @Published var isLoading: Bool = false
-    @Published var failed: Bool = false
-    
+    @Published var isLoading: Bool = false    
     // no of columns for VGrid
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
+    
+    var alertPresenter: CustomAlertPresenter?
     
     
     func isImageCaptured() {
@@ -236,23 +225,34 @@ fileprivate class PodUploadViewModel: ObservableObject {
     }
     
     
-    func downloadImage(urlString: String, notes: String) async throws {
+    func downloadImage(_ apiService: APIService, urlString: String, notes: String) async throws {
         
-        let url = URL(string: urlString)!
+        var image: UIImage = .init()
         
-        let request = URLRequest(url: url)
-        
-        
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            throw CustomErrorDescription.badResponse
+        image = await apiService.downloadImage(urlString: urlString)
+    
+        if image.size.width != 0 && image.size.height != 0 {
+            
+            fileDetails.append(DocumentType.FileDetails(image: image, url: urlString, fileName: "", notes: notes, editable: false))
         }
-        
-        fileDetails.append(DocumentType.FileDetails(image: UIImage(data: data)!, url: urlString, fileName: "", notes: notes, editable: false))
         
     }
     
+    func postData(_ apiService: APIService, zoneId: String) async {
+        
+        do {
+            isLoading = true
+            
+            success = try await apiService.uploadDocuments(docType: .pod(removedFiles: removedFiles, fileDetails: fileDetails), zoneId: zoneId)
+            
+            isLoading = false
+            
+        } catch {
+            isLoading = false
+        }
+        
+    }
+        
 }
 
 

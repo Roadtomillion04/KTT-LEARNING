@@ -17,7 +17,14 @@ struct LoginView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     
+    // Single enum-based focus for this view
+    enum Field: Hashable {
+        case mobile
+        case otp
+    }
+    @FocusState private var focusedField: Field?
     
+    @FocusState private var focused: Bool
     
     var body: some View {
         
@@ -71,13 +78,13 @@ struct LoginView: View {
             }
             
             
-            CustomTextField(icon: "iphone.gen1", title: "Mobile No.", text: $vm.mobileNumber)
+            CustomTextField(icon: "iphone.gen1", title: "Mobile No.", text: $vm.mobileNumber, keyboardType: .numberPad)
                 .disabled(vm.disableMobileNumberField)
             
             
             if vm.showOtpField {
                 
-                CustomTextField(icon: "ellipsis.rectangle.fill", title: "OTP", text: $vm.otp)
+                CustomTextField(icon: "ellipsis.rectangle.fill", title: "OTP", text: $vm.otp, keyboardType: .numberPad)
                 
                 }
             
@@ -134,6 +141,16 @@ struct LoginView: View {
                 
             }
             
+        }
+        
+        .toolbar {
+            
+            ToolbarItem(placement: .keyboard) {
+                    
+                Button("done") {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
+            }
         }
         
     }

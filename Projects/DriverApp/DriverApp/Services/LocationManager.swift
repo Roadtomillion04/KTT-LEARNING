@@ -22,8 +22,10 @@ final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObje
 
     
     func requestLocation() {
+        
         manager.requestWhenInUseAuthorization()
         manager.requestLocation()
+        
     }
     
     func startTracking() {
@@ -43,4 +45,3 @@ final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObje
            print("Location error: \(error.localizedDescription)")
        }
 }
-

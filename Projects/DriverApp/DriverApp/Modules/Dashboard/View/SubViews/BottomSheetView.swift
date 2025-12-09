@@ -13,9 +13,9 @@ struct ZoneInfoView: View {
     let lrNumber: String
     let loadingCharges: String
     let unloadingCharges: String
-    let lrImage: [APIService.DriverStatusAttributes.ImageShare]
-    let podImage: [APIService.DriverStatusAttributes.ImageShare]
-    let docImage: [APIService.DriverStatusAttributes.ImageShare]
+    let lrImage: [APIService.DriverStatusModel.ImageShare]
+    let podImage: [APIService.DriverStatusModel.ImageShare]
+    let docImage: [APIService.DriverStatusModel.ImageShare]
     
     // no of columns for VGrid
     let columns = [
@@ -55,7 +55,7 @@ struct ZoneInfoView: View {
                             
                         } header: {
                             Text(LocalizedStringResource("lorry_receipt_lr"))
-                                .font(Font.custom("ArialRoundedMTBold", size: 15))
+                                .font(Font.custom("ArialRoundedMTBold", size: 12.5))
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(.ultraThinMaterial)
@@ -74,7 +74,7 @@ struct ZoneInfoView: View {
                             
                         } header: {
                             Text(LocalizedStringResource("proof_of_delivery_pod"))
-                                .font(Font.custom("ArialRoundedMTBold", size: 15))
+                                .font(Font.custom("ArialRoundedMTBold", size: 12.5))
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(.ultraThinMaterial)
@@ -94,7 +94,7 @@ struct ZoneInfoView: View {
                             
                         } header: {
                             Text(LocalizedStringResource("documents"))
-                                .font(Font.custom("ArialRoundedMTBold", size: 15))
+                                .font(Font.custom("ArialRoundedMTBold", size: 12.5))
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(.ultraThinMaterial)

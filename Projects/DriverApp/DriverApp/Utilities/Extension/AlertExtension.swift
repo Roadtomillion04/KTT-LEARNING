@@ -8,20 +8,45 @@
 import SwiftUI
 
 
-enum CustomErrorDescription: Error, LocalizedError {
+class CustomAlertPresenter: ObservableObject {
     
-    case badResponse
+    @Published var error: String = ""
+}
+
+class ToastPresenter: ObservableObject {
+    
+    @Published var message: String?
+}
+
+enum CustomErrorDescription: Error, LocalizedError, Equatable {
+    static func == (lhs: CustomErrorDescription, rhs: CustomErrorDescription) -> Bool {
+        return true
+    }
+    
+    case networkError(String)
+    case badResponse(Int? = nil)
+    case decodeError(Error)
+    case responseError(String)
     
     var errorDescription: String? {
         
         switch self {
             
-        case .badResponse:
+        case .networkError(let error):
+            return error
             
-            return "Not Authorized"
+        case .badResponse(let statusCode):
+            return "Invalid Server Response.\nStatus Code: \(statusCode ?? 0)"
+                    
+        case .decodeError(let error):
+            print("Error From decoding data: \(error)")
+            return error.localizedDescription
+            
+        case .responseError(let message):
+            print("Error message from Response: \(message)")
+            return message
         }
     }
-    
 }
 
 // credit - kavsoft
@@ -45,14 +70,10 @@ fileprivate struct CustomAlertViewModifier<AlertContent: View>: ViewModifier {
     @State private var showFullScreenCover: Bool = false
     @State private var animatedValue: Bool = false
     
-    
-    
     func body(content: Content) -> some View {
-        
-        
-        
         content
-            // covers full screen
+            .font(Font.custom("Monaco", size: 13))
+        
             .fullScreenCover(isPresented: $showFullScreenCover) {
                 
                 ZStack {
@@ -69,17 +90,11 @@ fileprivate struct CustomAlertViewModifier<AlertContent: View>: ViewModifier {
                     Rectangle()
                         .fill(.primary.opacity(0.35))
                         
-                        // tapping/swiping outside
-                        .onTapGesture {
-                            isPresented = false
-                        }
-                    
-                        .gesture(
-                            DragGesture()
-                                .onChanged { _ in
-                                    isPresented = false
-                                }
-                        )
+//                        .onTapGesture { isPresented = false }
+//                        .gesture(
+//                            DragGesture()
+//                                .onChanged { _ in isPresented = false }
+//                        )
                 }
                 .task {
                     try? await Task.sleep(for: .seconds(0.1))
@@ -116,3 +131,4 @@ fileprivate struct CustomAlertViewModifier<AlertContent: View>: ViewModifier {
 #Preview {
 //    AlertExtension()
 }
+

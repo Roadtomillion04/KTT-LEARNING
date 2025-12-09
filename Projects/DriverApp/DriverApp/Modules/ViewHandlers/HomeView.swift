@@ -57,9 +57,9 @@ struct HomeView: View {
          
 //            try? await Task.sleep(for: .milliseconds(1000))
 //            
-//            if apiService.driverStatusAttributes.success != true {
+//            if apiService.driverStatusModel.success != true {
 //                
-//                alertMessage = apiService.driverStatusAttributes.error ?? ""
+//                alertMessage = apiService.driverStatusModel.error ?? ""
 //                
 //                showAlert = true
 //            }

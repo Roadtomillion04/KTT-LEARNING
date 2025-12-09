@@ -6,21 +6,6 @@
 //
 
 import SwiftUI
-//
-//struct TextFieldModifier: ViewModifier { // could also do extension View to make it available as a modifier anywhere in the project
-//
-//    func body(content: Content) -> some View {
-//        content
-//            .foregroundStyle(.black)
-//            .keyboardType(.numberPad)
-//            .textContentType(.telephoneNumber)
-//            .padding(12)
-//            .background(RoundedRectangle(cornerRadius: 5).fill(Color(hex: 0xF1F5F9)).shadow(radius: 1))
-//            .font(Font.custom("Monaco", size: 20))
-//           
-//    }
-//    
-//}
 
 
 struct CustomTextField: View {
@@ -28,17 +13,22 @@ struct CustomTextField: View {
     var icon: String
     var title: String
     @Binding var text: String
-    
-    
     var show: Bool
+    var keyboardType: UIKeyboardType
+
     
-    init(icon: String, title: String, text: Binding<String> = .constant(""), show: Bool = true) {
-        
+    init(
+        icon: String,
+        title: String,
+        text: Binding<String> = .constant(""),
+        show: Bool = true,
+        keyboardType: UIKeyboardType = .default
+    ) {
         self.icon = icon
         self.title = title
         self._text = text
         self.show = show
-        
+        self.keyboardType = keyboardType
     }
     
     var body: some View {
@@ -51,21 +41,23 @@ struct CustomTextField: View {
                     .font(.subheadline)
                     .foregroundColor(.gray)
                 
-                VStack(alignment: .leading, spacing: 1) {
+                VStack(alignment: .leading, spacing: 2.5) {
                     
                     Text(title)
-                        .font(Font.custom("Monaco", size: 14))
+                        .font(Font.custom("AriSan-Medium", size: 13))
                         .foregroundColor(Color(.systemGray))
                     
+                    
                     TextField("", text: $text)
-                        .font(Font.custom("Monaco", size: 16))
-            
+                        .font(Font.custom("Monaco", size: 12.5))
+                        .keyboardType(keyboardType)
+                    
                 }
             }
             .padding()
             .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray6)))
+                        
         }
-        
     }
 }
 
@@ -73,18 +65,20 @@ struct CustomTextField: View {
 struct SaveButtonModifier: ViewModifier {
     
     func body(content: Content) -> some View {
-        
         content
-            .font(Font.custom("Monaco", size: 17.5))
+            .font(Font.custom("Monaco", size: 15))
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding()
             .background(Color.teal)
             .cornerRadius(10)
-        
-            
-
     }
     
 }
 
+
+
+
+#Preview {
+//    ViewExtension()
+}

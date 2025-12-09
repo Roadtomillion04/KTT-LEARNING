@@ -16,8 +16,8 @@ struct DocUploadView: View {
     @EnvironmentObject private var apiService: APIService
     
     let zoneId: String
-    let docDetails: APIService.DriverStatusAttributes.ShareImages
-    
+    let docDetails: [APIService.DriverStatusModel.ImageShare]
+ 
     
     var body: some View {
         
@@ -30,10 +30,12 @@ struct DocUploadView: View {
                     .frame(width: 32, height: 32)
                 
                 Text("Capture Document Image to Upload")
-                    .bold()
+                    .font(Font.custom("ArialRoundedMTBold", size: 15))
                 
                 Text("Tap to Capture the document")
+                    .font(Font.custom("Monaco", size: 14))
                     .foregroundStyle(.secondary)
+                
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 40)
@@ -41,7 +43,7 @@ struct DocUploadView: View {
             
             .onTapGesture {
                 
-                if vm.documentDetails.count < apiService.driverStatusAttributes.driver.account.driverConfig.trip.maxImages.docs ?? -1 {
+                if vm.documentDetails.count < apiService.driverStatusModel.driver?.account?.driverConfig?.trip?.maxImages?.docs ?? -1 {
                     
                     coordinator.push(.miscellaneous(.cameraCapture(image: $vm.docImage, sourceType: .camera)))
                     
@@ -67,10 +69,10 @@ struct DocUploadView: View {
                                     .overlay {
                                         
                                         Image(systemName: "xmark.circle.fill")
-                                            .font(.title)
+                                            .font(.headline)
                                             .background(Circle().fill(.white))
                                             .foregroundStyle(.red)
-                                            .offset(x: 42, y: -42)
+                                            .offset(x: 35, y: -35)
                                         
                                             .onTapGesture {
                                                 
@@ -92,7 +94,6 @@ struct DocUploadView: View {
                         }
                     }
                 
-                
             }
             .scrollIndicators(.hidden)
             .scrollBounceBehavior(.basedOnSize)
@@ -108,12 +109,9 @@ struct DocUploadView: View {
                         vm.success = try await apiService.uploadDocuments(docType: .doc(removedFiles: vm.removedFiles, documentDetails: vm.documentDetails), zoneId: zoneId)
                         vm.isLoading = false
                         
-                        try await apiService.getDriverStatus(cachePolicy: .reloadIgnoringCacheData)
-                        try await apiService.getTripsData(cachePolicy: .reloadIgnoringCacheData)
                         
                     } catch {
                         vm.isLoading = false
-                        vm.failed = true
                     }
                 }
                 
@@ -134,21 +132,22 @@ struct DocUploadView: View {
           }
               
                 
-        .onAppear {
+        .task {
             if !vm.sceneEntered {
-                Task {
-                    do {
-                        vm.isLoading = true
-                        // zip could do only pairs, so nest them
-                        for (url, (type, number)) in zip(docDetails.images.map( { $0.url ?? "" } ), zip(docDetails.images.map( { $0.type ?? "" } ), docDetails.images.map( { $0.number ?? "" } )))  {
-                            try await vm.downloadImage(urlString: url, docType: type, number: number)
-                        }
-                        vm.isLoading = false
-                    } catch {
-                        
+                
+                do {
+                    
+                    vm.isLoading = true
+                    // zip could do only pairs, so nest them
+                    for (url, (type, number)) in zip(docDetails.map( { $0.url ?? "" } ), zip(docDetails.map( { $0.type ?? "" } ), docDetails.map( { $0.number ?? "" } )))  {
+                        try await vm.downloadImage(apiService, urlString: url, docType: type, number: number)
                     }
+                    vm.isLoading = false
+                } catch {
                     
                 }
+                    
+                
             } else {
                 vm.checkCapturedImage()
             }
@@ -159,8 +158,8 @@ struct DocUploadView: View {
        
         .loadingScreen(isLoading: vm.isLoading)
         
-        .successAlert(success: $vm.success, failed: $vm.failed, message: "Documents uploaded successfully", coordinator: coordinator)
-
+        .successAlert(success: $vm.success, message: "Documents uploaded successfully", coordinator: coordinator)
+        
     }
 
     
@@ -169,15 +168,14 @@ struct DocUploadView: View {
         
         VStack(alignment: .leading, spacing: 20) {
             
-            Text("Select Doument Type")
-                .font(Font.custom("ArialRoundedMTBold", size: 20))
-            
-            
             VStack(alignment: .center) {
                 
                 Image(uiImage: vm.documentDetails.last!.image)
                     .resizable()
+                    .scaledToFill()
                     .frame(width: 150, height: 150)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                
                 
             }
             .frame(maxWidth: .infinity)
@@ -187,6 +185,7 @@ struct DocUploadView: View {
             HStack {
                 
                 Text("Select Document Type")
+                    .font(Font.custom("ArialRoundedMTBold", size: 15))
                 
                 Spacer()
                 
@@ -194,6 +193,7 @@ struct DocUploadView: View {
                     
                     ForEach(DocUploadViewModel.DocumentTypes.allCases) { documentType in
                         Text("\(documentType.rawValue)")
+                            .font(Font.custom("Monaco", size: 12.5))
                             .tag(documentType)
                     }
                 }
@@ -202,7 +202,7 @@ struct DocUploadView: View {
             .tint(.black)
 
             
-            CustomTextField(icon: "text.document.fill", title: "Document No.", text: $vm.documentNumber)
+            CustomTextField(icon: "text.document.fill", title: "Document No.", text: $vm.documentNumber, keyboardType: .numberPad)
                 .padding(.bottom)
             
             
@@ -212,7 +212,7 @@ struct DocUploadView: View {
                     vm.documentDetails.removeLast()
                     vm.showDocumentSheet = false
                 }
-                .font(Font.custom("ArialRoundedMTBold", size: 20))
+                .font(Font.custom("ArialRoundedMTBold", size: 15))
                 .padding()
                 .background(RoundedRectangle(cornerRadius: 10).fill(.red))
                 .foregroundStyle(.white)
@@ -229,9 +229,9 @@ struct DocUploadView: View {
                     vm.selectedDocumentType = "Invoice"
                     vm.documentNumber = ""
                 }
-                .font(Font.custom("ArialRoundedMTBold", size: 20))
+                .font(Font.custom("ArialRoundedMTBold", size: 15))
                 .padding()
-                .background(RoundedRectangle(cornerRadius: 10).fill(.tint))
+                .background(RoundedRectangle(cornerRadius: 10).fill(.teal))
                 .foregroundStyle(.white)
                 
                 
@@ -241,6 +241,15 @@ struct DocUploadView: View {
         }
         .padding(.horizontal)
         
+        .toolbar {
+            
+            ToolbarItem(placement: .keyboard) {
+                    
+                Button("done") {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
+            }
+        }
         
     }
     
@@ -263,7 +272,6 @@ fileprivate class DocUploadViewModel: ObservableObject {
     
     @Published var success: Bool = false
     @Published var isLoading: Bool = false
-    @Published var failed: Bool = false
     
     // no of columns for VGrid
     let columns = [
@@ -298,21 +306,16 @@ fileprivate class DocUploadViewModel: ObservableObject {
         
     }
     
-    func downloadImage(urlString: String, docType: String, number: String) async throws {
+    func downloadImage(_ apiService: APIService, urlString: String, docType: String, number: String) async throws {
         
-        let url = URL(string: urlString)!
+        var image: UIImage = .init()
         
-        let request = URLRequest(url: url)
+        image = await apiService.downloadImage(urlString: urlString)
     
+        if image.size.width != 0 && image.size.height != 0 {
             
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                throw CustomErrorDescription.badResponse
-            }
-        
-        documentDetails.append(DocumentType.DocumentDetails(image: UIImage(data: data)!, url: urlString, fileName: "", number: number, type: docType))
-        
+            documentDetails.append(DocumentType.DocumentDetails(image: image, url: urlString, fileName: "", number: number, type: docType))
+        }
     }
     
 }

@@ -34,6 +34,7 @@ struct POIView: View {
                     .padding()
                     .background(Circle().fill(showPopover ? Color(.systemGray3) : .white))
                     .padding()
+                    .shadow(radius: 2)
                 
                     // positioning like this finally works
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
@@ -115,7 +116,8 @@ struct POIView: View {
                     .padding()
                     .background(RoundedRectangle(cornerRadius: 10).fill(.white))
                     .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .offset(y: 75)
                     
                 }
                 

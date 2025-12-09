@@ -24,13 +24,17 @@ extension View {
                 
             }
         
+            .onChange(of: isLoading) { old, new in
+                print(new)
+            }
+        
             .opacity(isLoading ? 0.5 : 1)
         
-            .allowsHitTesting(!isLoading) // disable the interaction
+            .disabled(isLoading)
 
     }
     
-    func successAlert(success: Binding<Bool>, failed: Binding<Bool>, message: String, coordinator: AppCoordinator) -> some View {
+    func successAlert(success: Binding<Bool>, message: String, coordinator: AppCoordinator) -> some View {
         
         self
             .alert("Success", isPresented: success) {
@@ -40,14 +44,7 @@ extension View {
             } message: {
                 Text(message)
             }
-        
-            .alert("Failed", isPresented: failed) {
-                
-            } message: {
-                Text("Please try again!")
-            }
-    }
-    
+        }
 }
 
 //
@@ -91,7 +88,6 @@ extension CustomTextField {
     func formatDouble(_ valueBinding: Binding<String>) -> some View {
         
         self
-            .keyboardType(.decimalPad)
             .onChange(of: valueBinding.wrappedValue) { oldValue, newValue in
                 
                 let decimalSeparator = Locale.current.decimalSeparator ?? "."

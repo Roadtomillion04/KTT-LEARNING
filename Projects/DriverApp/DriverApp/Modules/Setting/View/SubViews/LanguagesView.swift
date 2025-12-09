@@ -42,7 +42,7 @@ struct LanguagesView: View {
                    
         }
         .onAppear {
-            languageSelected = languages.filter( { $0.identifier == languageManager.selectedLanguage } ).first!
+            languageSelected = languages.filter( { $0.identifier == languageManager.selectedLanguage } ).first ?? languages.first!
         }
         
         .customAlert(isPresented: $showLanguageChoice) {

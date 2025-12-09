@@ -8,14 +8,15 @@
 import SwiftUI
 import Foundation
 import MapKit
+import GoogleMaps
 
 struct AttendanceView: View {
+    
+    @StateObject private var vm: AttendanceViewModel = .init()
     
     @EnvironmentObject private var coordinator: AppCoordinator
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var apiService: APIService
-    
-    @StateObject private var vm: AttendanceViewModel = .init()
     
     @State private var currentDate = Date()
     
@@ -35,8 +36,13 @@ struct AttendanceView: View {
         }
         .padding()
         
+        .task {
+            await vm.onAppear(apiService)
+        }
+        
         .onAppear {
             vm.checkCapturedImage()
+            vm.getLocationAddress(locationManager: locationManager)
         }
         
         .loadingScreen(isLoading: vm.isLoading)
@@ -47,37 +53,57 @@ struct AttendanceView: View {
                 
                 Image(uiImage: vm.checkinImage) // no preview here
                     .resizable()
-                    .frame(width: 250, height: 250)
+                    .scaledToFill()
+                    .frame(width: 200, height: 200)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                 
                 LazyVGrid(columns: vm.columns, alignment: .leading, spacing: 25) {
                     
                     Text("Date:")
+                        .font(Font.custom("Monaco", size: 13))
                     
                     Text(vm.date)
+                        .font(Font.custom("Monaco", size: 12.5))
                     
                     Text("Time:")
+                        .font(Font.custom("Monaco", size: 13))
                     
                     Text(vm.time)
+                        .font(Font.custom("Monaco", size: 12.5))
                     
                     Text("Location:")
+                        .font(Font.custom("Monaco", size: 13))
                         
                     Text(vm.location)
+                        .font(Font.custom("Monaco", size: 12.5))
+                    
+                    
+                }
+                
+                HStack {
+                    
+                    Spacer()
                     
                     Button(LocalizedStringKey("cancel")) {
                         vm.showCheckinAlert = false
                     }
-                    .font(Font.custom("Monaco", size: 20))
+                    .font(Font.custom("Monaco", size: 15))
                     .padding()
                     .background(RoundedRectangle(cornerRadius: 10).fill(.red))
                     .foregroundStyle(.white)
                     
+                    Spacer()
+                    
                     Button(LocalizedStringKey("check_in")) {
                         vm.postCheckIn(apiService, lat: locationManager.location?.latitude ?? 0, lng: locationManager.location?.longitude ?? 0)
                     }
-                    .font(Font.custom("Monaco", size: 20))
+                    .font(Font.custom("Monaco", size: 15))
                     .padding()
                     .background(RoundedRectangle(cornerRadius: 10).fill(.green))
                     .foregroundStyle(.black)
+                    
+                    Spacer()
+                    
                 }
             }
             
@@ -99,7 +125,7 @@ struct AttendanceView: View {
         VStack {
             
             Text(currentDate, style: .time)
-                .font(Font.custom("ArialRoundedMTBold", size: 50))
+                .font(Font.custom("ArialRoundedMTBold", size: 25))
                 .onReceive(timer) { input in
                     self.currentDate = input
                 }
@@ -114,10 +140,11 @@ struct AttendanceView: View {
         
         VStack(alignment: .center, spacing: 10) {
             
-            Text("Good Morning, \(apiService.driverStatusAttributes.driver.name ?? "")")
-                .bold()
+            Text("Good Morning, \(apiService.driverStatusModel.driver?.name ?? "")")
+                .font(Font.custom("Monaco", size: 13))
             
-            Text("Location")
+            Text(vm.location)
+                .font(Font.custom("Monaco", size: 13))
                 .foregroundStyle(Color(.systemGray))
             
             HStack {
@@ -125,7 +152,8 @@ struct AttendanceView: View {
                     .font(.headline)
                     .foregroundStyle(Color(.systemGray3))
                 
-                Text(apiService.driverStatusAttributes.trip.lplate ?? "")
+                Text(apiService.driverStatusModel.trip?.lplate ?? "")
+                    .font(Font.custom("Monaco", size: 13))
             }
             .padding()
             .background(
@@ -159,6 +187,7 @@ struct AttendanceView: View {
             
             Text("Today's Attendance")
             
+            
             Spacer()
             
             Button("View All") {
@@ -167,12 +196,12 @@ struct AttendanceView: View {
             
         }
         .foregroundStyle(.black)
-        .font(Font.custom("ArialRoundedMTBold", size: 20))
+        .font(Font.custom("ArialRoundedMTBold", size: 15))
         
         List {
             
             // Today's attendace show
-            ForEach(apiService.driverCheckInAttributes.results, id: \.self) { result in
+            ForEach(vm.driverCheckIn, id: \.self) { result in
                 
                 HStack(alignment: .center) {
                     
@@ -230,7 +259,8 @@ fileprivate class AttendanceViewModel: ObservableObject {
     
     @Published var success: Bool = false
     @Published var isLoading: Bool = false
-    @Published var failed: Bool = false
+    
+    @Published var driverCheckIn: [APIService.DriverCheckInModel.Results] = []
     
     init() {
         
@@ -244,13 +274,22 @@ fileprivate class AttendanceViewModel: ObservableObject {
            
             date = Date().toString(format: "dd/MM/yyyy")
             time = Date().toString(format: "HH:mm a")
-            location = "long long string sas fas here to take space so don't mind, is just  a test lsadlsadl sldjsajl las djlsaj lsa ljsla lajsd ljsa jlajl las ldsal a dsad a sad "
+            location = location
             
             showCheckinAlert = true
             
         }
         
     }
+    
+    func onAppear(_ apiService: APIService) async {
+        do {
+            driverCheckIn = try await apiService.getDriverCheckIn()
+        } catch {
+            
+        }
+    }
+    
     
     @MainActor
     func postCheckIn(_ apiService: APIService, lat: Double, lng: Double) {
@@ -259,9 +298,9 @@ fileprivate class AttendanceViewModel: ObservableObject {
             do {
                 isLoading = true
                 
-                success = try await apiService.postDriverAttendances(image: checkinImage, lat: lat, lng: lng, address: "")
+                success = try await apiService.postDriverCheckIn(image: checkinImage, lat: lat, lng: lng, address: location)
 
-                try await apiService.getDriverCheckIn()
+                driverCheckIn = try await apiService.getDriverCheckIn()
                 
                 checkinImage = UIImage() // clear the image
                 
@@ -269,15 +308,76 @@ fileprivate class AttendanceViewModel: ObservableObject {
                 
             } catch {
                 isLoading = false
-                failed = true
+                showCheckinAlert = false
             }
+        }
+        
+    }
+    
+    func getLocationAddress(locationManager: LocationManager) {
+            
+        let geocoder = GMSGeocoder()
+        
+        let coordinate = CLLocationCoordinate2D(latitude: locationManager.location?.latitude ?? 0, longitude: locationManager.location?.longitude ?? 0)
+        
+        geocoder.reverseGeocodeCoordinate(coordinate) { response, _ in
+            
+            if let address = response?.firstResult() {
+                
+                if let lines = address.lines {
+                    
+                    self.location = lines.joined(separator: ", ")
+                    
+                }
+            }
+            
         }
         
     }
     
 }
 
-
+// Model
+extension APIService {
+    
+    struct DriverCheckInModel: Hashable, Decodable {
+        var success: Bool?
+        var results: [Results] = []
+        var error: String?
+        
+        struct Results: Hashable, Decodable {
+            var id, date: String?
+            var images: [String]?
+            var details: Details = .init()
+            var geozone: GeoZone = .init()
+            
+            enum CodingKeys: String, CodingKey {
+                case id
+                case date
+                case images
+                case details
+                case geozone = "Geozone"
+            }
+        }
+        
+        struct Details: Hashable, Decodable {
+            var time: String?
+            var offline: Bool?
+            var location: Location = .init()
+            
+        }
+        
+        struct Location: Hashable, Decodable {
+            var lat, lon: Double?
+            var address: String?
+        }
+        
+        struct GeoZone: Hashable, Decodable {
+            var id, name, city: String?
+        }
+        
+    }
+}
 
 struct AttendanceLogView: View {
     
@@ -297,7 +397,7 @@ struct AttendanceDetailView: View {
     
     @EnvironmentObject private var apiService: APIService
     
-    let data: APIService.DriverCheckIn.Results
+    let data: APIService.DriverCheckInModel.Results
     
     
     var body: some View {
@@ -345,3 +445,4 @@ fileprivate class AttendanceDetailViewModel: ObservableObject {
 #Preview {
 //    AttendanceView()
 }
+

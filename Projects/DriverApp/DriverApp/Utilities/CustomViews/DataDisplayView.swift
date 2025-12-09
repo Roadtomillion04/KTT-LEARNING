@@ -22,7 +22,7 @@ struct IconData: View {
             if let icon = icon {
                 
                 Image(systemName: icon)
-                    .font(.title2)
+                    .font(.headline)
                     .foregroundColor(Color(hex: 0x5A5A5A))
                 
             }
@@ -30,22 +30,22 @@ struct IconData: View {
             if let image = image {
                 
                 Image(image)
-                    .font(.title2)
+                    .font(.headline)
                     .foregroundColor(Color(hex: 0x5A5A5A))
                 
             }
        
             
-            VStack(alignment: .leading, spacing: 1) {
+            VStack(alignment: .leading, spacing: 2.5) {
                 
                 if let title = title {
                     Text(title)
-                        .font(Font.custom("Monaco", size: 14))
+                        .font(Font.custom("AriSanPro-Medium", size: 13))
                         .foregroundColor(Color(.systemGray))
                 }
                 
                 Text(value)
-                    .font(Font.custom("Monaco", size: 16))
+                    .font(Font.custom("Monaco", size: 12.5))
         
             }
         }

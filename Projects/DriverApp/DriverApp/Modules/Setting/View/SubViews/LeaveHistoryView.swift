@@ -12,6 +12,12 @@ struct LeaveHistoryView: View {
     var body: some View {
             
         
+        VStack {
+            Text("No Data")
+        }
+        .refreshable {
+            
+        }
         
     }
     

@@ -16,6 +16,8 @@ struct SettingView: View {
     
     @Environment(\.openURL) var openURL
     
+    @State var showLogoutAlert: Bool = false
+    
     var body: some View {
            
         VStack(alignment: .center) {
@@ -30,34 +32,32 @@ struct SettingView: View {
                         
                         HStack(spacing: 15) {
                             
-                            AsyncImage(url: URL(string: apiService.driverStatusAttributes.driver.photoURL ?? "")) { image in
+                            AsyncImage(url: URL(string: apiService.driverStatusModel.driver?.photoURL ?? "")) { image in
                                 
                                 image
                                     .profileImage()
                                 
                                 
                             } placeholder: {
-                                Image(systemName: "person.fill")
-                                    .profileImage()
+                              Circle().fill(.thinMaterial)
                             }
                             .frame(width: 64, height: 64)
                             
                             VStack(alignment: .leading, spacing: 6) {
                                 
-                                Text(apiService.driverStatusAttributes.driver.name ?? "Name")
-                                    .font(Font.custom("ArialRoundedMTBold", size: 20))
+                                Text(apiService.driverStatusModel.driver?.name ?? "Name")
+                                    .font(Font.custom("ArialRoundedMTBold", size: 15))
                                 
-                                Text(apiService.driverStatusAttributes.driver.phone1 ?? "Number")
-                                    .font(Font.custom("ArialRoundedMTBold", size: 17.5))
+                                Text(apiService.driverStatusModel.driver?.phone1 ?? "Number")
+                                    .font(Font.custom("ArialRoundedMTBold", size: 12.5))
                                     .foregroundStyle(.secondary)
                                 
                             }
                             
                             Spacer()
                             
-                            Image("right-arrow")
-                                .resizable()
-                                .frame(width: 28, height: 28)
+                            Image(systemName: "chevron.forward")
+                                .font(.title3)
                             
                         }
                         
@@ -72,7 +72,6 @@ struct SettingView: View {
                         
                 }
                 .listRowSeparator(.hidden)
-                .padding(.vertical, 10)
                 
                 
                 Button {
@@ -81,7 +80,6 @@ struct SettingView: View {
                     buttonContent(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90", text: LocalizedStringResource("leave_history_list"))
                         
                 }
-                .padding(.vertical, 10)
                 .listRowSeparator(.hidden)
 
                 
@@ -91,7 +89,6 @@ struct SettingView: View {
                     buttonContent(systemName: "dollarsign.circle.fill", text: LocalizedStringResource("trip_settlement"))
                         
                 }
-                .padding(.vertical, 10)
                 .listRowSeparator(.hidden)
                 
                 
@@ -101,7 +98,6 @@ struct SettingView: View {
                     buttonContent(systemName: "folder", text: LocalizedStringResource("documents"))
                         
                 }
-                .padding(.vertical, 10)
                 .listRowSeparator(.hidden)
                 
                 
@@ -110,24 +106,22 @@ struct SettingView: View {
                 } label: {
                     buttonContent(systemName: "person.crop.circle.badge.checkmark.fill", text: LocalizedStringResource("mattendance"))
                 }
-                .padding(.vertical, 10)
                 .listRowSeparator(.hidden)
                 
-                
-                Section {
-                    
-                    Button {
-                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-                    } label: {
-                        buttonContent(systemName: "bell.fill", text: LocalizedStringResource("notifications"))
-                    }
-                    .padding(.vertical, 10)
-                    
-                    
-                } header: {
-                    Text(LocalizedStringResource("notifications"))
-                        .font(Font.custom("ArialRoundedMTBold", size: 15))
-                }
+                // Firebase integration
+//                Section {
+//                    
+//                    Button {
+//                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+//                    } label: {
+//                        buttonContent(systemName: "bell.fill", text: LocalizedStringResource("notifications"))
+//                    }
+//                    
+//                    
+//                } header: {
+//                    Text(LocalizedStringResource("notifications"))
+//                        .font(Font.custom("ArialRoundedMTBold", size: 15))
+//                }
                 
                 
                 Section {
@@ -137,33 +131,31 @@ struct SettingView: View {
                     } label: {
                         buttonContent(systemName: "globe", text: LocalizedStringResource("languages"))
                     }
-                    .padding(.vertical, 10)
                     .listRowSeparator(.hidden)
                     
                     Button {
-                        openURL(URL(string: "https://www.apple.com/privacy/")!)
+                        openURL(URL(string: "https://www.kttelematic.com/privacy_dt")!)
                         
                     } label: {
                         buttonContent(systemName: "shield", text: LocalizedStringResource("privacy_policy"))
                     }
-                    .padding(.vertical, 10)
                     .listRowSeparator(.hidden)
                     
                     
                     Button {
-                        coordinator.reset()
+                        // alert
+                        showLogoutAlert = true
                     } label: {
                         buttonContent(systemName: "rectangle.portrait.and.arrow.right", text: LocalizedStringResource("logout"))
                     }
-                    .padding(.vertical, 10)
                     
                     
                 } header: {
                     Text(LocalizedStringResource("settings"))
-                        .font(Font.custom("ArialRoundedMTBold", size: 15))
+                        .font(Font.custom("ArialRoundedMTBold", size: 13))
                 } footer: {
                     Text("App Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
-                        .font(Font.custom("ArialRoundedMTBold", size: 15))
+                        .font(Font.custom("ArialRoundedMTBold", size: 13))
                         .frame(maxWidth: .infinity)
                         .frame(alignment: .center)
                 }
@@ -171,6 +163,16 @@ struct SettingView: View {
             }
             .listStyle(.sidebar)
             .shadow(radius: 3)
+            
+            .alert("logout", isPresented: $showLogoutAlert) {
+                Button(LocalizedStringKey("yes")) {
+                    coordinator.reset()
+                }
+                
+                Button(LocalizedStringKey("no")) {
+                    
+                }
+            }
             
         }
         
@@ -184,10 +186,10 @@ struct SettingView: View {
             HStack(spacing: 15) {
                 
                 Image(systemName: systemName)
-                    .font(.title)
+                    .font(.headline)
                 
                 Text(text)
-                    .font(Font.custom("ArialRoundedMTBold", size: 18))
+                    .font(Font.custom("ArialRoundedMTBold", size: 15))
                 
             }
             .foregroundStyle(.red)
@@ -197,16 +199,16 @@ struct SettingView: View {
             HStack(spacing: 15) {
                 
                 Image(systemName: systemName)
-                    .font(.title)
+                    .font(.headline)
                 
                 Text(text)
-                    .font(Font.custom("ArialRoundedMTBold", size: 18))
+                    .font(Font.custom("ArialRoundedMTBold", size: 15))
                 
                 Spacer()
                 
-                Image("right-arrow")
-                    .resizable()
-                    .frame(width: 28, height: 28)
+                Image(systemName: "chevron.forward")
+                    .font(.headline)
+                    
                 
             }
             .frame(maxWidth: .infinity)
